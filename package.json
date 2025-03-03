@@ -6,17 +6,22 @@
 	"keywords": [],
 	"license": "ISC",
 	"author": "",
+	"workspaces": [
+	  "apps/*",
+	  "packages/*"
+	],
 	"scripts": {
-		"build": "turbo run build",
-		"dev": "turbo run dev",
-		"format": "concurrently \"biome format --write .\" \"turbo run format --filter=@repo/app\"",
-		"lint": "concurrently \"biome lint --write --unsafe .\" \"turbo run lint --filter=@repo/app\"",
-		"format-and-lint": "concurrently \"biome check --write --unsafe .\" \"turbo run format --filter=@repo/app && turbo run lint --filter=@repo/app\""
+	  "build": "turbo run build",
+	  "dev": "turbo run dev",
+	  "format": "concurrently \"biome format --write .\" \"turbo run format --filter=@repo/app\"",
+	  "lint": "concurrently \"biome lint --write --unsafe .\" \"turbo run lint --filter=@repo/app\"",
+	  "format-and-lint": "concurrently \"biome check --write --unsafe .\" \"turbo run format --filter=@repo/app && turbo run lint --filter=@repo/app\"",
+	  "install:rust": "bash -c \"curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y\"",
+	  "setup": "npm run install:rust && set PATH=%PATH%;%USERPROFILE%\\.cargo\\bin && npm install"
 	},
-	"packageManager": "pnpm@8.6.5",
 	"devDependencies": {
-		"@biomejs/biome": "^1.9.4",
-		"concurrently": "latest",
-		"turbo": "latest"
+	  "@biomejs/biome": "^1.9.4",
+	  "concurrently": "latest",
+	  "turbo": "latest"
 	}
-}
+  }

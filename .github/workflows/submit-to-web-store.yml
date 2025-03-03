@@ -22,14 +22,12 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: lts/*
-      - name: install pnpm
-        uses: pnpm/action-setup@v4
       - name: Install dependencies and build artifact
         run: |
           cd apps/extension
-          pnpm install
-          pnpm build -- --zip
-          pnpm build -- --zip --target=firefox-mv3
+          npm install
+          npm run build -- --zip
+          npm run build -- --zip --target=firefox-mv3
       - name: Browser Platform Publish
         uses: PlasmoHQ/bpp@v3
         with:
