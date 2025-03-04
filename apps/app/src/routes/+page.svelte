@@ -3,8 +3,6 @@
 	import NavItems from '$lib/components/NavItems.svelte';
 	import RecordingControls from '$lib/components/RecordingControls.svelte';
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
-	import CopyToClipboardButton from '$lib/components/copyable/CopyToClipboardButton.svelte';
-	import { ClipboardIcon } from '$lib/components/icons';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import { useLatestRecording } from '$lib/query/recordings/queries';
@@ -14,7 +12,7 @@
 	import { settings } from '$lib/stores/settings.svelte';
 	import { createBlobUrlManager } from '$lib/utils/blobUrlManager';
 	import { getRecordingTransitionId } from '$lib/utils/getRecordingTransitionId';
-	import { AudioLinesIcon, Loader2Icon, MicIcon } from 'lucide-svelte';
+	import { AudioLinesIcon, MicIcon } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
 
 	const recorder = getRecorderFromContext();
