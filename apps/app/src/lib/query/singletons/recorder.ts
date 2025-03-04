@@ -13,6 +13,7 @@ import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 export type Recorder = ReturnType<typeof createRecorder>;
 
@@ -59,6 +60,27 @@ function createRecorder({
 		initialData: 'IDLE' as const,
 	}));
 
+	let recorderIndicatorWindow:WebviewWindow | null = null;
+	const showRecorderIndicator = () => {
+		// Open a new Tauri window
+		recorderIndicatorWindow = new WebviewWindow('recording', {
+			url: 'recording.html',
+			width: 300,
+			height: 100,
+			resizable: false,
+			decorations: false,
+			transparent: false,
+			alwaysOnTop: true,
+		});
+	};
+
+	const hideRecorderIndicator = () => {
+		if (recorderIndicatorWindow) {
+			recorderIndicatorWindow.close();
+			recorderIndicatorWindow = null;
+		}
+	};
+
 	const startRecording = createResultMutation(() => ({
 		onMutate: async ({ toastId }) => {
 			toast.loading({
@@ -84,6 +106,9 @@ function createRecorder({
 				title: '🎙️ Whispering is recording...',
 				description: 'Speak now and stop recording when done',
 			});
+
+			showRecorderIndicator();
+
 			console.info('Recording started');
 			void playSoundIfEnabled('start-manual');
 		},
@@ -115,6 +140,8 @@ function createRecorder({
 			});
 			console.info('Recording stopped');
 			void playSoundIfEnabled('stop-manual');
+
+			hideRecorderIndicator();
 
 			const now = new Date().toISOString();
 			const newRecordingId = nanoid();
