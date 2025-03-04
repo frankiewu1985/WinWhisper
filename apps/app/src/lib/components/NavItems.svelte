@@ -59,16 +59,14 @@
 			class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
 		/>
 	</WhisperingButton>
-	{#if window.__TAURI_INTERNALS__}
-		<WhisperingButton
-			tooltipContent="Minimize"
-			onclick={() => getCurrentWindow().setSize(new LogicalSize(72, 84))}
-			variant="ghost"
-			size="icon"
-		>
-			<Minimize2Icon class="h-4 w-4" aria-hidden="true" />
-		</WhisperingButton>
-	{/if}
+	<WhisperingButton
+		tooltipContent="Minimize"
+		onclick={() => getCurrentWindow().setSize(new LogicalSize(72, 84))}
+		variant="ghost"
+		size="icon"
+	>
+		<Minimize2Icon class="h-4 w-4" aria-hidden="true" />
+	</WhisperingButton>
 </nav>
 
 <style>

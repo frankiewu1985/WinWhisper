@@ -240,23 +240,21 @@
 			</WhisperingButton>{' '}
 			to start recording here.
 		</p>
-		{#if window.__TAURI_INTERNALS__}
-			<p class="text-foreground/75 text-sm">
-				Press
-				{' '}<WhisperingButton
-					tooltipContent="Go to global shortcut in settings"
-					href="/settings#global-shortcut"
-					variant="link"
-					size="inline"
+		<p class="text-foreground/75 text-sm">
+			Press
+			{' '}<WhisperingButton
+				tooltipContent="Go to global shortcut in settings"
+				href="/settings#global-shortcut"
+				variant="link"
+				size="inline"
+			>
+				<kbd
+					class="bg-muted relative rounded px-[0.3rem] py-[0.15rem] font-mono text-sm font-semibold"
 				>
-					<kbd
-						class="bg-muted relative rounded px-[0.3rem] py-[0.15rem] font-mono text-sm font-semibold"
-					>
-						{settings.value['shortcuts.currentGlobalShortcut']}
-					</kbd>
-				</WhisperingButton>{' '}
-				to start recording anywhere.
-			</p>
-		{/if}
+					{settings.value['shortcuts.currentGlobalShortcut']}
+				</kbd>
+			</WhisperingButton>{' '}
+			to start recording anywhere.
+		</p>
 	</div>
 </main>

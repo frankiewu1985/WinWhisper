@@ -16,10 +16,8 @@
 
 	const recorder = getRecorderFromContext();
 
-	if (window.__TAURI_INTERNALS__) {
-		syncWindowAlwaysOnTopWithRecorderState();
-		closeToTrayIfEnabled();
-	}
+	syncWindowAlwaysOnTopWithRecorderState();
+	closeToTrayIfEnabled();
 
 	$effect(() => {
 		recorder.recorderState;
@@ -29,10 +27,6 @@
 	onMount(async () => {
 		window.recorder = recorder;
 		window.goto = goto;
-		if (!window.__TAURI_INTERNALS__) {
-			const _notifyWhisperingTabReadyResult =
-				await extension.notifyWhisperingTabReady(undefined);
-		}
 	});
 
 	const TOASTER_SETTINGS = {

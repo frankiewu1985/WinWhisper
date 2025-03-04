@@ -12,7 +12,6 @@ export const toast = createToastService();
 
 const isFocused = async () => {
 	const isDocumentFocused = document.hasFocus();
-	if (!window.__TAURI_INTERNALS__) return isDocumentFocused;
 	const isWindowFocused = await getCurrentWindow().isFocused();
 	return isWindowFocused && isDocumentFocused;
 };
