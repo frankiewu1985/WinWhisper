@@ -22,14 +22,6 @@
 	style="view-transition-name: nav"
 >
 	<WhisperingButton
-		tooltipContent="Recordings"
-		href="/recordings"
-		variant="ghost"
-		size="icon"
-	>
-		<ListIcon class="h-4 w-4" aria-hidden="true" />
-	</WhisperingButton>
-	<WhisperingButton
 		tooltipContent="Transformations"
 		href="/transformations"
 		variant="ghost"

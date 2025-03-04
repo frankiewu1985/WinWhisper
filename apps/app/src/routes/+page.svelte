@@ -16,7 +16,6 @@
 	import { getRecordingTransitionId } from '$lib/utils/getRecordingTransitionId';
 	import { AudioLinesIcon, Loader2Icon, MicIcon } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
-	import TranscribedTextDialog from './(config)/recordings/TranscribedTextDialog.svelte';
 
 	const recorder = getRecorderFromContext();
 	const vadRecorder = getVadRecorderFromContext();
@@ -176,38 +175,6 @@
 	</div>
 
 	<div class="xxs:flex hidden w-full max-w-xs flex-col items-center gap-2">
-		{#if latestRecording.transcribedText !== ''}
-			<div class="flex w-full items-center gap-2">
-				<TranscribedTextDialog
-					recordingId={latestRecording.id}
-					transcribedText={latestRecording.transcriptionStatus ===
-					'TRANSCRIBING'
-						? '...'
-						: latestRecording.transcribedText}
-					rows={1}
-				/>
-				<CopyToClipboardButton
-					label="transcribed text"
-					copyableText={latestRecording.transcribedText}
-					viewTransitionName={getRecordingTransitionId({
-						recordingId: latestRecording.id,
-						propertyName: 'transcribedText',
-					})}
-					size="default"
-					variant="secondary"
-					disabled={latestRecording.transcriptionStatus === 'TRANSCRIBING'}
-				>
-					{#snippet copyIcon()}
-						{#if latestRecording.transcriptionStatus === 'TRANSCRIBING'}
-							<Loader2Icon class="h-6 w-6 animate-spin" />
-						{:else}
-							<ClipboardIcon class="h-6 w-6" />
-						{/if}
-					{/snippet}
-				</CopyToClipboardButton>
-			</div>
-		{/if}
-
 		{#if blobUrl}
 			<audio
 				style="view-transition-name: {getRecordingTransitionId({
