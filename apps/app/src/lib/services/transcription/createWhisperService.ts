@@ -53,7 +53,6 @@ export function createWhisperService({
                 ),
             );
             formData.append('model', modelName);
-            formData.append('task', 'transcribe'); // Ensure the task is set to transcribe
             if (options.outputLanguage !== 'auto') {
                 formData.append('language', options.outputLanguage);
             }
