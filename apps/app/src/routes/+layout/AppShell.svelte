@@ -7,7 +7,6 @@
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { DbRecordingsService } from '$lib/services';
 	import { settings } from '$lib/stores/settings.svelte';
-	import { extension } from '@repo/extension';
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { onMount } from 'svelte';
 	import { Toaster, type ToasterProps } from 'svelte-sonner';
