@@ -60,18 +60,30 @@ function createRecorder({
 		initialData: 'IDLE' as const,
 	}));
 
-	let recorderIndicatorWindow:WebviewWindow | null = null;
+	let recorderIndicatorWindow: WebviewWindow | null = null;
 	const showRecorderIndicator = () => {
 		// Open a new Tauri window
-		recorderIndicatorWindow = new WebviewWindow('recording', {
-			url: 'recording.html',
-			width: 300,
-			height: 100,
-			resizable: false,
-			decorations: false,
-			transparent: false,
-			alwaysOnTop: true,
-		});
+		try {
+			recorderIndicatorWindow = new WebviewWindow('recording', {
+				url: 'recording.html',
+				width: 300,
+				height: 100,
+				resizable: false,
+				decorations: false,
+				transparent: false,
+				alwaysOnTop: true,
+			});
+
+			recorderIndicatorWindow.once('tauri://created', () => {
+				console.log('Recorder indicator window created successfully');
+			});
+
+			recorderIndicatorWindow.once('tauri://error', (e) => {
+				console.error('Failed to create recorder indicator window', e);
+			});
+		} catch (error) {
+			console.error('Error creating recorder indicator window:', error);
+		}
 	};
 
 	const hideRecorderIndicator = () => {

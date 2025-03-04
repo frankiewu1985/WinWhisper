@@ -62,16 +62,6 @@
                 "width": 800,
                 "minHeight": 84,
                 "minWidth": 72
-            },
-            {
-              "label": "recording",
-              "url": "recording.html",
-              "title": "Recording",
-              "width": 300,
-              "height": 100,
-              "resizable": false,
-              "decorations": false,
-              "transparent": true
             }
         ],
         "security": {
