@@ -39,7 +39,7 @@
 			};
 			registerShortcuts.registerLocalShortcut({
 				shortcut: value,
-				callback: () => recorder.toggleRecording(),
+				callback: (action) => recorder.toggleRecording(action=== 'Pressed'),
 			});
 		}}
 	/>
@@ -57,7 +57,7 @@
 				};
 				registerShortcuts.registerGlobalShortcut({
 					shortcut: value,
-					callback: () => recorder.toggleRecording(),
+					callback: (action) => recorder.toggleRecording(action=== 'Pressed'),
 				});
 			}}
 		/>

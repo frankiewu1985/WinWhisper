@@ -51,11 +51,15 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 		await unregisterAllGlobalShortcuts();
 		registerLocalShortcut({
 			shortcut: settings.value['shortcuts.currentLocalShortcut'],
-			callback: recorder.toggleRecording,
+			callback: (action) => {
+				recorder.toggleRecording(action === 'Pressed');
+			},
 		});
 		await registerGlobalShortcut({
 			shortcut: settings.value['shortcuts.currentGlobalShortcut'],
-			callback: recorder.toggleRecording,
+			callback: (action) => {
+				recorder.toggleRecording(action === 'Pressed');
+			},
 		});
 	};
 
@@ -67,7 +71,7 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 			callback,
 		}: {
 			shortcut: string;
-			callback: () => void;
+			callback: (action: 'Pressed' | 'Released') => void;
 		}) => {
 			const job = async () => {
 				unregisterAllLocalShortcuts();

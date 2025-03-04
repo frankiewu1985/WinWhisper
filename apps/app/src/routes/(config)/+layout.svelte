@@ -30,7 +30,7 @@
 	<RecordingControls class="hidden sm:flex" />
 	<WhisperingButton
 		tooltipContent="Toggle recording"
-		onclick={recorder.toggleRecording}
+		onclick={()=>recorder.toggleRecording(recorder.recorderState!== 'SESSION+RECORDING')}
 		variant="ghost"
 		size="icon"
 		style="view-transition-name: microphone-icon"

@@ -99,7 +99,7 @@
 				tooltipContent={recorder.recorderState === 'SESSION+RECORDING'
 					? 'Stop recording'
 					: 'Start recording'}
-				onclick={recorder.toggleRecording}
+				onclick={()=>recorder.toggleRecording(recorder.recorderState !== 'SESSION+RECORDING')}
 				variant="ghost"
 				class="flex-shrink-0 size-32 transform items-center justify-center overflow-hidden duration-300 ease-in-out"
 			>

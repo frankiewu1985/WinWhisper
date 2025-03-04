@@ -383,12 +383,12 @@ function createRecorder({
 		get recorderState() {
 			return recorderState.data ?? 'IDLE';
 		},
-		toggleRecording: async (action: 'Pressed' | 'Released') => {
+		toggleRecording: async (start: boolean) => {
 			const toastId = nanoid();
-			if (action === 'Released') {
-				stopRecording.mutate({ toastId });
-			} else if (action === 'Pressed') {
+			if (start) {
 				startRecording.mutate({ toastId });
+			} else {
+				stopRecording.mutate({ toastId });
 			}
 		},
 		cancelRecorderWithToast: () => {
