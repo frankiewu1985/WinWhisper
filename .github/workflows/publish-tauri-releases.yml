@@ -70,7 +70,7 @@ jobs:
           projectPath: './apps/app'
           tagName: v__VERSION__ # the action automatically replaces __VERSION__ with the app version.
           releaseName: 'App v__VERSION__'
-          releaseBody: 'Full installation instructions can be found [here](https://github.com/braden-w/whispering?tab=readme-ov-file#desktop-app).'
+          releaseBody: ''
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}

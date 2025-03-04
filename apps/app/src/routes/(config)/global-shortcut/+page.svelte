@@ -17,30 +17,6 @@
 		<p class="text-muted-foreground lg:text-xl">
 			You can access global keyboard shortcuts on the extension and desktop app.
 		</p>
-		<div class="flex flex-col gap-2 md:flex-row">
-			<WhisperingButton
-				tooltipContent="Check out the Chrome Extension"
-				href="https://github.com/braden-w/whispering/releases"
-				target="_blank"
-				rel="noopener noreferrer"
-				variant="default"
-				size="lg"
-			>
-				<DesktopIcon class="mr-2 h-6 w-6" />
-				Download for Desktop
-			</WhisperingButton>
-			<WhisperingButton
-				tooltipContent="Check out the desktop app"
-				href="https://chromewebstore.google.com/detail/whispering/oilbfihknpdbpfkcncojikmooipnlglo"
-				target="_blank"
-				rel="noopener noreferrer"
-				variant="outline"
-				size="lg"
-			>
-				<ChromeWebStoreIcon class="mr-2 h-6 w-6" />
-				Get Chrome Extension
-			</WhisperingButton>
-		</div>
 		<Button onclick={() => window.history.back()} variant="link">Go back</Button
 		>
 	</section>

@@ -164,22 +164,6 @@ function IndexPage() {
 						</WhisperingButton>{' '}
 						to start recording.
 					</p>
-					<p className="font-light text-muted-foreground text-sm">
-						Check out the{' '}
-						<WhisperingButton
-							tooltipContent="Check out the desktop app"
-							variant="link"
-							size="inline"
-							onClick={() => {
-								chrome.tabs.create({
-									url: 'https://github.com/braden-w/whispering/releases',
-								});
-							}}
-						>
-							desktop app
-						</WhisperingButton>{' '}
-						for more integrations!
-					</p>
 				</div>
 			</div>
 		</ThemeProvider>
@@ -236,20 +220,7 @@ function NavItems() {
 			>
 				<SlidersVerticalIcon className="h-4 w-4" aria-hidden="true" />
 			</WhisperingButton>
-
-			<WhisperingButton
-				tooltipContent="View project on GitHub"
-				onClick={() => {
-					chrome.tabs.create({ url: 'https://github.com/braden-w/whispering' });
-				}}
-				variant="ghost"
-				size="icon"
-			>
-				<GithubIcon
-					className="h-4 w-4 fill-current text-foreground"
-					aria-hidden="true"
-				/>
-			</WhisperingButton>
+			
 			<WhisperingButton
 				className="relative"
 				tooltipContent="Toggle dark mode"

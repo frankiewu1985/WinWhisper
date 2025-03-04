@@ -47,16 +47,6 @@
 		<SettingsIcon class="h-4 w-4" aria-hidden="true" />
 	</WhisperingButton>
 	<WhisperingButton
-		tooltipContent="View project on GitHub"
-		href="https://github.com/braden-w/whispering"
-		target="_blank"
-		rel="noopener noreferrer"
-		variant="ghost"
-		size="icon"
-	>
-		<GithubIcon class="h-4 w-4" aria-hidden="true" />
-	</WhisperingButton>
-	<WhisperingButton
 		tooltipContent="Toggle dark mode"
 		onclick={toggleMode}
 		variant="ghost"

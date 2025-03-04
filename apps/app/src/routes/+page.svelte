@@ -57,7 +57,7 @@
 <main class="flex flex-1 flex-col items-center justify-center gap-4">
 	<div class="xs:flex hidden flex-col items-center gap-4">
 		<h1 class="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
-			Start recording
+			WhisperingX
 		</h1>
 		<p class="text-muted-foreground text-center">
 			Click the 🎙 button to start. Allow access to your microphone.
@@ -258,29 +258,5 @@
 				to start recording anywhere.
 			</p>
 		{/if}
-		<p class="text-muted-foreground text-center text-sm font-light">
-			Check out the {' '}<WhisperingButton
-				tooltipContent="Check out the Chrome Extension"
-				href="https://chromewebstore.google.com/detail/whispering/oilbfihknpdbpfkcncojikmooipnlglo"
-				target="_blank"
-				rel="noopener noreferrer"
-				variant="link"
-				size="inline"
-			>
-				extension
-			</WhisperingButton>{' '}
-			{#if !window.__TAURI_INTERNALS__}
-				and {' '}<WhisperingButton
-					tooltipContent="Check out the desktop app"
-					href="https://github.com/braden-w/whispering/releases"
-					target="_blank"
-					rel="noopener noreferrer"
-					variant="link"
-					size="inline"
-				>
-					app
-				</WhisperingButton>{' '}
-			{/if} for more integrations!
-		</p>
 	</div>
 </main>
