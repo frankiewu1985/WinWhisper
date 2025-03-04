@@ -14,6 +14,7 @@ import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { LogicalPosition } from '@tauri-apps/api/window';
 
 export type Recorder = ReturnType<typeof createRecorder>;
 
@@ -64,15 +65,30 @@ function createRecorder({
 	const showRecorderIndicator = () => {
 		// Open a new Tauri window
 		try {
+			// Get the screen size
+			const screenSize = window.screen;
+			const screenWidth = screenSize.width;
+			const screenHeight = screenSize.height;
+
+			// Calculate the position for the bottom center
+			const windowWidth = 100;
+			const windowHeight = 30;
+			const x = (screenWidth - windowWidth) / 2;
+			const y = screenHeight - windowHeight - 150; // 150 pixels above the bottom
+
+			// Open a new Tauri window
 			recorderIndicatorWindow = new WebviewWindow('recording', {
-				url: 'recording.html',
-				width: 300,
-				height: 100,
+				url: 'recording.html', // Ensure this path is correct relative to your web assets directory
+				width: windowWidth,
+				height: windowHeight,
 				resizable: false,
 				decorations: false,
-				transparent: false,
-				alwaysOnTop: true,
+				transparent: true,
+				alwaysOnTop: true, // Ensure the window is always on top
 			});
+
+			// Set the position of the window
+			recorderIndicatorWindow.setPosition(new LogicalPosition(x, y));
 
 			recorderIndicatorWindow.once('tauri://created', () => {
 				console.log('Recorder indicator window created successfully');
