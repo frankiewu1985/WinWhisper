@@ -88,8 +88,17 @@ function createRecorder({
 
 	const hideRecorderIndicator = () => {
 		if (recorderIndicatorWindow) {
-			recorderIndicatorWindow.close();
-			recorderIndicatorWindow = null;
+			recorderIndicatorWindow
+				.close()
+				.then(() => {
+					console.log('Recorder indicator window closed successfully');
+					recorderIndicatorWindow = null;
+				})
+				.catch((error) => {
+					console.error('Error closing recorder indicator window:', error);
+				});
+		} else {
+			console.log('No recorder indicator window to close');
 		}
 	};
 
