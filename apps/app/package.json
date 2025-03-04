@@ -51,7 +51,6 @@
         "@epicenterhq/result": "^0.6.0",
         "@google/generative-ai": "^0.21.0",
         "@plasmohq/messaging": "^0.6.2",
-        "@repo/extension": "file:../../packages/extension",
         "@repo/shared": "file:../../packages/shared",
         "@ricky0123/vad-web": "^0.0.22",
         "@tanstack/query-core": "^5.64.1",

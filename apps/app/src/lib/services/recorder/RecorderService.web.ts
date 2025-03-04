@@ -1,5 +1,4 @@
 import { Err, Ok, tryAsync } from '@epicenterhq/result';
-import { extension } from '@repo/extension';
 import { WhisperingErr, type WhisperingResult } from '@repo/shared';
 import type {
 	RecorderService,
@@ -301,10 +300,6 @@ async function getFirstAvailableStream() {
 }
 
 async function enumerateRecordingDevices() {
-	const hasPermission = await hasExistingAudioPermission();
-	if (!hasPermission) {
-		void extension.openWhisperingTab({});
-	}
 	return tryAsync({
 		try: async () => {
 			const allAudioDevicesStream = await navigator.mediaDevices.getUserMedia({
@@ -330,10 +325,6 @@ async function enumerateRecordingDevices() {
 }
 
 async function getStreamForDeviceId(recordingDeviceId: string) {
-	const hasPermission = await hasExistingAudioPermission();
-	if (!hasPermission) {
-		void extension.openWhisperingTab({});
-	}
 	return tryAsync({
 		try: async () => {
 			const stream = await navigator.mediaDevices.getUserMedia({
