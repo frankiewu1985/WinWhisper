@@ -8,6 +8,7 @@ import {
 	getDefaultSettings,
 	settingsSchema,
 } from '@repo/shared';
+import type { ShortcutEvent } from '@tauri-apps/plugin-global-shortcut';
 import hotkeys from 'hotkeys-js';
 import { getContext, setContext } from 'svelte';
 
@@ -134,7 +135,7 @@ function registerLocalShortcut({
 	callback,
 }: {
 	shortcut: string;
-	callback: () => void;
+	callback: (action: 'Pressed' | 'Released') => void;
 }) {
 	const unregisterAllLocalShortcutsResult = unregisterAllLocalShortcuts();
 	if (!unregisterAllLocalShortcutsResult.ok)
@@ -142,9 +143,18 @@ function registerLocalShortcut({
 	return trySync({
 		try: () =>
 			hotkeys(shortcut, (event) => {
-				// Prevent the default refresh event under WINDOWS system
-				event.preventDefault();
-				callback();
+				// check if the event is pressed or released.
+				const action =
+					event.type === 'keydown'
+						? 'Pressed'
+						: event.type === 'keyup'
+							? 'Released'
+							: undefined;
+				if (action) {
+					// Prevent the default refresh event under WINDOWS system
+					event.preventDefault();
+					callback(action);
+				}
 			}),
 		mapErr: (error) =>
 			WhisperingErr({
@@ -170,10 +180,10 @@ async function registerGlobalShortcut({
 		try: async () => {
 			if (!window.__TAURI_INTERNALS__) return;
 			const { register } = await import('@tauri-apps/plugin-global-shortcut');
-			return await register(shortcut, (event) => {
-                if (event.state === 'Pressed' || event.state === 'Released') {
-                    callback(event.state);
-                }
+			return await register(shortcut, (event: ShortcutEvent) => {
+				if (event.state === 'Pressed' || event.state === 'Released') {
+					callback(event.state);
+				}
 			});
 		},
 		mapErr: (error) =>

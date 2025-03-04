@@ -14,7 +14,7 @@ import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
-import { LogicalPosition } from '@tauri-apps/api/window';
+import { LogicalPosition, LogicalSize } from '@tauri-apps/api/window';
 
 export type Recorder = ReturnType<typeof createRecorder>;
 
@@ -106,7 +106,7 @@ function createRecorder({
 			}
 		}
 
-        recorderIndicatorWindow.show().then(() => {
+        recorderIndicatorWindow!.show().then(() => {
             console.log('Recorder indicator window shown successfully');
         }).catch((error) => {
             console.error('Error showing recorder indicator window:', error);
