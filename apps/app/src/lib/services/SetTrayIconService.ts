@@ -41,7 +41,7 @@ export function createSetTrayIconDesktopService(): SetTrayIconService {
 					const tray = await trayPromise;
 					return tray.setIcon(iconPath);
 				},
-				mapErr: (error) => SetTrayIconServiceErr(recorderState),
+				mapErr: () => SetTrayIconServiceErr(recorderState),
 			}),
 	};
 }
