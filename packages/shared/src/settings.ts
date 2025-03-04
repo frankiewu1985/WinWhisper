@@ -35,6 +35,7 @@ export const getDefaultSettings = () =>
 		'transcription.groq.model': 'whisper-large-v3',
 		'transcription.outputLanguage': 'auto',
 		'transcription.prompt': '',
+		'transcription.vocabulary': '',
 		'transcription.temperature': '0',
 
 		'transcription.fasterWhisperServer.serverUrl': 'http://localhost:8000',
@@ -88,6 +89,7 @@ export const settingsSchema = z.object({
 	'transcription.selectedTranscriptionService': z.enum(TRANSCRIPTION_SERVICES),
 	'transcription.outputLanguage': z.enum(SUPPORTED_LANGUAGES),
 	'transcription.prompt': z.string(),
+	'transcription.vocabulary': z.string(),
 	'transcription.temperature': z.string(),
 
 	// Service-specific settings
