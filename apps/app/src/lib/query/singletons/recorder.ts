@@ -71,26 +71,29 @@ function createRecorder({
 				const screenHeight = screenSize.height;
 	
 				// Calculate the position for the bottom center
-				const windowWidth = 100;
-				const windowHeight = 30;
+				const windowWidth = 120;
+				const windowHeight = 60;
 				const x = (screenWidth - windowWidth) / 2;
 				const y = screenHeight - windowHeight - 150;
 	
 				// Open a new Tauri window in hidden mode
 				recorderIndicatorWindow = new WebviewWindow('recording', {
-					url: 'recording.html', // Ensure this path is correct relative to your web assets directory
-					width: windowWidth,
-					height: windowHeight,
+					url: 'recording.html',
 					resizable: false,
 					decorations: false,
 					transparent: true,
-					alwaysOnTop: true, // Ensure the window is always on top
-					visible: false // Start the window in hidden mode
+					alwaysOnTop: true,
+					visible: false,
+					shadow: false,
+					skipTaskbar: true,
 				});
-	
+
 				// Set the position of the window
+				recorderIndicatorWindow.setSize(
+					new LogicalSize(windowWidth, windowHeight),
+				);
 				recorderIndicatorWindow.setPosition(new LogicalPosition(x, y));
-	
+
 				recorderIndicatorWindow.once('tauri://created', () => {
 					console.log('Recorder indicator window created successfully');
 				});
