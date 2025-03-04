@@ -383,11 +383,11 @@ function createRecorder({
 		get recorderState() {
 			return recorderState.data ?? 'IDLE';
 		},
-		toggleRecording: async () => {
+		toggleRecording: async (action: 'Pressed' | 'Released') => {
 			const toastId = nanoid();
-			if (recorderState.data === 'SESSION+RECORDING') {
+			if (action === 'Released') {
 				stopRecording.mutate({ toastId });
-			} else {
+			} else if (action === 'Pressed') {
 				startRecording.mutate({ toastId });
 			}
 		},
