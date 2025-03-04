@@ -34,6 +34,9 @@ export const getDefaultSettings = () =>
 		'transcription.selectedTranscriptionService': 'OpenAI',
 		'transcription.groq.model': 'whisper-large-v3',
 		'transcription.outputLanguage': 'auto',
+		'transcription.outputLanguage1': 'auto',
+		'transcription.outputLanguage2': 'auto',
+		'transcription.outputLanguage3': 'auto',
 		'transcription.prompt': '',
 		'transcription.vocabulary': '',
 		'transcription.temperature': '0',
@@ -51,6 +54,9 @@ export const getDefaultSettings = () =>
 
 		'shortcuts.currentLocalShortcut': 'space',
 		'shortcuts.currentGlobalShortcut': 'CommandOrControl+Shift+;',
+		'shortcuts.currentGlobalShortcut1': 'CommandOrControl+Shift+1',
+		'shortcuts.currentGlobalShortcut2': 'CommandOrControl+Shift+2',
+		'shortcuts.currentGlobalShortcut3': 'CommandOrControl+Shift+3',
 	}) satisfies Settings;
 
 export const settingsSchema = z.object({
@@ -88,6 +94,9 @@ export const settingsSchema = z.object({
 	// Shared transcription settings
 	'transcription.selectedTranscriptionService': z.enum(TRANSCRIPTION_SERVICES),
 	'transcription.outputLanguage': z.enum(SUPPORTED_LANGUAGES),
+	'transcription.outputLanguage1': z.enum(SUPPORTED_LANGUAGES),
+	'transcription.outputLanguage2': z.enum(SUPPORTED_LANGUAGES),
+	'transcription.outputLanguage3': z.enum(SUPPORTED_LANGUAGES),
 	'transcription.prompt': z.string(),
 	'transcription.vocabulary': z.string(),
 	'transcription.temperature': z.string(),
@@ -106,6 +115,9 @@ export const settingsSchema = z.object({
 
 	'shortcuts.currentLocalShortcut': z.string(),
 	'shortcuts.currentGlobalShortcut': z.string(),
+	'shortcuts.currentGlobalShortcut1': z.string(),
+	'shortcuts.currentGlobalShortcut2': z.string(),
+	'shortcuts.currentGlobalShortcut3': z.string(),
 });
 
 export type Settings = z.infer<typeof settingsSchema>;

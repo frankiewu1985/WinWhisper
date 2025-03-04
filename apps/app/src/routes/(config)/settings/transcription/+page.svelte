@@ -158,20 +158,6 @@
 		/>
 	{/if}
 
-	<LabeledSelect
-		id="output-language"
-		label="Output Language"
-		items={SUPPORTED_LANGUAGES_OPTIONS}
-		selected={settings.value['transcription.outputLanguage']}
-		onSelectedChange={(selected) => {
-			settings.value = {
-				...settings.value,
-				'transcription.outputLanguage': selected,
-			};
-		}}
-		placeholder="Select a language"
-	/>
-
 	<LabeledInput
 		id="temperature"
 		label="Temperature"

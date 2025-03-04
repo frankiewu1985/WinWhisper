@@ -15,6 +15,7 @@ import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { LogicalPosition, LogicalSize } from '@tauri-apps/api/window';
+import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
 
 export type Recorder = ReturnType<typeof createRecorder>;
 
@@ -167,7 +168,7 @@ function createRecorder({
 				description: 'Finalizing your audio capture...',
 			});
 		},
-		mutationFn: async ({ toastId }: { toastId: string }) => {
+		mutationFn: async ({ toastId }: { toastId: string; language:LanguageType }) => {
 			const stopResult = await userConfiguredServices.recorder.stopRecording({
 				sendStatus: (options) => toast.loading({ id: toastId, ...options }),
 			});
@@ -176,7 +177,7 @@ function createRecorder({
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
 		},
-		onSuccess: async (blob, { toastId }) => {
+		onSuccess: async (blob, { toastId, language }) => {
 			toast.success({
 				id: toastId,
 				title: '🎙️ Recording stopped',
@@ -262,7 +263,7 @@ function createRecorder({
 
 						const transcribeToastId = nanoid();
 						transcriber.transcribeRecording.mutate(
-							{ recording: createdRecording, toastId: transcribeToastId },
+							{ recording: createdRecording, toastId: transcribeToastId, language: language },
 							{
 								onSuccess: () => {
 									if (
@@ -383,12 +384,13 @@ function createRecorder({
 		get recorderState() {
 			return recorderState.data ?? 'IDLE';
 		},
-		toggleRecording: async (start: boolean) => {
+		toggleRecording: async (start: boolean, language?: LanguageType) => {
+			const resolvedLanguage = language || 'auto';
 			const toastId = nanoid();
 			if (start) {
 				startRecording.mutate({ toastId });
 			} else {
-				stopRecording.mutate({ toastId });
+				stopRecording.mutate({ toastId, language: resolvedLanguage });
 			}
 		},
 		cancelRecorderWithToast: () => {

@@ -112,6 +112,7 @@ function createVadRecorder({
 									{
 										recording: createdRecording,
 										toastId: transcribeToastId,
+										language: 'auto'
 									},
 									{
 										onSuccess: () => {

@@ -11,6 +11,7 @@ import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import { useUpdateRecording } from '../recordings/mutations';
 import { maybeCopyAndPaste } from './maybeCopyAndPaste';
+import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
 
 export type Transcriber = ReturnType<typeof createTranscriber>;
 
@@ -62,9 +63,11 @@ function createTranscriber() {
 		},
 		mutationFn: async ({
 			recording,
+			language,
 		}: {
 			recording: Recording;
 			toastId: string;
+			language: LanguageType;
 		}) => {
 			if (!recording.blob) {
 				return WhisperingErr({
@@ -82,7 +85,7 @@ function createTranscriber() {
 
 			const transcriptionResult =
 				await userConfiguredServices.transcription.transcribe(recording.blob, {
-					outputLanguage: settings.value['transcription.outputLanguage'],
+					outputLanguage: language,
 					prompt,
 					temperature: settings.value['transcription.temperature'],
 				});

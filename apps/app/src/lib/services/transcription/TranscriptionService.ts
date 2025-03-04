@@ -8,6 +8,7 @@ import type { HttpServiceErr } from '../http/HttpService';
 
 export type TranscriptionServiceErr = WhisperingErr;
 export type TranscriptionServiceResult<T> = Ok<T> | WhisperingErr;
+export type LanguageType = Settings['transcription.outputLanguage'];
 
 export type TranscriptionService = {
 	transcribe: (
@@ -15,7 +16,7 @@ export type TranscriptionService = {
 		options: {
 			prompt: string;
 			temperature: string;
-			outputLanguage: Settings['transcription.outputLanguage'];
+			outputLanguage: LanguageType;
 		},
 	) => Promise<TranscriptionServiceResult<string>>;
 };
