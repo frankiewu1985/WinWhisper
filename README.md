@@ -15,6 +15,7 @@ WhisperingX is a customized fork of the open-source <a href="https://whispering.
 - Support press and hold to start and stop recording.
 - Add a pop up indicator on the screen while recording.
 - Add vocabulary setting.
+- Support use different shortcut for different languages.
 - Other UX adjustments.
 - Browser extension logic removed.
 
