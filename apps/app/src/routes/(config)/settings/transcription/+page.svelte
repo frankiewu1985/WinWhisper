@@ -21,7 +21,7 @@
 </script>
 
 <svelte:head>
-	<title>Transcription Settings - Whispering</title>
+	<title>Transcription Settings</title>
 </svelte:head>
 
 <div class="space-y-6">

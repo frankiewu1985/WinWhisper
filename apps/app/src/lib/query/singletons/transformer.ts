@@ -3,7 +3,6 @@ import { RunTransformationService } from '$lib/services/index.js';
 import { TransformErrorToWhisperingErr } from '$lib/services/runTransformation';
 import { toast } from '$lib/services/toast';
 import { settings } from '$lib/stores/settings.svelte';
-import { getErrorMessage } from '$lib/utils';
 import { Ok } from '@epicenterhq/result';
 import { WhisperingErr, type WhisperingResult } from '@repo/shared';
 import { getContext, setContext } from 'svelte';
@@ -11,6 +10,7 @@ import { queryClient } from '..';
 import { transformationRunKeys } from '../transformationRuns/queries';
 import { transformationsKeys } from '../transformations/queries';
 import { maybeCopyAndPaste } from './maybeCopyAndPaste';
+import type { TransformationStep } from '$lib/services/db';
 
 export type Transformer = ReturnType<typeof createTransformer>;
 
@@ -27,6 +27,7 @@ export const getTransformerFromContext = () => {
 const transformerKeys = {
 	transformInput: ['transformer', 'transformInput'] as const,
 	transformRecording: ['transformer', 'transformRecording'] as const,
+	transformStep: ['transformer', 'transformStep'] as const,
 };
 
 export function createTransformer() {
@@ -199,6 +200,67 @@ export function createTransformer() {
 			});
 		},
 	}));
+	const transformStep = createResultMutation(() => ({
+		mutationKey: transformerKeys.transformStep,
+		onMutate: ({ toastId }) => {
+			toast.loading({
+				id: toastId,
+				title: '🔄 Running transformation...',
+				description: 'Applying your selected transformation to the input...',
+			});
+		},
+		mutationFn: async ({
+			input,
+			transformationStep,
+		}: {
+			input: string;
+			transformationStep: TransformationStep;
+			toastId:string;
+		}): Promise<WhisperingResult<string>> => {
+			const transformationRunResult =
+				await RunTransformationService.runTransformationStep({
+					input,
+					transformationStep,
+				});
+
+			if (!transformationRunResult.ok) {
+				return TransformErrorToWhisperingErr(transformationRunResult);
+			}
+
+			return transformationRunResult;
+		},
+		onError: (error) => {
+			toast.error(error);
+		},
+		onSuccess: (output, { toastId }) => {
+			void playSoundIfEnabled('transformationComplete');
+			maybeCopyAndPaste({
+				text: output,
+				toastId,
+				shouldCopy: settings.value['transformation.clipboard.copyOnSuccess'],
+				shouldPaste: settings.value['transformation.clipboard.pasteOnSuccess'],
+				statusToToastText: (status) => {
+					switch (status) {
+						case null:
+							return '🔄 Transformation complete!';
+						case 'COPIED':
+							return '🔄 Transformation complete and copied to clipboard!';
+						case 'COPIED+PASTED':
+							return '🔄 Transformation complete, copied to clipboard, and pasted!';
+					}
+				},
+			});
+		},
+		// onSettled: (_data, _error) => {
+		// 	queryClient.invalidateQueries({
+		// 		queryKey:
+		// 			transformationRunKeys.runsByTransformationId(transformationId),
+		// 	});
+		// 	queryClient.invalidateQueries({
+		// 		queryKey: transformationsKeys.byId(transformationId),
+		// 	});
+		// },
+	}));
 	return {
 		get isCurrentlyTransforming() {
 			return (
@@ -212,5 +274,6 @@ export function createTransformer() {
 		},
 		transformInput,
 		transformRecording,
+		transformStep,
 	};
 }

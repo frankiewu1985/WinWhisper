@@ -264,23 +264,19 @@ function createRecorder({
 						// transcribe.
 						const transcribeToastId = nanoid();
 						transcriber.transcribeRecording.mutate(
-							{ recording: createdRecording, toastId: transcribeToastId, language: language },
 							{
-								onSuccess: () => {
-									// const vocabulary = settings.value['transcription.vocabulary'];
-
-									// transform to remove heisitation and fix transcription based on vocabulary.
-
-									if (
-										settings.value['transformations.selectedTransformationId']
-									) {
+								recording: createdRecording,
+								toastId: transcribeToastId,
+								language: language,
+							},
+							{
+								onSuccess: (transcribedText) => {
+									const transformStep = settings.value['postProcessing.config'];
+									if(transformStep.type!== 'none') {
 										const transformToastId = nanoid();
-										transformer.transformRecording.mutate({
-											recordingId: createdRecording.id,
-											transformationId:
-												settings.value[
-													'transformations.selectedTransformationId'
-												],
+										transformer.transformStep.mutate({
+											input: transcribedText,
+											transformationStep:transformStep,
 											toastId: transformToastId,
 										});
 									}
