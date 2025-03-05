@@ -77,16 +77,10 @@ function createTranscriber() {
 			}
 
 			// construct the prompt
-			const vocabulary = settings.value['transcription.vocabulary'];
-			const userPrompt = settings.value['transcription.prompt'];
-
-			const prompt = `Transcribe the audio accurately, use the following user-provided context to improve recognition accuracy: {${userPrompt}}.
-			Also, prioritize correct transcription of the following vocabulary: {${vocabulary}}. Maintain correct capitalization, punctuation, and formatting. Ensure proper segmentation and readability. Accurately transcribe acronyms, jargon, and names while minimizing misinterpretation of specialized terms.`;
-
 			const transcriptionResult =
 				await userConfiguredServices.transcription.transcribe(recording.blob, {
 					outputLanguage: language,
-					prompt,
+					prompt: settings.value['transcription.prompt'],
 					temperature: settings.value['transcription.temperature'],
 				});
 			if (!transcriptionResult.ok) return transcriptionResult;
