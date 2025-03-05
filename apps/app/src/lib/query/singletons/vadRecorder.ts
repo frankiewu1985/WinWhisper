@@ -10,6 +10,7 @@ import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
 import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
+import { hideRecorderIndicator, showRecorderIndicator } from './recorderIndicator';
 
 export type VadRecorder = ReturnType<typeof createVadRecorder>;
 
@@ -148,7 +149,8 @@ function createVadRecorder({
 					'Speak now. Will transcribe until you end the voice activated capture session',
 			});
 			console.info('Voice activated capture started');
-			void playSoundIfEnabled('start-vad');
+			showRecorderIndicator();
+			void playSoundIfEnabled('start-vad');			
 		},
 		onSettled: invalidateVadState,
 	}));
@@ -178,6 +180,8 @@ function createVadRecorder({
 
 			console.info('Stopping voice activated capture');
 			void playSoundIfEnabled('on-stopped-voice-activated-session');
+			
+			hideRecorderIndicator();
 
 			if (!settings.value['recording.isFasterRerecordEnabled']) {
 				toast.loading({
