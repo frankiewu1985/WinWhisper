@@ -54,27 +54,6 @@
 	<Separator />
 
 	<LabeledSwitch
-		id="faster-rerecord"
-		checked={settings.value['recording.isFasterRerecordEnabled']}
-		onCheckedChange={(v) => {
-			settings.value = {
-				...settings.value,
-				'recording.isFasterRerecordEnabled': v,
-			};
-		}}
-	>
-		{#snippet label()}
-			Enable faster rerecord. <Button
-				variant="link"
-				size="inline"
-				onclick={() => fasterRerecordExplainedDialog.open()}
-			>
-				(What's that?)
-			</Button>
-		{/snippet}
-	</LabeledSwitch>
-
-	<LabeledSwitch
 		id="close-to-tray"
 		checked={settings.value['system.closeToTray']}
 		onCheckedChange={(v) => {
@@ -94,8 +73,6 @@
 			{/if}
 		{/snippet}
 	</LabeledSwitch>
-
-	<Separator />
 	
 	<LabeledSwitch
 		id="play-sound"

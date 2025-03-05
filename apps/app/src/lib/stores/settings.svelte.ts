@@ -54,24 +54,6 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 				recorder.toggleRecording(action === 'Pressed');
 			},
 		});
-		await registerGlobalShortcut({
-			shortcut: settings.value['shortcuts.currentGlobalShortcut1'],
-			callback: (action) => {
-				recorder.toggleRecording(action === 'Pressed', settings.value['transcription.outputLanguage1']);
-			},
-		});
-		await registerGlobalShortcut({
-			shortcut: settings.value['shortcuts.currentGlobalShortcut2'],
-			callback: (action) => {
-				recorder.toggleRecording(action === 'Pressed', settings.value['transcription.outputLanguage2']);
-			},
-		});
-		await registerGlobalShortcut({
-			shortcut: settings.value['shortcuts.currentGlobalShortcut3'],
-			callback: (action) => {
-				recorder.toggleRecording(action === 'Pressed', settings.value['transcription.outputLanguage3']);
-			},
-		});
 	};
 
 	jobQueue.addJobToQueue(initialSilentJob());

@@ -114,27 +114,25 @@ function createRecorder({
 
 			hideRecorderIndicator();
 
-			if (!settings.value['recording.isFasterRerecordEnabled']) {
-				closeRecordingSession.mutate(
-					{
-						sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+			closeRecordingSession.mutate(
+				{
+					sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+				},
+				{
+					onError: (error) => {
+						toast.warning({
+							id: toastId,
+							title: '⚠️ Unable to close session after recording',
+							description:
+								'You might need to restart the application to continue recording',
+							action: {
+								type: 'more-details',
+								error: error,
+							},
+						});
 					},
-					{
-						onError: (error) => {
-							toast.warning({
-								id: toastId,
-								title: '⚠️ Unable to close session after recording',
-								description:
-									'You might need to restart the application to continue recording',
-								action: {
-									type: 'more-details',
-									error: error,
-								},
-							});
-						},
-					},
-				);
-			}
+				},
+			);
 
 			// transcribe.
 			const transcribeToastId = nanoid();
@@ -228,35 +226,26 @@ function createRecorder({
 			toast.error({ id: toastId, ...error });
 		},
 		onSuccess: async (_data, { toastId }) => {
-			if (settings.value['recording.isFasterRerecordEnabled']) {
-				toast.success({
-					id: toastId,
-					title: '🚫 Recording Cancelled',
-					description:
-						'Recording discarded, but session remains open for a new take',
-				});
-			} else {
-				closeRecordingSession.mutate(
-					{
-						sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+			closeRecordingSession.mutate(
+				{
+					sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+				},
+				{
+					onSuccess: () => {
+						void playSoundIfEnabled('cancel');
+						console.info('Recording cancelled');
 					},
-					{
-						onSuccess: () => {
-							void playSoundIfEnabled('cancel');
-							console.info('Recording cancelled');
-						},
-						onError: (error) => {
-							toast.error({
-								id: toastId,
-								title: '❌ Failed to close session while cancelling recording',
-								description:
-									'Your recording was cancelled but we encountered an issue while closing your session. You may need to restart the application.',
-								action: { type: 'more-details', error: error },
-							});
-						},
+					onError: (error) => {
+						toast.error({
+							id: toastId,
+							title: '❌ Failed to close session while cancelling recording',
+							description:
+								'Your recording was cancelled but we encountered an issue while closing your session. You may need to restart the application.',
+							action: { type: 'more-details', error: error },
+						});
 					},
-				);
-			}
+				},
+			);
 		},
 		onSettled: invalidateRecorderState,
 	}));
