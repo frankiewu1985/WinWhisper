@@ -2,7 +2,12 @@ import { settings } from '$lib/stores/settings.svelte';
 import { getErrorMessage } from '$lib/utils';
 import { Err, Ok, type Result, tryAsync } from '@epicenterhq/result';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { POST_PROCESSING_PROMPT_SYSTEM_DEFAULT, POST_PROCESSING_PROMPT_USER_DEFAULT, WhisperingErr, type PostProcessingConfig } from '@repo/shared';
+import {
+	POST_PROCESSING_PROMPT_SYSTEM_DEFAULT,
+	POST_PROCESSING_PROMPT_USER_DEFAULT,
+	WhisperingErr,
+	type PostProcessingConfig,
+} from '@repo/shared';
 import { z } from 'zod';
 import type { HttpService } from './http/HttpService';
 
@@ -173,7 +178,8 @@ export const handleStep = async ({
 				}
 
 				case 'Groq': {
-					const model = config['prompt_transform.inference.provider.Groq.model'];
+					const model =
+						config['prompt_transform.inference.provider.Groq.model'];
 					const result = await HttpService.post({
 						url: 'https://api.groq.com/openai/v1/chat/completions',
 						headers: {
@@ -263,7 +269,8 @@ export const handleStep = async ({
 							);
 
 							const model = genAI.getGenerativeModel({
-								model: config['prompt_transform.inference.provider.Google.model'],
+								model:
+									config['prompt_transform.inference.provider.Google.model'],
 								generationConfig: { temperature: 0 },
 							});
 							return await model.generateContent(combinedPrompt);

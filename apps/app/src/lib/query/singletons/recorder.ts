@@ -61,11 +61,6 @@ function createRecorder({
 
 	const startRecording = createResultMutation(() => ({
 		onMutate: async ({ toastId }) => {
-			toast.loading({
-				id: toastId,
-				title: '🎙️ Preparing to record...',
-				description: 'Setting up your recording environment...',
-			});
 			await ensureRecordingSession.mutateAsync(toastId);
 		},
 		mutationFn: async ({ toastId }: { toastId: string }) => {
@@ -94,13 +89,6 @@ function createRecorder({
 	}));
 
 	const stopRecording = createResultMutation(() => ({
-		onMutate: ({ toastId }) => {
-			toast.loading({
-				id: toastId,
-				title: '⏸️ Stopping recording...',
-				description: 'Finalizing your audio capture...',
-			});
-		},
 		mutationFn: async ({
 			toastId,
 		}: {
@@ -127,24 +115,11 @@ function createRecorder({
 			hideRecorderIndicator();
 
 			if (!settings.value['recording.isFasterRerecordEnabled']) {
-				toast.loading({
-					id: toastId,
-					title: '⏳ Closing recording session...',
-					description: 'Wrapping things up, just a moment...',
-				});
 				closeRecordingSession.mutate(
 					{
 						sendStatus: (options) => toast.loading({ id: toastId, ...options }),
 					},
 					{
-						onSuccess: async () => {
-							toast.success({
-								id: toastId,
-								title: '✨ Session Closed Successfully',
-								description:
-									'Your recording session has been neatly wrapped up',
-							});
-						},
 						onError: (error) => {
 							toast.warning({
 								id: toastId,
@@ -242,13 +217,6 @@ function createRecorder({
 	}));
 
 	const cancelRecorder = createResultMutation(() => ({
-		onMutate: ({ toastId }: { toastId: string }) => {
-			toast.loading({
-				id: toastId,
-				title: '⏸️ Canceling recording...',
-				description: 'Cleaning up recording session...',
-			});
-		},
 		mutationFn: async ({ toastId }: { toastId: string }) => {
 			const cancelResult =
 				await userConfiguredServices.recorder.cancelRecording({
@@ -274,12 +242,6 @@ function createRecorder({
 					},
 					{
 						onSuccess: () => {
-							toast.success({
-								id: toastId,
-								title: '✅ All Done!',
-								description:
-									'Recording cancelled and session closed successfully',
-							});
 							void playSoundIfEnabled('cancel');
 							console.info('Recording cancelled');
 						},

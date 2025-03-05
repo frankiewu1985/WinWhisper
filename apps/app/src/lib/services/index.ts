@@ -10,9 +10,7 @@ import {
 	createQuery,
 } from '@tanstack/svelte-query';
 import { settings } from '../stores/settings.svelte';
-import {
-	createSetTrayIconDesktopService,
-} from './SetTrayIconService';
+import { createSetTrayIconDesktopService } from './SetTrayIconService';
 import { createClipboardServiceDesktop } from './clipboard/ClipboardService.desktop';
 import { createHttpServiceDesktop } from './http/HttpService.desktop';
 // import { createRecorderServiceTauri } from './recorder/RecorderService.tauri';
@@ -95,7 +93,7 @@ const HttpService = createHttpServiceDesktop();
 const PlaySoundService = createPlaySoundServiceDesktop();
 
 export const RunTransformationService = createRunTransformationService({
-	HttpService
+	HttpService,
 });
 
 /**
@@ -148,38 +146,30 @@ export const userConfiguredServices = (() => {
 })();
 
 export const playSoundIfEnabled = (soundName: WhisperingSoundNames) => {
+	if (!settings.value['sound.enabled']) {
+		return;
+	}
+
 	switch (soundName) {
 		case 'start-vad':
-			if (settings.value['sound.playOn.start']) {
-				void PlaySoundService.playSound(soundName);
-			}
+			void PlaySoundService.playSound(soundName);
 			break;
 		case 'start':
 		case 'start-manual':
-			if (settings.value['sound.playOn.start']) {
-				void PlaySoundService.playSound(soundName);
-			}
+			void PlaySoundService.playSound(soundName);
 			break;
 		case 'on-stopped-voice-activated-session':
-			if (settings.value['sound.playOn.stop']) {
-				void PlaySoundService.playSound(soundName);
-			}
+			void PlaySoundService.playSound(soundName);
 			break;
 		case 'stop':
 		case 'stop-manual':
-			if (settings.value['sound.playOn.stop']) {
-				void PlaySoundService.playSound(soundName);
-			}
+			void PlaySoundService.playSound(soundName);
 			break;
 		case 'cancel':
-			if (settings.value['sound.playOn.cancel']) {
-				void PlaySoundService.playSound(soundName);
-			}
+			void PlaySoundService.playSound(soundName);
 			break;
 		case 'transcriptionComplete':
-			if (settings.value['sound.playOn.transcriptionComplete']) {
-				void PlaySoundService.playSound(soundName);
-			}
+			void PlaySoundService.playSound(soundName);
 			break;
 	}
 };

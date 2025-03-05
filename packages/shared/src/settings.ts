@@ -9,8 +9,6 @@ import {
 	GROQ_MODELS,
 	INFERENCE_PROVIDERS,
 	OPENAI_INFERENCE_MODELS,
-	POST_PROCESSING_PROMPT_SYSTEM_DEFAULT,
-	POST_PROCESSING_PROMPT_USER_DEFAULT,
 	SUPPORTED_LANGUAGES,
 	TRANSCRIPTION_SERVICES,
 	TRANSFORMATION_STEP_TYPES,
@@ -19,10 +17,7 @@ import {
 
 export const getDefaultSettings = () =>
   ({
-    "sound.playOn.start": true,
-    "sound.playOn.stop": true,
-    "sound.playOn.cancel": true,
-    "sound.playOn.transcriptionComplete": true,
+	"sound.enabled": true,
     "transcription.copyToClipboardOnSuccess": false,
     "transcription.insertToCursorOnSuccess": true,
     "recording.isFasterRerecordEnabled": false,
@@ -38,7 +33,7 @@ export const getDefaultSettings = () =>
     "transcription.outputLanguage1": "auto",
     "transcription.outputLanguage2": "auto",
     "transcription.outputLanguage3": "auto",
-    "transcription.prompt": "",
+    "transcription.prompt": '',
     "transcription.vocabulary": "",
     "transcription.temperature": "0",
 
@@ -57,8 +52,8 @@ export const getDefaultSettings = () =>
       "prompt_transform.inference.provider.Anthropic.model":
         "claude-3-5-sonnet-latest",
       "prompt_transform.inference.provider.Google.model": "gemini-2.0-flash",
-      "prompt_transform.systemPromptTemplate": POST_PROCESSING_PROMPT_SYSTEM_DEFAULT,
-      "prompt_transform.userPromptTemplate": POST_PROCESSING_PROMPT_USER_DEFAULT,
+      "prompt_transform.systemPromptTemplate": '',
+      "prompt_transform.userPromptTemplate": '',
       "find_replace.findText": "",
       "find_replace.replaceText": "",
       "find_replace.useRegex": false,
@@ -77,10 +72,7 @@ export const getDefaultSettings = () =>
 
 export const settingsSchema = z.object({
 	...({
-		'sound.playOn.start': z.boolean(),
-		'sound.playOn.stop': z.boolean(),
-		'sound.playOn.cancel': z.boolean(),
-		'sound.playOn.transcriptionComplete': z.boolean(),
+		'sound.enabled': z.boolean(),
 	} satisfies Partial<{
 		[K in WhisperingSoundNames as `sound.playOn.${K}`]: ZodBoolean;
 	}>),
