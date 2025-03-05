@@ -7,9 +7,7 @@
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { getVadRecorderFromContext } from '$lib/query/singletons/vadRecorder';
 	import { settings } from '$lib/stores/settings.svelte';
-	import { getRecordingTransitionId } from '$lib/utils/getRecordingTransitionId';
 	import { AudioLinesIcon, MicIcon } from 'lucide-svelte';
-	import { onDestroy } from 'svelte';
 
 	const recorder = getRecorderFromContext();
 	const vadRecorder = getVadRecorderFromContext();

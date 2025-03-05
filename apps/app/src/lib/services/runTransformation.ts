@@ -86,18 +86,18 @@ export const TransformError = <
 
 export const handleStep = async ({
 	input,
-	step,
+	config,
 	HttpService,
 }: {
 	input: string;
-	step: PostProcessingConfig;
+	config: PostProcessingConfig;
 	HttpService: HttpService;
 }): Promise<Result<string, string>> => {
-	switch (step.type) {
+	switch (config.type) {
 		case 'find_replace': {
-			const findText = step['find_replace.findText'];
-			const replaceText = step['find_replace.replaceText'];
-			const useRegex = step['find_replace.useRegex'];
+			const findText = config['find_replace.findText'];
+			const replaceText = config['find_replace.replaceText'];
+			const useRegex = config['find_replace.useRegex'];
 
 			if (useRegex) {
 				try {
@@ -113,8 +113,8 @@ export const handleStep = async ({
 
 		case 'prompt_transform': {
 			const vocabulary = settings.value['transcription.vocabulary'];
-			const provider = step['prompt_transform.inference.provider'];
-			const rawSystemPrompt = step['prompt_transform.systemPromptTemplate'];
+			const provider = config['prompt_transform.inference.provider'];
+			const rawSystemPrompt = config['prompt_transform.systemPromptTemplate'];
 			const systemPrompt = (
 				rawSystemPrompt.trim().length > 0
 					? rawSystemPrompt.trim()
@@ -122,7 +122,7 @@ export const handleStep = async ({
 			)
 				.replace('{{input}}', input)
 				.replace('{{vocabulary}}', vocabulary);
-			const rawUserPrompt = step['prompt_transform.userPromptTemplate'];
+			const rawUserPrompt = config['prompt_transform.userPromptTemplate'];
 			const userPrompt = (
 				rawUserPrompt.trim().length > 0
 					? rawUserPrompt.trim()
@@ -134,7 +134,7 @@ export const handleStep = async ({
 			switch (provider) {
 				case 'OpenAI': {
 					const model =
-						step['prompt_transform.inference.provider.OpenAI.model'];
+						config['prompt_transform.inference.provider.OpenAI.model'];
 					const result = await HttpService.post({
 						url: 'https://api.openai.com/v1/chat/completions',
 						headers: {
@@ -173,7 +173,7 @@ export const handleStep = async ({
 				}
 
 				case 'Groq': {
-					const model = step['prompt_transform.inference.provider.Groq.model'];
+					const model = config['prompt_transform.inference.provider.Groq.model'];
 					const result = await HttpService.post({
 						url: 'https://api.groq.com/openai/v1/chat/completions',
 						headers: {
@@ -213,7 +213,7 @@ export const handleStep = async ({
 
 				case 'Anthropic': {
 					const model =
-						step['prompt_transform.inference.provider.Anthropic.model'];
+						config['prompt_transform.inference.provider.Anthropic.model'];
 					const result = await HttpService.post({
 						url: 'https://api.anthropic.com/v1/messages',
 						headers: {
@@ -263,7 +263,7 @@ export const handleStep = async ({
 							);
 
 							const model = genAI.getGenerativeModel({
-								model: step['prompt_transform.inference.provider.Google.model'],
+								model: config['prompt_transform.inference.provider.Google.model'],
 								generationConfig: { temperature: 0 },
 							});
 							return await model.generateContent(combinedPrompt);
@@ -289,7 +289,7 @@ export const handleStep = async ({
 		}
 
 		default:
-			return Err(`Unsupported step type: ${step.type}`);
+			return Err(`Unsupported step type: ${config.type}`);
 	}
 };
 
@@ -298,16 +298,16 @@ export function createRunTransformationService({
 }: {
 	HttpService: HttpService;
 }) {
-	const runTransformationStep = async ({
+	const runTransformation = async ({
 		input,
-		step,
+		config,
 	}: {
 		input: string;
-		step: PostProcessingConfig;
+		config: PostProcessingConfig;
 	}): Promise<TransformResult<string>> => {
 		const handleStepResult = await handleStep({
 			input,
-			step,
+			config,
 			HttpService,
 		});
 
@@ -321,19 +321,19 @@ export function createRunTransformationService({
 	};
 
 	return {
-		runTransformationStep: async ({
+		runTransformation: async ({
 			input,
-			transformationStep,
+			config,
 		}: {
 			input: string;
-			transformationStep: PostProcessingConfig;
+			config: PostProcessingConfig;
 		}): Promise<TransformResult<string>> => {
 			if (!input.trim()) {
 				return TransformError({ code: 'NO_INPUT' });
 			}
-			return runTransformationStep({
+			return runTransformation({
 				input,
-				step: transformationStep,
+				config,
 			});
 		},
 	};

@@ -19,12 +19,12 @@ export const getTransformerFromContext = () => {
 };
 
 const transformerKeys = {
-	transformStep: ['transformer', 'transformStep'] as const,
+	transform: ['transformer', 'transform'] as const,
 };
 
 export function createTransformer() {
-	const transformStep = createResultMutation(() => ({
-		mutationKey: transformerKeys.transformStep,
+	const transform = createResultMutation(() => ({
+		mutationKey: transformerKeys.transform,
 		onMutate: ({ toastId }) => {
 			toast.loading({
 				id: toastId,
@@ -34,16 +34,16 @@ export function createTransformer() {
 		},
 		mutationFn: async ({
 			input,
-			transformationStep,
+			config,
 		}: {
 			input: string;
-			transformationStep: PostProcessingConfig;
+			config: PostProcessingConfig;
 			toastId:string;
 		}): Promise<WhisperingResult<string>> => {
 			const transformationRunResult =
-				await RunTransformationService.runTransformationStep({
+				await RunTransformationService.runTransformation({
 					input,
-					transformationStep,
+					config,
 				});
 
 			if (!transformationRunResult.ok) {
@@ -60,10 +60,10 @@ export function createTransformer() {
 		get isCurrentlyTransforming() {
 			return (
 				queryClient.isMutating({
-					mutationKey: transformerKeys.transformStep,
+					mutationKey: transformerKeys.transform,
 				}) > 0
 			);
 		},
-		transformStep,
+		transform,
 	};
 }

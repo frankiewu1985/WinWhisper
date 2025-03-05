@@ -243,12 +243,12 @@ function createRecorder({
 				},
 				{
 					onSuccess: (transcribedText) => {
-						const transformStep = settings.value['postProcessing.config'];
-						if (transformStep.type !== 'none') {
+						const config = settings.value['postProcessing.config'];
+						if (config.type !== 'none') {
 							const transformToastId = nanoid();
-							transformer.transformStep.mutate({
+							transformer.transform.mutate({
 								input: transcribedText,
-								transformationStep: transformStep,
+								config,
 								toastId: transformToastId,
 							});
 						}
