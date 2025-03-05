@@ -65,7 +65,7 @@ export function createClipboardServiceDesktop(): ClipboardService {
 					title:
 						'Please enable or re-enable accessibility to paste transcriptions!',
 					description:
-						'Accessibility must be enabled or re-enabled for Whispering after install or update. Follow the link below for instructions.',
+						'Accessibility must be enabled or re-enabled for WhisperingX after install or update. Follow the link below for instructions.',
 					action: {
 						type: 'link',
 						label: 'Open Directions',

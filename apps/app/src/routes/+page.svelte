@@ -16,7 +16,7 @@
 </script>
 
 <svelte:head>
-	<title>Whispering</title>
+	<title>WhisperingX</title>
 </svelte:head>
 
 <main class="flex flex-1 flex-col items-center justify-center gap-4">

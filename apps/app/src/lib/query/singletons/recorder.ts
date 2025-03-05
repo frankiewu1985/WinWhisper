@@ -81,7 +81,7 @@ function createRecorder({
 		onSuccess: (_data, { toastId }) => {
 			toast.success({
 				id: toastId,
-				title: '🎙️ Whispering is recording...',
+				title: '🎙️ recording...',
 				description: 'Speak now and stop recording when done',
 			});
 

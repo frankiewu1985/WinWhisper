@@ -14,14 +14,14 @@
 </script>
 
 <svelte:head>
-	<title>Settings - Whispering</title>
+	<title>Settings</title>
 </svelte:head>
 
 <div class="space-y-6">
 	<div>
 		<h3 class="text-lg font-medium">General</h3>
 		<p class="text-muted-foreground text-sm">
-			Configure your general Whispering preferences.
+			Configure your general preferences.
 		</p>
 	</div>
 
