@@ -1,48 +1,18 @@
 <script lang="ts">
 	import { fasterRerecordExplainedDialog } from '$lib/components/FasterRerecordExplainedDialog.svelte';
 	import NavItems from '$lib/components/NavItems.svelte';
-	import RecordingControls from '$lib/components/RecordingControls.svelte';
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
-	import { useLatestRecording } from '$lib/query/recordings/queries';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { getVadRecorderFromContext } from '$lib/query/singletons/vadRecorder';
-	import type { Recording } from '$lib/services/db';
 	import { settings } from '$lib/stores/settings.svelte';
-	import { createBlobUrlManager } from '$lib/utils/blobUrlManager';
 	import { getRecordingTransitionId } from '$lib/utils/getRecordingTransitionId';
 	import { AudioLinesIcon, MicIcon } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
 
 	const recorder = getRecorderFromContext();
 	const vadRecorder = getVadRecorderFromContext();
-	const { latestRecordingQuery } = useLatestRecording();
-
-	const latestRecording = $derived<Recording>(
-		latestRecordingQuery.data ?? {
-			id: '',
-			title: '',
-			subtitle: '',
-			createdAt: '',
-			updatedAt: '',
-			timestamp: '',
-			blob: new Blob(),
-			transcribedText: '',
-			transcriptionStatus: 'UNPROCESSED',
-		},
-	);
-
-	const blobUrlManager = createBlobUrlManager();
-
-	const blobUrl = $derived.by(() => {
-		if (!latestRecording.blob) return undefined;
-		return blobUrlManager.createUrl(latestRecording.blob);
-	});
-
-	onDestroy(() => {
-		blobUrlManager.revokeCurrentUrl();
-	});
 
 	let mode = $state<'manual' | 'voice-activated'>('manual');
 </script>
@@ -164,26 +134,8 @@
 						</Button>
 					{/snippet}
 				</WhisperingButton>
-			{:else if vadRecorder.vadState === 'SESSION+RECORDING' || vadRecorder.vadState === 'SESSION'}
-				<!-- Render nothing -->
-			{:else}
-				<RecordingControls></RecordingControls>
 			{/if}
 		</div>
-	</div>
-
-	<div class="xxs:flex hidden w-full max-w-xs flex-col items-center gap-2">
-		{#if blobUrl}
-			<audio
-				style="view-transition-name: {getRecordingTransitionId({
-					recordingId: latestRecording.id,
-					propertyName: 'blob',
-				})}"
-				src={blobUrl}
-				controls
-				class="h-8 w-full"
-			></audio>
-		{/if}
 	</div>
 
 	<NavItems class="xs:flex -mb-2.5 -mt-1 hidden" />

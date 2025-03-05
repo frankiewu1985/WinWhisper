@@ -2,7 +2,7 @@
 	"name": "whisperingX",
 	"private": true,
 	"version": "1.0.0",
-    "packageManager": "npm@10.2.4",
+	"packageManager": "npm@10.2.4",
 	"description": "",
 	"keywords": [],
 	"license": "ISC",
@@ -23,7 +23,11 @@
 	"devDependencies": {
 		"@biomejs/biome": "^1.9.4",
 		"concurrently": "latest",
+		"eslint": "^9.21.0",
+		"eslint-plugin-react": "^7.37.4",
+		"globals": "^16.0.0",
 		"turbo": "latest",
+		"typescript-eslint": "^8.26.0",
 		"vite-plugin-static-copy": "^2.3.0"
 	}
 }

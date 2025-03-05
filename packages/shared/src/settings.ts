@@ -29,10 +29,6 @@ export const getDefaultSettings = () =>
     "system.closeToTray": true,
     "system.alwaysOnTop": "Never",
 
-    // Recording retention defaults
-    "database.recordingRetentionStrategy": "keep-forever",
-    "database.maxRecordingCount": "5",
-
     "recording.selectedAudioInputDeviceId": "default",
     "recording.bitrateKbps": DEFAULT_BITRATE_KBPS,
 
@@ -86,9 +82,9 @@ export const settingsSchema = z.object({
 		'sound.playOn.stop': z.boolean(),
 		'sound.playOn.cancel': z.boolean(),
 		'sound.playOn.transcriptionComplete': z.boolean(),
-	} satisfies {
+	} satisfies Partial<{
 		[K in WhisperingSoundNames as `sound.playOn.${K}`]: ZodBoolean;
-	}),
+	}>),
 
 	'transcription.copyToClipboardOnSuccess': z.boolean(),
 	'transcription.insertToCursorOnSuccess': z.boolean(),
@@ -96,12 +92,6 @@ export const settingsSchema = z.object({
 
 	'system.closeToTray': z.boolean(),
 	'system.alwaysOnTop': z.enum(ALWAYS_ON_TOP_VALUES),
-
-	'database.recordingRetentionStrategy': z.enum([
-		'keep-forever',
-		'limit-count',
-	] as const),
-	'database.maxRecordingCount': z.string().regex(/^\d+$/, 'Must be a number'),
 
 	'recording.selectedAudioInputDeviceId': z.string().nullable(),
 	'recording.bitrateKbps': z

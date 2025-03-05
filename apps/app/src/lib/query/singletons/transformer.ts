@@ -1,11 +1,10 @@
-import { createResultMutation, playSoundIfEnabled } from '$lib/services';
+import { createResultMutation } from '$lib/services';
 import { RunTransformationService } from '$lib/services/index.js';
 import { TransformErrorToWhisperingErr } from '$lib/services/runTransformation';
 import { toast } from '$lib/services/toast';
-import { type WhisperingResult } from '@repo/shared';
+import { type PostProcessingConfig, type WhisperingResult } from '@repo/shared';
 import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
-import type { TransformationStep } from '$lib/services/db';
 
 export type Transformer = ReturnType<typeof createTransformer>;
 
@@ -38,7 +37,7 @@ export function createTransformer() {
 			transformationStep,
 		}: {
 			input: string;
-			transformationStep: TransformationStep;
+			transformationStep: PostProcessingConfig;
 			toastId:string;
 		}): Promise<WhisperingResult<string>> => {
 			const transformationRunResult =

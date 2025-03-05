@@ -14,22 +14,20 @@
 		INFERENCE_PROVIDER_OPTIONS,
 		OPENAI_INFERENCE_MODEL_OPTIONS,
 		TRANSFORMATION_STEP_TYPES,
+		TRANSFORMATION_STEP_TYPES_TO_LABELS,
+		type PostProcessingConfig,
 	} from '@repo/shared';
 	import GroqApiKeyInput from '../../-components/GroqApiKeyInput.svelte';
 	import OpenAiApiKeyInput from '../../-components/OpenAiApiKeyInput.svelte';
 
 	import * as Accordion from '$lib/components/ui/accordion';
-	import {
-		TRANSFORMATION_STEP_TYPES_TO_LABELS,
-		type TransformationStep,
-	} from '$lib/services/db';
 	import AnthropicApiKeyInput from '../../-components/AnthropicApiKeyInput.svelte';
 	import GoogleApiKeyInput from '../../-components/GoogleApiKeyInput.svelte';
 	import { settings } from '$lib/stores/settings.svelte';
 
-	let transformationStep: TransformationStep =
+	let transformationStep: PostProcessingConfig =
 		settings.value['postProcessing.config'];
-	const setTransformationStep = (step: TransformationStep) => {
+	const setTransformationStep = (step: PostProcessingConfig) => {
 		transformationStep = { ...step };
 		settings.value['postProcessing.config'] = transformationStep;
 	};

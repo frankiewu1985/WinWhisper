@@ -9,8 +9,10 @@ import cancelSoundSrc from './assets/zapsplat_multimedia_click_button_short_shar
 import transcriptionCompleteSoundSrc from './assets/zapsplat_multimedia_ui_notification_classic_bell_synth_success_107505.mp3';
 
 const sounds = {
+	'start': new Audio(startManualSoundSrc),
 	'start-vad': new Audio(startVadSoundSrc),
 	'start-manual': new Audio(startManualSoundSrc),
+	'stop': new Audio(stopSoundSrc),
 	'stop-manual': new Audio(stopSoundSrc),
 	'on-stopped-voice-activated-session': new Audio(onSpeechEndSoundSrc),
 	cancel: new Audio(cancelSoundSrc),
