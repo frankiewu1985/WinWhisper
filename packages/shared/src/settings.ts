@@ -12,6 +12,7 @@ import {
 	POST_PROCESSING_PROMPT_SYSTEM_DEFAULT,
 	POST_PROCESSING_PROMPT_USER_DEFAULT,
 	SUPPORTED_LANGUAGES,
+	TRANSCRIPTION_PROMPT_DEFAULT,
 	TRANSCRIPTION_SERVICES,
 	TRANSFORMATION_STEP_TYPES,
 	type WhisperingSoundNames,
@@ -38,7 +39,7 @@ export const getDefaultSettings = () =>
     "transcription.outputLanguage1": "auto",
     "transcription.outputLanguage2": "auto",
     "transcription.outputLanguage3": "auto",
-    "transcription.prompt": "",
+    "transcription.prompt": TRANSCRIPTION_PROMPT_DEFAULT,
     "transcription.vocabulary": "",
     "transcription.temperature": "0",
 

@@ -12,7 +12,6 @@
 	import { settings } from '$lib/stores/settings.svelte';
 	import {
 		GROQ_MODELS_OPTIONS,
-		SUPPORTED_LANGUAGES_OPTIONS,
 		TRANSCRIPTION_SERVICE_OPTIONS,
 		WHISPERING_URL,
 	} from '@repo/shared';
@@ -189,10 +188,9 @@
 		}}
 		description="Helps transcription service (e.g., Whisper) better recognize specific terms, names, words to improve the accuracy."
 	/>
-
 	<LabeledTextarea
 		id="transcription-prompt"
-		label="System Prompt"
+		label={`System Prompt`}
 		placeholder="e.g., This is an academic lecture about quantum physics."
 		value={settings.value['transcription.prompt']}
 		oninput={({ currentTarget: { value } }) => {
@@ -201,6 +199,6 @@
 				'transcription.prompt': value,
 			};
 		}}
-		description="Helps transcription service (e.g., Whisper) better understand the context during initial transcription, to improve the accuracy."
+		description={`Avaiable parameters: {{vocabulary}}`}
 	/>
 </div>
