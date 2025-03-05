@@ -8,18 +8,15 @@ import { nanoid } from 'nanoid/non-secure';
 import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
-import type { Transformer } from './transformer';
 
 export type VadRecorder = ReturnType<typeof createVadRecorder>;
 
 export const initVadRecorderInContext = ({
 	transcriber,
-	transformer,
 }: {
 	transcriber: Transcriber;
-	transformer: Transformer;
 }) => {
-	const vad = createVadRecorder({ transcriber, transformer });
+	const vad = createVadRecorder({ transcriber });
 	setContext('vad', vad);
 	return vad;
 };
@@ -34,11 +31,9 @@ const vadRecorderKeys = {
 };
 
 function createVadRecorder({
-	_transcriber,
-	_transformer,
+	transcriber
 }: {
 	transcriber: Transcriber;
-	transformer: Transformer;
 }) {
 	const VadService = createVadServiceWeb();
 	const invalidateVadState = () =>
@@ -56,7 +51,7 @@ function createVadRecorder({
 		mutationFn: async () => {
 			const ensureVadResult = await VadService.ensureVad({
 				deviceId: settings.value['recording.selectedAudioInputDeviceId'],
-				onSpeechEnd: () => {
+				onSpeechEnd: (blob) => {
 					const toastId = nanoid();
 					toast.success({
 						id: toastId,
@@ -65,6 +60,17 @@ function createVadRecorder({
 					});
 					console.info('Voice activated speech captured');
 					void playSoundIfEnabled('stop-manual');
+
+					const transcribeToastId = nanoid();
+					transcriber.transcribeRecording.mutate(
+						{
+							recording: { blob },
+							toastId: transcribeToastId,
+							language: 'auto',
+						},
+						{
+						},
+					);
 				},
 			});
 			return ensureVadResult;
