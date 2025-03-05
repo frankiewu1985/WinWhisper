@@ -46,7 +46,7 @@
     "identifier": "com.frankiew.whisperingX",
     "plugins": {
         "updater": {
-            "pubkey": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjFUOMrq+riu6T3pN6TEZGtRsox/Q8JdMXLrGFbhQ7xWzOjWZicf+6P6m08fZuPRADWMCzjAk8LVyAWK1GcNlvh8RI+fvvn+bNAOkLOHTRybfYkGcsAtQslGr9WKiNUrkFvBpKokLcbFsPTSZY0eDXnSGNHnIMGeEjFifOgS1VcpnsL1mIPM7bhpFXfRjTmvJ/BxeB1HjiIqc+ZQejf0P5Dk5BmN924Te0Tt4UnlNM/s9J4Y3oaboGIxshHrfqnxSCpbRrj836lF73CpvJycZgqp/dChVepr+gBJnDakuniOw3tL8efJuE3YRlz3QrmGRHitz95AxTRkaoCPxpvSBswIDAQAB",
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDFCMTU0RDg5NjZDQjUxMUYKUldRZlVjdG1pVTBWRzNXTDB3QWdRNHErVzlxclhFSHBsTnNuZDd6bUtDdGlrNEJSYnpLUTlIMWIK",
             "endpoints": []
         }
     },
