@@ -190,10 +190,5 @@ export const playSoundIfEnabled = (soundName: WhisperingSoundNames) => {
 				void PlaySoundService.playSound(soundName);
 			}
 			break;
-		case 'transformationComplete':
-			if (settings.value['sound.playOn.transformationComplete']) {
-				void PlaySoundService.playSound(soundName);
-			}
-			break;
 	}
 };

@@ -56,11 +56,6 @@ export function createTransformer() {
 		onError: (error) => {
 			toast.error(error);
 		},
-		onSuccess: (_output, { _toastId }) => {
-			void playSoundIfEnabled('transformationComplete');
-		},
-		onSettled: (_data, _error) => {
-		},
 	}));
 	return {
 		get isCurrentlyTransforming() {

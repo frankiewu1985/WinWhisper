@@ -287,8 +287,7 @@ export type WhisperingSoundNames =
 	| 'stop-manual'
 	| 'on-stopped-voice-activated-session'
 	| 'cancel'
-	| 'transcriptionComplete'
-	| 'transformationComplete';
+	| 'transcriptionComplete';
 
 
 export const TRANSFORMATION_STEP_TYPES = [

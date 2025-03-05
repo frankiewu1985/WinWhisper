@@ -23,7 +23,6 @@ export const getDefaultSettings = () =>
     "sound.playOn.stop": true,
     "sound.playOn.cancel": true,
     "sound.playOn.transcriptionComplete": true,
-    "sound.playOn.transformationComplete": true,
     "transcription.copyToClipboardOnSuccess": false,
     "transcription.insertToCursorOnSuccess": true,
     "recording.isFasterRerecordEnabled": false,
@@ -87,7 +86,6 @@ export const settingsSchema = z.object({
 		'sound.playOn.stop': z.boolean(),
 		'sound.playOn.cancel': z.boolean(),
 		'sound.playOn.transcriptionComplete': z.boolean(),
-		'sound.playOn.transformationComplete': z.boolean(),
 	} satisfies {
 		[K in WhisperingSoundNames as `sound.playOn.${K}`]: ZodBoolean;
 	}),
