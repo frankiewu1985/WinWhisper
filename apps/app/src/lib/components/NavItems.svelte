@@ -22,14 +22,6 @@
 	style="view-transition-name: nav"
 >
 	<WhisperingButton
-		tooltipContent="Recordings"
-		href="/recordings"
-		variant="ghost"
-		size="icon"
-	>
-		<ListIcon class="h-4 w-4" aria-hidden="true" />
-	</WhisperingButton>
-	<WhisperingButton
 		tooltipContent="Transformations"
 		href="/transformations"
 		variant="ghost"
@@ -47,16 +39,6 @@
 		<SettingsIcon class="h-4 w-4" aria-hidden="true" />
 	</WhisperingButton>
 	<WhisperingButton
-		tooltipContent="View project on GitHub"
-		href="https://github.com/braden-w/whispering"
-		target="_blank"
-		rel="noopener noreferrer"
-		variant="ghost"
-		size="icon"
-	>
-		<GithubIcon class="h-4 w-4" aria-hidden="true" />
-	</WhisperingButton>
-	<WhisperingButton
 		tooltipContent="Toggle dark mode"
 		onclick={toggleMode}
 		variant="ghost"
@@ -69,16 +51,6 @@
 			class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
 		/>
 	</WhisperingButton>
-	{#if window.__TAURI_INTERNALS__}
-		<WhisperingButton
-			tooltipContent="Minimize"
-			onclick={() => getCurrentWindow().setSize(new LogicalSize(72, 84))}
-			variant="ghost"
-			size="icon"
-		>
-			<Minimize2Icon class="h-4 w-4" aria-hidden="true" />
-		</WhisperingButton>
-	{/if}
 </nav>
 
 <style>

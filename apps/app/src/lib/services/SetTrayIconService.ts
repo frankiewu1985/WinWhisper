@@ -2,7 +2,6 @@ import { goto } from '$app/navigation';
 import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 import { settings } from '$lib/stores/settings.svelte';
 import { Err, Ok, tryAsync } from '@epicenterhq/result';
-import { extension } from '@repo/extension';
 import {
 	ALWAYS_ON_TOP_VALUES,
 	type WhisperingRecordingState,
@@ -32,18 +31,6 @@ type SetTrayIconService = {
 	) => Promise<SetTrayIconServiceResult<void>>;
 };
 
-export function createSetTrayIconWebService(): SetTrayIconService {
-	return {
-		setTrayIcon: async (icon: WhisperingRecordingState) => {
-			const setRecorderStateResult = await extension.setRecorderState({
-				recorderState: icon,
-			});
-			if (!setRecorderStateResult.ok) return SetTrayIconServiceErr(icon);
-			return Ok(undefined);
-		},
-	};
-}
-
 export function createSetTrayIconDesktopService(): SetTrayIconService {
 	const trayPromise = initTray();
 	return {
@@ -54,7 +41,7 @@ export function createSetTrayIconDesktopService(): SetTrayIconService {
 					const tray = await trayPromise;
 					return tray.setIcon(iconPath);
 				},
-				mapErr: (error) => SetTrayIconServiceErr(recorderState),
+				mapErr: () => SetTrayIconServiceErr(recorderState),
 			}),
 	};
 }
@@ -132,7 +119,7 @@ async function initTray() {
 				e.buttonState === 'Down'
 			) {
 				const recorder = getRecorderFromContext();
-				recorder.toggleRecording();
+				recorder.toggleRecording(recorder.recorderState !== 'SESSION+RECORDING');
 				return true;
 			}
 			return false;

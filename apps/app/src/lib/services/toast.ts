@@ -3,7 +3,6 @@ import { goto } from '$app/navigation';
 import { moreDetailsDialog } from '$lib/components/MoreDetailsDialog.svelte';
 import { notificationLog } from '$lib/components/NotificationLog.svelte';
 import { NotificationService } from '$lib/services/index.js';
-import { extension } from '@repo/extension';
 import type { ToastAndNotifyOptions } from '@repo/shared';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { toast as sonnerToast } from 'svelte-sonner';
@@ -12,7 +11,6 @@ export const toast = createToastService();
 
 const isFocused = async () => {
 	const isDocumentFocused = document.hasFocus();
-	if (!window.__TAURI_INTERNALS__) return isDocumentFocused;
 	const isWindowFocused = await getCurrentWindow().isFocused();
 	return isWindowFocused && isDocumentFocused;
 };
@@ -21,10 +19,6 @@ function createToastService() {
 	const createToastFn =
 		(toastVariant: ToastAndNotifyOptions['variant']) =>
 		(toastOptions: Omit<ToastAndNotifyOptions, 'variant'>) => {
-			if (toastVariant === 'error') {
-				void extension.openWhisperingTab({});
-			}
-
 			(async () => {
 				if (toastVariant !== 'loading' && !(await isFocused())) {
 					const notifyResult = await NotificationService.notify({

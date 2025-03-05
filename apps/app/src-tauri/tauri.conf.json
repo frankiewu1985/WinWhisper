@@ -1,71 +1,69 @@
 {
-	"$schema": "../node_modules/@tauri-apps/cli/schema.json",
-	"build": {
-		"beforeBuildCommand": "pnpm run build",
-		"beforeDevCommand": "pnpm run dev:web",
-		"frontendDist": "../build",
-		"devUrl": "http://localhost:5173"
-	},
-	"bundle": {
-		"active": true,
-		"category": "Productivity",
-		"copyright": "",
-		"targets": "all",
-		"externalBin": [],
-		"icon": [
-			"icons/32x32.png",
-			"icons/128x128.png",
-			"icons/128x128@2x.png",
-			"icons/icon.icns",
-			"icons/icon.ico"
-		],
-		"windows": {
-			"certificateThumbprint": null,
-			"digestAlgorithm": "sha256",
-			"timestampUrl": ""
-		},
-		"longDescription": "Seamlessly integrate speech-to-text transcriptions anywhere on your desktop. Powered by OpenAI's Whisper API.",
-		"macOS": {
-			"entitlements": "entitlements.plist",
-			"exceptionDomain": "",
-			"frameworks": [],
-			"providerShortName": null,
-			"signingIdentity": null
-		},
-		"resources": ["recorder-state-icons/*"],
-		"shortDescription": "",
-		"linux": {
-			"deb": {
-				"depends": []
-			}
-		},
-		"createUpdaterArtifacts": "v1Compatible"
-	},
-	"productName": "Whispering",
-	"version": "6.4.3",
-	"identifier": "com.bradenwong.whispering",
-	"plugins": {
-		"updater": {
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDUwQzE1RjEyRThENzg0OEEKUldTS2hOZm9FbC9CVU1uZ1JLWlluMm1mOHd4N1RWUkNjME9PcHA3Nkg2ek5RMnZyVTVDS2k1QkwK",
-			"endpoints": [
-				"https://github.com/braden-w/whispering/releases/latest/download/latest.json"
-			]
-		}
-	},
-	"app": {
-		"windows": [
-			{
-				"fullscreen": false,
-				"height": 600,
-				"resizable": true,
-				"title": "Whispering",
-				"width": 800,
-				"minHeight": 84,
-				"minWidth": 72
-			}
-		],
-		"security": {
-			"csp": null
-		}
-	}
+    "$schema": "../node_modules/@tauri-apps/cli/schema.json",
+    "build": {
+        "beforeBuildCommand": "npm run build",
+        "beforeDevCommand": "npm run dev:web",
+        "frontendDist": "../build",
+        "devUrl": "http://localhost:5173"
+    },
+    "bundle": {
+        "active": true,
+        "category": "Productivity",
+        "copyright": "",
+        "targets": "all",
+        "externalBin": [],
+        "icon": [
+            "icons/32x32.png",
+            "icons/128x128.png",
+            "icons/128x128@2x.png",
+            "icons/icon.icns",
+            "icons/icon.ico"
+        ],
+        "windows": {
+            "certificateThumbprint": null,
+            "digestAlgorithm": "sha256",
+            "timestampUrl": ""
+        },
+        "longDescription": "Seamlessly integrate speech-to-text transcriptions anywhere on your desktop. Powered by OpenAI's Whisper API.",
+        "macOS": {
+            "entitlements": "entitlements.plist",
+            "exceptionDomain": "",
+            "frameworks": [],
+            "providerShortName": null,
+            "signingIdentity": null
+        },
+        "resources": ["recorder-state-icons/*"],
+        "shortDescription": "",
+        "linux": {
+            "deb": {
+                "depends": []
+            }
+        },
+        "createUpdaterArtifacts": "v1Compatible"
+    },
+    "productName": "Whispering",
+    "version": "6.4.3",
+    "identifier": "com.bradenwong.whispering",
+    "plugins": {
+        "updater": {
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQ3N0I1NjlCMzA5NEFFRkYKUldUL3JwUXdtMVo3MTQ5dVd3TnhwbkdJdmNUbFBPSzA5bDJlSFlWMDZUeTIrVHQ3UkJoKzFoOWQK",
+            "endpoints": []
+        }
+    },
+    "app": {
+        "windows": [
+            {
+                "fullscreen": false,
+                "height": 600,
+                "resizable": true,
+                "title": "Whispering",
+                "width": 800,
+                "minHeight": 84,
+                "minWidth": 72
+            }
+        ],
+        "security": {
+            "csp": null
+        }
+    }
 }

@@ -158,20 +158,6 @@
 		/>
 	{/if}
 
-	<LabeledSelect
-		id="output-language"
-		label="Output Language"
-		items={SUPPORTED_LANGUAGES_OPTIONS}
-		selected={settings.value['transcription.outputLanguage']}
-		onSelectedChange={(selected) => {
-			settings.value = {
-				...settings.value,
-				'transcription.outputLanguage': selected,
-			};
-		}}
-		placeholder="Select a language"
-	/>
-
 	<LabeledInput
 		id="temperature"
 		label="Temperature"
@@ -192,8 +178,22 @@
 
 	<LabeledTextarea
 		id="transcription-prompt"
+		label='Vocabulary (split by ",")'
+		placeholder="e.g., Whisper, transcription, AI"
+		value={settings.value['transcription.vocabulary']}
+		oninput={({ currentTarget: { value } }) => {
+			settings.value = {
+				...settings.value,
+				'transcription.vocabulary': value,
+			};
+		}}
+		description="Helps transcription service (e.g., Whisper) better recognize specific terms, names, words to improve the accuracy."
+	/>
+
+	<LabeledTextarea
+		id="transcription-prompt"
 		label="System Prompt"
-		placeholder="e.g., This is an academic lecture about quantum physics with technical terms like 'eigenvalue' and 'Schrödinger'"
+		placeholder="e.g., This is an academic lecture about quantum physics."
 		value={settings.value['transcription.prompt']}
 		oninput={({ currentTarget: { value } }) => {
 			settings.value = {
@@ -201,6 +201,6 @@
 				'transcription.prompt': value,
 			};
 		}}
-		description="Helps transcription service (e.g., Whisper) better recognize specific terms, names, or context during initial transcription. Not for text transformations - use the Transformations tab for post-processing rules."
+		description="Helps transcription service (e.g., Whisper) better understand the context during initial transcription, to improve the accuracy."
 	/>
 </div>

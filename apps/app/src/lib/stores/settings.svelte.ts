@@ -8,6 +8,7 @@ import {
 	getDefaultSettings,
 	settingsSchema,
 } from '@repo/shared';
+import type { ShortcutEvent } from '@tauri-apps/plugin-global-shortcut';
 import hotkeys from 'hotkeys-js';
 import { getContext, setContext } from 'svelte';
 
@@ -50,11 +51,33 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 		await unregisterAllGlobalShortcuts();
 		registerLocalShortcut({
 			shortcut: settings.value['shortcuts.currentLocalShortcut'],
-			callback: recorder.toggleRecording,
+			callback: (action) => {
+				recorder.toggleRecording(action === 'Pressed');
+			},
 		});
 		await registerGlobalShortcut({
 			shortcut: settings.value['shortcuts.currentGlobalShortcut'],
-			callback: recorder.toggleRecording,
+			callback: (action) => {
+				recorder.toggleRecording(action === 'Pressed');
+			},
+		});
+		await registerGlobalShortcut({
+			shortcut: settings.value['shortcuts.currentGlobalShortcut1'],
+			callback: (action) => {
+				recorder.toggleRecording(action === 'Pressed', settings.value['transcription.outputLanguage1']);
+			},
+		});
+		await registerGlobalShortcut({
+			shortcut: settings.value['shortcuts.currentGlobalShortcut2'],
+			callback: (action) => {
+				recorder.toggleRecording(action === 'Pressed', settings.value['transcription.outputLanguage2']);
+			},
+		});
+		await registerGlobalShortcut({
+			shortcut: settings.value['shortcuts.currentGlobalShortcut3'],
+			callback: (action) => {
+				recorder.toggleRecording(action === 'Pressed', settings.value['transcription.outputLanguage3']);
+			},
 		});
 	};
 
@@ -66,7 +89,7 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 			callback,
 		}: {
 			shortcut: string;
-			callback: () => void;
+			callback: (action: 'Pressed' | 'Released') => void;
 		}) => {
 			const job = async () => {
 				unregisterAllLocalShortcuts();
@@ -83,11 +106,10 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 			callback,
 		}: {
 			shortcut: string;
-			callback: () => void;
+			callback: (action: 'Pressed' | 'Released') => void;
 		}) => {
 			const job = async () => {
-				if (!window.__TAURI_INTERNALS__) return;
-				unregisterAllGlobalShortcuts();
+				unregisterGlobalShortcut(shortcut);
 				await registerGlobalShortcut({ shortcut, callback });
 				toast.success({
 					title: `Global shortcut set to ${shortcut}`,
@@ -114,11 +136,27 @@ function unregisterAllLocalShortcuts() {
 function unregisterAllGlobalShortcuts() {
 	return tryAsync({
 		try: async () => {
-			if (!window.__TAURI_INTERNALS__) return;
 			const { unregisterAll } = await import(
 				'@tauri-apps/plugin-global-shortcut'
 			);
 			return await unregisterAll();
+		},
+		mapErr: (error) =>
+			WhisperingErr({
+				title: 'Error unregistering all shortcuts',
+				description: 'Please try again.',
+				action: { type: 'more-details', error },
+			}),
+	});
+}
+
+function unregisterGlobalShortcut(shortcut: string) {
+	return tryAsync({
+		try: async () => {
+			const { unregister } = await import(
+				'@tauri-apps/plugin-global-shortcut'
+			);
+			return await unregister(shortcut);
 		},
 		mapErr: (error) =>
 			WhisperingErr({
@@ -134,7 +172,7 @@ function registerLocalShortcut({
 	callback,
 }: {
 	shortcut: string;
-	callback: () => void;
+	callback: (action: 'Pressed' | 'Released') => void;
 }) {
 	const unregisterAllLocalShortcutsResult = unregisterAllLocalShortcuts();
 	if (!unregisterAllLocalShortcutsResult.ok)
@@ -142,9 +180,18 @@ function registerLocalShortcut({
 	return trySync({
 		try: () =>
 			hotkeys(shortcut, (event) => {
-				// Prevent the default refresh event under WINDOWS system
-				event.preventDefault();
-				callback();
+				// check if the event is pressed or released.
+				const action =
+					event.type === 'keydown'
+						? 'Pressed'
+						: event.type === 'keyup'
+							? 'Released'
+							: undefined;
+				if (action) {
+					// Prevent the default refresh event under WINDOWS system
+					event.preventDefault();
+					callback(action);
+				}
 			}),
 		mapErr: (error) =>
 			WhisperingErr({
@@ -160,19 +207,15 @@ async function registerGlobalShortcut({
 	callback,
 }: {
 	shortcut: string;
-	callback: () => void;
+	callback: (action: 'Pressed' | 'Released') => void;
 }) {
-	const unregisterAllGlobalShortcutsResult =
-		await unregisterAllGlobalShortcuts();
-	if (!unregisterAllGlobalShortcutsResult.ok)
-		return unregisterAllGlobalShortcutsResult;
+	await unregisterGlobalShortcut(shortcut);
 	return tryAsync({
 		try: async () => {
-			if (!window.__TAURI_INTERNALS__) return;
 			const { register } = await import('@tauri-apps/plugin-global-shortcut');
-			return await register(shortcut, (event) => {
-				if (event.state === 'Pressed') {
-					callback();
+			return await register(shortcut, (event: ShortcutEvent) => {
+				if (event.state === 'Pressed' || event.state === 'Released') {
+					callback(event.state);
 				}
 			});
 		},

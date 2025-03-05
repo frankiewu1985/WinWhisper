@@ -11,6 +11,7 @@ import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import { useUpdateRecording } from '../recordings/mutations';
 import { maybeCopyAndPaste } from './maybeCopyAndPaste';
+import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
 
 export type Transcriber = ReturnType<typeof createTranscriber>;
 
@@ -62,9 +63,11 @@ function createTranscriber() {
 		},
 		mutationFn: async ({
 			recording,
+			language,
 		}: {
 			recording: Recording;
 			toastId: string;
+			language: LanguageType;
 		}) => {
 			if (!recording.blob) {
 				return WhisperingErr({
@@ -72,9 +75,11 @@ function createTranscriber() {
 					description: "Your recording doesn't have a blob to transcribe.",
 				});
 			}
+
+			// construct the prompt
 			const transcriptionResult =
 				await userConfiguredServices.transcription.transcribe(recording.blob, {
-					outputLanguage: settings.value['transcription.outputLanguage'],
+					outputLanguage: language,
 					prompt: settings.value['transcription.prompt'],
 					temperature: settings.value['transcription.temperature'],
 				});

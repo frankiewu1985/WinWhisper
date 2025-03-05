@@ -3,8 +3,6 @@
 	import NavItems from '$lib/components/NavItems.svelte';
 	import RecordingControls from '$lib/components/RecordingControls.svelte';
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
-	import CopyToClipboardButton from '$lib/components/copyable/CopyToClipboardButton.svelte';
-	import { ClipboardIcon } from '$lib/components/icons';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as ToggleGroup from '$lib/components/ui/toggle-group';
 	import { useLatestRecording } from '$lib/query/recordings/queries';
@@ -14,9 +12,8 @@
 	import { settings } from '$lib/stores/settings.svelte';
 	import { createBlobUrlManager } from '$lib/utils/blobUrlManager';
 	import { getRecordingTransitionId } from '$lib/utils/getRecordingTransitionId';
-	import { AudioLinesIcon, Loader2Icon, MicIcon } from 'lucide-svelte';
+	import { AudioLinesIcon, MicIcon } from 'lucide-svelte';
 	import { onDestroy } from 'svelte';
-	import TranscribedTextDialog from './(config)/recordings/TranscribedTextDialog.svelte';
 
 	const recorder = getRecorderFromContext();
 	const vadRecorder = getVadRecorderFromContext();
@@ -57,7 +54,7 @@
 <main class="flex flex-1 flex-col items-center justify-center gap-4">
 	<div class="xs:flex hidden flex-col items-center gap-4">
 		<h1 class="scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl">
-			Start recording
+			WhisperingX
 		</h1>
 		<p class="text-muted-foreground text-center">
 			Click the 🎙 button to start. Allow access to your microphone.
@@ -99,7 +96,7 @@
 				tooltipContent={recorder.recorderState === 'SESSION+RECORDING'
 					? 'Stop recording'
 					: 'Start recording'}
-				onclick={recorder.toggleRecording}
+				onclick={()=>recorder.toggleRecording(recorder.recorderState !== 'SESSION+RECORDING')}
 				variant="ghost"
 				class="flex-shrink-0 size-32 transform items-center justify-center overflow-hidden duration-300 ease-in-out"
 			>
@@ -176,38 +173,6 @@
 	</div>
 
 	<div class="xxs:flex hidden w-full max-w-xs flex-col items-center gap-2">
-		{#if latestRecording.transcribedText !== ''}
-			<div class="flex w-full items-center gap-2">
-				<TranscribedTextDialog
-					recordingId={latestRecording.id}
-					transcribedText={latestRecording.transcriptionStatus ===
-					'TRANSCRIBING'
-						? '...'
-						: latestRecording.transcribedText}
-					rows={1}
-				/>
-				<CopyToClipboardButton
-					label="transcribed text"
-					copyableText={latestRecording.transcribedText}
-					viewTransitionName={getRecordingTransitionId({
-						recordingId: latestRecording.id,
-						propertyName: 'transcribedText',
-					})}
-					size="default"
-					variant="secondary"
-					disabled={latestRecording.transcriptionStatus === 'TRANSCRIBING'}
-				>
-					{#snippet copyIcon()}
-						{#if latestRecording.transcriptionStatus === 'TRANSCRIBING'}
-							<Loader2Icon class="h-6 w-6 animate-spin" />
-						{:else}
-							<ClipboardIcon class="h-6 w-6" />
-						{/if}
-					{/snippet}
-				</CopyToClipboardButton>
-			</div>
-		{/if}
-
 		{#if blobUrl}
 			<audio
 				style="view-transition-name: {getRecordingTransitionId({
@@ -240,47 +205,21 @@
 			</WhisperingButton>{' '}
 			to start recording here.
 		</p>
-		{#if window.__TAURI_INTERNALS__}
-			<p class="text-foreground/75 text-sm">
-				Press
-				{' '}<WhisperingButton
-					tooltipContent="Go to global shortcut in settings"
-					href="/settings#global-shortcut"
-					variant="link"
-					size="inline"
-				>
-					<kbd
-						class="bg-muted relative rounded px-[0.3rem] py-[0.15rem] font-mono text-sm font-semibold"
-					>
-						{settings.value['shortcuts.currentGlobalShortcut']}
-					</kbd>
-				</WhisperingButton>{' '}
-				to start recording anywhere.
-			</p>
-		{/if}
-		<p class="text-muted-foreground text-center text-sm font-light">
-			Check out the {' '}<WhisperingButton
-				tooltipContent="Check out the Chrome Extension"
-				href="https://chromewebstore.google.com/detail/whispering/oilbfihknpdbpfkcncojikmooipnlglo"
-				target="_blank"
-				rel="noopener noreferrer"
+		<p class="text-foreground/75 text-sm">
+			Press
+			{' '}<WhisperingButton
+				tooltipContent="Go to global shortcut in settings"
+				href="/settings#global-shortcut"
 				variant="link"
 				size="inline"
 			>
-				extension
-			</WhisperingButton>{' '}
-			{#if !window.__TAURI_INTERNALS__}
-				and {' '}<WhisperingButton
-					tooltipContent="Check out the desktop app"
-					href="https://github.com/braden-w/whispering/releases"
-					target="_blank"
-					rel="noopener noreferrer"
-					variant="link"
-					size="inline"
+				<kbd
+					class="bg-muted relative rounded px-[0.3rem] py-[0.15rem] font-mono text-sm font-semibold"
 				>
-					app
-				</WhisperingButton>{' '}
-			{/if} for more integrations!
+					{settings.value['shortcuts.currentGlobalShortcut']}
+				</kbd>
+			</WhisperingButton>{' '}
+			to start recording anywhere.
 		</p>
 	</div>
 </main>

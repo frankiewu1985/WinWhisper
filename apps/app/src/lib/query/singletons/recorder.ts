@@ -13,6 +13,9 @@ import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { LogicalPosition, LogicalSize } from '@tauri-apps/api/window';
+import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
 
 export type Recorder = ReturnType<typeof createRecorder>;
 
@@ -59,6 +62,70 @@ function createRecorder({
 		initialData: 'IDLE' as const,
 	}));
 
+	let recorderIndicatorWindow: WebviewWindow | null = null;
+	const showRecorderIndicator = () => {
+		if (!recorderIndicatorWindow) {
+			try {
+				// Get the screen size
+				const screenSize = window.screen;
+				const screenWidth = screenSize.width;
+				const screenHeight = screenSize.height;
+	
+				// Calculate the position for the bottom center
+				const windowWidth = 120;
+				const windowHeight = 60;
+				const x = (screenWidth - windowWidth) / 2;
+				const y = screenHeight - windowHeight - 150;
+	
+				// Open a new Tauri window in hidden mode
+				recorderIndicatorWindow = new WebviewWindow('recording', {
+					url: 'recording.html',
+					resizable: false,
+					decorations: false,
+					transparent: true,
+					alwaysOnTop: true,
+					visible: false,
+					shadow: false,
+					skipTaskbar: true,
+				});
+
+				// Set the position of the window
+				recorderIndicatorWindow.setSize(
+					new LogicalSize(windowWidth, windowHeight),
+				);
+				recorderIndicatorWindow.setPosition(new LogicalPosition(x, y));
+
+				recorderIndicatorWindow.once('tauri://created', () => {
+					console.log('Recorder indicator window created successfully');
+				});
+	
+				recorderIndicatorWindow.once('tauri://error', (e) => {
+					console.error('Failed to create recorder indicator window', e);
+				});
+			} catch (error) {
+				console.error('Error creating recorder indicator window:', error);
+			}
+		}
+
+        recorderIndicatorWindow!.show().then(() => {
+            console.log('Recorder indicator window shown successfully');
+        }).catch((error) => {
+            console.error('Error showing recorder indicator window:', error);
+        });
+	};
+
+	const hideRecorderIndicator = () => {
+		if (recorderIndicatorWindow) {
+			recorderIndicatorWindow.hide().then(() => {
+				console.log('Recorder indicator window hidden successfully');
+			}).catch((error) => {
+				console.error('Error hiding recorder indicator window:', error);
+			});
+		} else {
+			console.log('No recorder indicator window to hide');
+		}
+	};
+
 	const startRecording = createResultMutation(() => ({
 		onMutate: async ({ toastId }) => {
 			toast.loading({
@@ -84,6 +151,9 @@ function createRecorder({
 				title: '🎙️ Whispering is recording...',
 				description: 'Speak now and stop recording when done',
 			});
+
+			showRecorderIndicator();
+
 			console.info('Recording started');
 			void playSoundIfEnabled('start-manual');
 		},
@@ -98,7 +168,7 @@ function createRecorder({
 				description: 'Finalizing your audio capture...',
 			});
 		},
-		mutationFn: async ({ toastId }: { toastId: string }) => {
+		mutationFn: async ({ toastId }: { toastId: string; language:LanguageType }) => {
 			const stopResult = await userConfiguredServices.recorder.stopRecording({
 				sendStatus: (options) => toast.loading({ id: toastId, ...options }),
 			});
@@ -107,7 +177,7 @@ function createRecorder({
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
 		},
-		onSuccess: async (blob, { toastId }) => {
+		onSuccess: async (blob, { toastId, language }) => {
 			toast.success({
 				id: toastId,
 				title: '🎙️ Recording stopped',
@@ -115,6 +185,8 @@ function createRecorder({
 			});
 			console.info('Recording stopped');
 			void playSoundIfEnabled('stop-manual');
+
+			hideRecorderIndicator();
 
 			const now = new Date().toISOString();
 			const newRecordingId = nanoid();
@@ -191,7 +263,7 @@ function createRecorder({
 
 						const transcribeToastId = nanoid();
 						transcriber.transcribeRecording.mutate(
-							{ recording: createdRecording, toastId: transcribeToastId },
+							{ recording: createdRecording, toastId: transcribeToastId, language: language },
 							{
 								onSuccess: () => {
 									if (
@@ -312,12 +384,13 @@ function createRecorder({
 		get recorderState() {
 			return recorderState.data ?? 'IDLE';
 		},
-		toggleRecording: async () => {
+		toggleRecording: async (start: boolean, language?: LanguageType) => {
+			const resolvedLanguage = language || 'auto';
 			const toastId = nanoid();
-			if (recorderState.data === 'SESSION+RECORDING') {
-				stopRecording.mutate({ toastId });
-			} else {
+			if (start) {
 				startRecording.mutate({ toastId });
+			} else {
+				stopRecording.mutate({ toastId, language: resolvedLanguage });
 			}
 		},
 		cancelRecorderWithToast: () => {

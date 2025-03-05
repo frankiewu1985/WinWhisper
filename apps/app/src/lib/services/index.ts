@@ -5,7 +5,6 @@ import {
 	type CreateMutationOptions,
 	type CreateQueryOptions,
 	type DefaultError,
-	type FunctionedParams,
 	type QueryKey,
 	createMutation,
 	createQuery,
@@ -13,25 +12,19 @@ import {
 import { settings } from '../stores/settings.svelte';
 import {
 	createSetTrayIconDesktopService,
-	createSetTrayIconWebService,
 } from './SetTrayIconService';
 import { createClipboardServiceDesktop } from './clipboard/ClipboardService.desktop';
-import { createClipboardServiceWeb } from './clipboard/ClipboardService.web';
 import {
 	createDbRecordingsServiceDexie,
 	createDbTransformationsServiceDexie,
 } from './db/DbService.dexie';
 import { createDownloadServiceDesktop } from './download/DownloadService.desktop';
-import { createDownloadServiceWeb } from './download/DownloadService.web';
 import { createHttpServiceDesktop } from './http/HttpService.desktop';
-import { createHttpServiceWeb } from './http/HttpService.web';
 import { createNotificationServiceDesktop } from './notifications/NotificationService.desktop';
-import { createNotificationServiceWeb } from './notifications/NotificationService.web';
 import { createRecorderServiceTauri } from './recorder/RecorderService.tauri';
 import { createRecorderServiceWeb } from './recorder/RecorderService.web';
 import { createRunTransformationService } from './runTransformation';
 import { createPlaySoundServiceDesktop } from './sound/PlaySoundService.desktop';
-import { createPlaySoundServiceWeb } from './sound/PlaySoundService.web';
 import { createFasterWhisperServerTranscriptionService } from './transcription/TranscriptionService.fasterWhisperServer';
 import { createGroqTranscriptionService } from './transcription/TranscriptionService.groq';
 import { createOpenaiTranscriptionService } from './transcription/TranscriptionService.openai';
@@ -99,32 +92,20 @@ export function createResultMutation<
 	});
 }
 
-export const DownloadService = window.__TAURI_INTERNALS__
-	? createDownloadServiceDesktop()
-	: createDownloadServiceWeb();
+export const DownloadService = createDownloadServiceDesktop();
 
-export const NotificationService = window.__TAURI_INTERNALS__
-	? createNotificationServiceDesktop()
-	: createNotificationServiceWeb();
+export const NotificationService = createNotificationServiceDesktop();
 
-export const ClipboardService = window.__TAURI_INTERNALS__
-	? createClipboardServiceDesktop()
-	: createClipboardServiceWeb();
+export const ClipboardService = createClipboardServiceDesktop();
 
-export const SetTrayIconService = window.__TAURI_INTERNALS__
-	? createSetTrayIconDesktopService()
-	: createSetTrayIconWebService();
+export const SetTrayIconService = createSetTrayIconDesktopService();
 
 export const DbRecordingsService = createDbRecordingsServiceDexie();
 export const DbTransformationsService = createDbTransformationsServiceDexie();
 
-const HttpService = window.__TAURI_INTERNALS__
-	? createHttpServiceDesktop()
-	: createHttpServiceWeb();
+const HttpService = createHttpServiceDesktop();
 
-const PlaySoundService = window.__TAURI_INTERNALS__
-	? createPlaySoundServiceDesktop()
-	: createPlaySoundServiceWeb();
+const PlaySoundService = createPlaySoundServiceDesktop();
 
 export const RunTransformationService = createRunTransformationService({
 	HttpService,

@@ -102,28 +102,26 @@
 		{/snippet}
 	</LabeledSwitch>
 
-	{#if window.__TAURI_INTERNALS__}
-		<LabeledSwitch
-			id="close-to-tray"
-			checked={settings.value['system.closeToTray']}
-			onCheckedChange={(v) => {
-				settings.value = { ...settings.value, 'system.closeToTray': v };
-			}}
-		>
-			{#snippet label()}
-				Close to tray instead of quitting.
-				{#if window.__TAURI_INTERNALS__ && type() === 'macos'}
-					<Button
-						variant="link"
-						size="inline"
-						onclick={() => macOSAppNapExplainedDialog.open()}
-					>
-						(Not recommended for macOS)
-					</Button>
-				{/if}
-			{/snippet}
-		</LabeledSwitch>
-	{/if}
+	<LabeledSwitch
+		id="close-to-tray"
+		checked={settings.value['system.closeToTray']}
+		onCheckedChange={(v) => {
+			settings.value = { ...settings.value, 'system.closeToTray': v };
+		}}
+	>
+		{#snippet label()}
+			Close to tray instead of quitting.
+			{#if type() === 'macos'}
+				<Button
+					variant="link"
+					size="inline"
+					onclick={() => macOSAppNapExplainedDialog.open()}
+				>
+					(Not recommended for macOS)
+				</Button>
+			{/if}
+		{/snippet}
+	</LabeledSwitch>
 
 	<Separator />
 
@@ -166,21 +164,19 @@
 		/>
 	{/if}
 
-	{#if window.__TAURI_INTERNALS__}
-		<LabeledSelect
-			id="always-on-top"
-			label="Always On Top"
-			items={ALWAYS_ON_TOP_OPTIONS}
-			selected={settings.value['system.alwaysOnTop']}
-			onSelectedChange={async (selected) => {
-				settings.value = {
-					...settings.value,
-					'system.alwaysOnTop': selected,
-				};
-			}}
-			placeholder="Select a language"
-		/>
-	{/if}
+	<LabeledSelect
+		id="always-on-top"
+		label="Always On Top"
+		items={ALWAYS_ON_TOP_OPTIONS}
+		selected={settings.value['system.alwaysOnTop']}
+		onSelectedChange={async (selected) => {
+			settings.value = {
+				...settings.value,
+				'system.alwaysOnTop': selected,
+			};
+		}}
+		placeholder="Select a language"
+	/>
 </div>
 
 <MacOSAppNapExplainedDialog />

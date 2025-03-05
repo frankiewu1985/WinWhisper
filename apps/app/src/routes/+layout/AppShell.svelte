@@ -7,7 +7,6 @@
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { DbRecordingsService } from '$lib/services';
 	import { settings } from '$lib/stores/settings.svelte';
-	import { extension } from '@repo/extension';
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { onMount } from 'svelte';
 	import { Toaster, type ToasterProps } from 'svelte-sonner';
@@ -16,10 +15,8 @@
 
 	const recorder = getRecorderFromContext();
 
-	if (window.__TAURI_INTERNALS__) {
-		syncWindowAlwaysOnTopWithRecorderState();
-		closeToTrayIfEnabled();
-	}
+	syncWindowAlwaysOnTopWithRecorderState();
+	closeToTrayIfEnabled();
 
 	$effect(() => {
 		recorder.recorderState;
@@ -29,10 +26,6 @@
 	onMount(async () => {
 		window.recorder = recorder;
 		window.goto = goto;
-		if (!window.__TAURI_INTERNALS__) {
-			const _notifyWhisperingTabReadyResult =
-				await extension.notifyWhisperingTabReady(undefined);
-		}
 	});
 
 	const TOASTER_SETTINGS = {
@@ -47,7 +40,7 @@
 
 <button
 	class="xxs:hidden hover:bg-accent hover:text-accent-foreground h-screen w-screen transform duration-300 ease-in-out"
-	onclick={recorder.toggleRecording}
+	onclick={()=>recorder.toggleRecording(recorder.recorderState !== 'SESSION+RECORDING')}
 >
 	<span
 		style="filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.5));"

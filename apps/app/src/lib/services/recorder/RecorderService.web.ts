@@ -1,5 +1,4 @@
-import { Err, Ok, tryAsync } from '@epicenterhq/result';
-import { extension } from '@repo/extension';
+import { Ok, tryAsync } from '@epicenterhq/result';
 import { WhisperingErr, type WhisperingResult } from '@repo/shared';
 import type {
 	RecorderService,
@@ -205,7 +204,7 @@ export function createRecorderServiceWeb(): RecorderService {
 			});
 			const stopResult = await tryAsync({
 				try: () =>
-					new Promise<Blob>((resolve, reject) => {
+					new Promise<Blob>((resolve) => {
 						recorder.mediaRecorder.addEventListener('stop', () => {
 							const audioBlob = new Blob(recorder.recordedChunks, {
 								type: recorder.mediaRecorder.mimeType,
@@ -255,27 +254,6 @@ export function createRecorderServiceWeb(): RecorderService {
 	};
 }
 
-async function hasExistingAudioPermission(): Promise<boolean> {
-	try {
-		const permissions = await navigator.permissions.query({
-			name: 'microphone' as PermissionName,
-		});
-		return permissions.state === 'granted';
-	} catch {
-		try {
-			const stream = await navigator.mediaDevices.getUserMedia({
-				audio: WHISPER_RECOMMENDED_MEDIA_TRACK_CONSTRAINTS,
-			});
-			for (const track of stream.getTracks()) {
-				track.stop();
-			}
-			return true;
-		} catch {
-			return false;
-		}
-	}
-}
-
 async function getFirstAvailableStream() {
 	const enumerateDevicesResult = await enumerateRecordingDevices();
 	if (!enumerateDevicesResult.ok)
@@ -301,10 +279,6 @@ async function getFirstAvailableStream() {
 }
 
 async function enumerateRecordingDevices() {
-	const hasPermission = await hasExistingAudioPermission();
-	if (!hasPermission) {
-		void extension.openWhisperingTab({});
-	}
 	return tryAsync({
 		try: async () => {
 			const allAudioDevicesStream = await navigator.mediaDevices.getUserMedia({
@@ -330,10 +304,6 @@ async function enumerateRecordingDevices() {
 }
 
 async function getStreamForDeviceId(recordingDeviceId: string) {
-	const hasPermission = await hasExistingAudioPermission();
-	if (!hasPermission) {
-		void extension.openWhisperingTab({});
-	}
 	return tryAsync({
 		try: async () => {
 			const stream = await navigator.mediaDevices.getUserMedia({
