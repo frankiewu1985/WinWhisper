@@ -22,15 +22,6 @@
 	style="view-transition-name: nav"
 >
 	<WhisperingButton
-		tooltipContent="Transformations"
-		href="/transformations"
-		variant="ghost"
-		size="icon"
-		class="relative"
-	>
-		<LayersIcon class="h-4 w-4" aria-hidden="true" />
-	</WhisperingButton>
-	<WhisperingButton
 		tooltipContent="Settings"
 		href="/settings"
 		variant="ghost"
