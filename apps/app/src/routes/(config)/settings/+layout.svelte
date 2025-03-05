@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { Button } from '$lib/components/ui/button/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import SidebarNav from './SidebarNav.svelte';
 
@@ -11,7 +10,6 @@
 		{ title: 'Transcription', href: '/settings/transcription' },
 		{ title: 'Post Processing', href: '/settings/post-processing' },
 		{ title: 'API Keys', href: '/settings/api-keys' },
-		{ title: 'Sound', href: '/settings/sound' },
 		{ title: 'Shortcuts', href: '/settings/shortcuts' },
 	] as const;
 

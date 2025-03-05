@@ -96,6 +96,20 @@
 	</LabeledSwitch>
 
 	<Separator />
+	
+	<LabeledSwitch
+		id="play-sound"
+		label="Play sound"
+		checked={settings.value['sound.enabled']}
+		onCheckedChange={(v) => {
+			settings.value = {
+				...settings.value,
+				'sound.enabled': v,
+			};
+		}}
+	/>
+
+	<Separator />
 
 	<LabeledSelect
 		id="always-on-top"

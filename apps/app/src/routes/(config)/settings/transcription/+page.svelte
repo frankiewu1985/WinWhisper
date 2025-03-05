@@ -7,6 +7,7 @@
 	} from '$lib/components/labeled/index.js';
 	import { Button } from '$lib/components/ui/button/index.js';
 	import * as Card from '$lib/components/ui/card/index.js';
+	import * as Accordion from '$lib/components/ui/accordion';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import * as Tabs from '$lib/components/ui/tabs/index.js';
 	import { settings } from '$lib/stores/settings.svelte';
@@ -46,9 +47,7 @@
 		placeholder="Select a transcription service"
 	/>
 
-	{#if settings.value['transcription.selectedTranscriptionService'] === 'OpenAI'}
-		<OpenAiApiKeyInput />
-	{:else if settings.value['transcription.selectedTranscriptionService'] === 'Groq'}
+	{#if settings.value['transcription.selectedTranscriptionService'] === 'OpenAI'}{:else if settings.value['transcription.selectedTranscriptionService'] === 'Groq'}
 		<LabeledSelect
 			id="groq-model"
 			label="Groq Model"
@@ -73,7 +72,6 @@
 				</Button>.
 			{/snippet}
 		</LabeledSelect>
-		<GroqApiKeyInput />
 	{:else if settings.value['transcription.selectedTranscriptionService'] === 'faster-whisper-server'}
 		<Card.Root class="w-full">
 			<Card.Header>
@@ -177,7 +175,7 @@
 
 	<LabeledTextarea
 		id="transcription-prompt"
-		label='Vocabulary'
+		label="Vocabulary"
 		placeholder="e.g., 'OpenAI' - company name, 'ChatGPT' - AI assistant name, 'neuralink' - brain-interface tech"
 		value={settings.value['transcription.vocabulary']}
 		oninput={({ currentTarget: { value } }) => {
@@ -188,17 +186,25 @@
 		}}
 		description="Helps transcription service (e.g., Whisper) better recognize specific terms, names, words to improve the accuracy."
 	/>
-	<LabeledTextarea
-		id="transcription-prompt"
-		label={`System Prompt`}
-		placeholder="e.g., This is an academic lecture about quantum physics."
-		value={settings.value['transcription.prompt']}
-		oninput={({ currentTarget: { value } }) => {
-			settings.value = {
-				...settings.value,
-				'transcription.prompt': value,
-			};
-		}}
-		description={`Avaiable parameters: {{vocabulary}}`}
-	/>
+
+	<Accordion.Root type="single" class="w-full">
+		<Accordion.Item class="border-none" value="advanced">
+			<Accordion.Trigger class="text-sm">Advanced Options</Accordion.Trigger>
+			<Accordion.Content>
+				<LabeledTextarea
+					id="transcription-prompt"
+					label={`System Prompt`}
+					placeholder="e.g., This is an academic lecture about quantum physics."
+					value={settings.value['transcription.prompt']}
+					oninput={({ currentTarget: { value } }) => {
+						settings.value = {
+							...settings.value,
+							'transcription.prompt': value,
+						};
+					}}
+					description={`Avaiable parameters: {{vocabulary}}`}
+				/>
+			</Accordion.Content>
+		</Accordion.Item>
+	</Accordion.Root>
 </div>
