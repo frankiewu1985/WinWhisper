@@ -20,7 +20,7 @@ import {
 } from './db/DbService.dexie';
 import { createDownloadServiceDesktop } from './download/DownloadService.desktop';
 import { createHttpServiceDesktop } from './http/HttpService.desktop';
-import { createRecorderServiceTauri } from './recorder/RecorderService.tauri';
+// import { createRecorderServiceTauri } from './recorder/RecorderService.tauri';
 import { createRecorderServiceWeb } from './recorder/RecorderService.web';
 import { createRunTransformationService } from './runTransformation';
 import { createPlaySoundServiceDesktop } from './sound/PlaySoundService.desktop';
@@ -113,7 +113,7 @@ export const RunTransformationService = createRunTransformationService({
  * Services that are determined by the user's settings.
  */
 export const userConfiguredServices = (() => {
-	const RecorderServiceTauri = createRecorderServiceTauri();
+	// const RecorderServiceTauri = createRecorderServiceTauri();
 	const RecorderServiceWeb = createRecorderServiceWeb();
 
 	return {
@@ -150,9 +150,9 @@ export const userConfiguredServices = (() => {
 			}
 		},
 		get recorder() {
-			if (settings.value['recorder.selectedRecorderService'] === 'Tauri') {
-				return RecorderServiceTauri;
-			}
+			// if (settings.value['recorder.selectedRecorderService'] === 'Tauri') {
+			// 	return RecorderServiceTauri;
+			// }
 			return RecorderServiceWeb;
 		},
 	};
