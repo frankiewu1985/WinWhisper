@@ -24,12 +24,10 @@ export const getDefaultSettings = () =>
     "sound.playOn.cancel": true,
     "sound.playOn.transcriptionComplete": true,
     "sound.playOn.transformationComplete": true,
-    "transcription.clipboard.copyOnSuccess": true,
-    "transcription.clipboard.pasteOnSuccess": true,
-    "transformation.clipboard.copyOnSuccess": true,
-    "transformation.clipboard.pasteOnSuccess": true,
+    "transcription.copyToClipboardOnSuccess": false,
+    "transcription.insertToCursorOnSuccess": true,
     "recording.isFasterRerecordEnabled": false,
-    "system.closeToTray": false,
+    "system.closeToTray": true,
     "system.alwaysOnTop": "Never",
 
     // Recording retention defaults
@@ -94,10 +92,8 @@ export const settingsSchema = z.object({
 		[K in WhisperingSoundNames as `sound.playOn.${K}`]: ZodBoolean;
 	}),
 
-	'transcription.clipboard.copyOnSuccess': z.boolean(),
-	'transcription.clipboard.pasteOnSuccess': z.boolean(),
-	'transformation.clipboard.copyOnSuccess': z.boolean(),
-	'transformation.clipboard.pasteOnSuccess': z.boolean(),
+	'transcription.copyToClipboardOnSuccess': z.boolean(),
+	'transcription.insertToCursorOnSuccess': z.boolean(),
 	'recording.isFasterRerecordEnabled': z.boolean(),
 
 	'system.closeToTray': z.boolean(),

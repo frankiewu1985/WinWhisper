@@ -10,8 +10,8 @@ import { WhisperingErr } from '@repo/shared';
 import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import { useUpdateRecording } from '../recordings/mutations';
-import { maybeCopyAndPaste } from './maybeCopyAndPaste';
 import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
+import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
 
 export type Transcriber = ReturnType<typeof createTranscriber>;
 
@@ -119,7 +119,7 @@ function createTranscriber() {
 				},
 			);
 		},
-		onSuccess: (transcribedText, { recording, toastId }) => {
+		onSuccess: (transcribedText, { recording }) => {
 			updateRecording.mutate(
 				{ ...recording, transcribedText, transcriptionStatus: 'DONE' },
 				{
@@ -134,22 +134,14 @@ function createTranscriber() {
 				},
 			);
 			void playSoundIfEnabled('transcriptionComplete');
-			maybeCopyAndPaste({
-				text: transcribedText,
-				toastId,
-				shouldCopy: settings.value['transcription.clipboard.copyOnSuccess'],
-				shouldPaste: settings.value['transcription.clipboard.pasteOnSuccess'],
-				statusToToastText(status) {
-					switch (status) {
-						case null:
-							return '📝 Recording transcribed!';
-						case 'COPIED':
-							return '📝 Recording transcribed and copied to clipboard!';
-						case 'COPIED+PASTED':
-							return '📝📋✍️ Recording transcribed, copied to clipboard, and pasted!';
-					}
-				},
-			});
+
+			// if copy to clipboard is enabled, copy the transcription to clipboard
+			if (settings.value['transcription.copyToClipboardOnSuccess']) {
+				writeTextToClipboard(transcribedText);
+			}
+			if(settings.value['transcription.insertToCursorOnSuccess']) {
+				writeTextToCursor(transcribedText);
+			}
 		},
 	}));
 

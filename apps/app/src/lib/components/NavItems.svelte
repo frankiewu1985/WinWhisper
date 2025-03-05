@@ -1,13 +1,7 @@
 <script lang="ts">
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
-	import { GithubIcon } from '$lib/components/icons';
-	import { settings } from '$lib/stores/settings.svelte';
 	import { cn } from '$lib/utils';
-	import { LogicalSize, getCurrentWindow } from '@tauri-apps/api/window';
 	import {
-		LayersIcon,
-		ListIcon,
-		Minimize2Icon,
 		MoonIcon,
 		SettingsIcon,
 		SunIcon,

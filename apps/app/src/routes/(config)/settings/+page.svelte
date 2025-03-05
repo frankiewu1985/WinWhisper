@@ -28,55 +28,27 @@
 	<Separator />
 
 	<LabeledSwitch
-		id="transcription.clipboard.copyOnSuccess"
+		id="transcription.copyToClipboardOnSuccess"
 		label="Copy text to clipboard on successful transcription"
-		checked={settings.value['transcription.clipboard.copyOnSuccess']}
+		checked={settings.value['transcription.copyToClipboardOnSuccess']}
 		onCheckedChange={(v) => {
 			settings.value = {
 				...settings.value,
-				'transcription.clipboard.copyOnSuccess': v,
+				'transcription.copyToClipboardOnSuccess': v,
 			};
 		}}
 	/>
 
 	<LabeledSwitch
-		id="transcription.clipboard.pasteOnSuccess"
+		id="transcription.insertToCursorOnSuccess"
 		label="Paste contents from clipboard after successful transcription"
-		checked={settings.value['transcription.clipboard.pasteOnSuccess']}
+		checked={settings.value['transcription.insertToCursorOnSuccess']}
 		onCheckedChange={(v) => {
 			settings.value = {
 				...settings.value,
-				'transcription.clipboard.pasteOnSuccess': v,
+				'transcription.insertToCursorOnSuccess': v,
 			};
 		}}
-		disabled={!settings.value['transcription.clipboard.copyOnSuccess']}
-	/>
-
-	<Separator />
-
-	<LabeledSwitch
-		id="transformation.clipboard.copyOnSuccess"
-		label="Copy text to clipboard on successful transformation"
-		checked={settings.value['transformation.clipboard.copyOnSuccess']}
-		onCheckedChange={(v) => {
-			settings.value = {
-				...settings.value,
-				'transformation.clipboard.copyOnSuccess': v,
-			};
-		}}
-	/>
-
-	<LabeledSwitch
-		id="transformation.clipboard.pasteOnSuccess"
-		label="Paste contents from clipboard after successful transformation"
-		checked={settings.value['transformation.clipboard.pasteOnSuccess']}
-		onCheckedChange={(v) => {
-			settings.value = {
-				...settings.value,
-				'transformation.clipboard.pasteOnSuccess': v,
-			};
-		}}
-		disabled={!settings.value['transformation.clipboard.copyOnSuccess']}
 	/>
 
 	<Separator />
