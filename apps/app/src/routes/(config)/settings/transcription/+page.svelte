@@ -177,8 +177,8 @@
 
 	<LabeledTextarea
 		id="transcription-prompt"
-		label='Vocabulary (split by ",")'
-		placeholder="e.g., Whisper, transcription, AI"
+		label='Vocabulary'
+		placeholder="e.g., 'OpenAI' - company name, 'ChatGPT' - AI assistant name, 'neuralink' - brain-interface tech"
 		value={settings.value['transcription.vocabulary']}
 		oninput={({ currentTarget: { value } }) => {
 			settings.value = {
