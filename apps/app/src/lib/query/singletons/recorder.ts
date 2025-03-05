@@ -15,6 +15,7 @@ import type { Transformer } from './transformer';
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { LogicalPosition, LogicalSize } from '@tauri-apps/api/window';
 import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
+import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
 
 export type Recorder = ReturnType<typeof createRecorder>;
 
@@ -243,14 +244,33 @@ function createRecorder({
 				},
 				{
 					onSuccess: (transcribedText) => {
+						const output = () => {
+							// if copy to clipboard is enabled, copy the transcription to clipboard
+							if (settings.value['transcription.copyToClipboardOnSuccess']) {
+								writeTextToClipboard(transcribedText);
+							}
+							if (settings.value['transcription.insertToCursorOnSuccess']) {
+								writeTextToCursor(transcribedText);
+							}
+						};
+
 						const config = settings.value['postProcessing.config'];
 						if (config.type !== 'none') {
 							const transformToastId = nanoid();
-							transformer.transform.mutate({
-								input: transcribedText,
-								config,
-								toastId: transformToastId,
-							});
+							transformer.transform.mutate(
+								{
+									input: transcribedText,
+									config,
+									toastId: transformToastId,
+								},
+								{
+									onSuccess: () => {
+										output();
+									},
+								},
+							);
+						}else{
+							output();
 						}
 					},
 				},

@@ -8,15 +8,19 @@ import { nanoid } from 'nanoid/non-secure';
 import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
+import type { Transformer } from './transformer';
+import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
 
 export type VadRecorder = ReturnType<typeof createVadRecorder>;
 
 export const initVadRecorderInContext = ({
 	transcriber,
+	transformer,
 }: {
 	transcriber: Transcriber;
+	transformer: Transformer;
 }) => {
-	const vad = createVadRecorder({ transcriber });
+	const vad = createVadRecorder({ transcriber, transformer });
 	setContext('vad', vad);
 	return vad;
 };
@@ -31,9 +35,11 @@ const vadRecorderKeys = {
 };
 
 function createVadRecorder({
-	transcriber
+	transcriber,
+	transformer,
 }: {
 	transcriber: Transcriber;
+	transformer: Transformer;
 }) {
 	const VadService = createVadServiceWeb();
 	const invalidateVadState = () =>
@@ -52,12 +58,6 @@ function createVadRecorder({
 			const ensureVadResult = await VadService.ensureVad({
 				deviceId: settings.value['recording.selectedAudioInputDeviceId'],
 				onSpeechEnd: (blob) => {
-					const toastId = nanoid();
-					toast.success({
-						id: toastId,
-						title: '🎙️ Voice activated speech captured',
-						description: 'Your voice activated speech has been captured.',
-					});
 					console.info('Voice activated speech captured');
 					void playSoundIfEnabled('stop-manual');
 
@@ -69,6 +69,38 @@ function createVadRecorder({
 							language: 'auto',
 						},
 						{
+							onSuccess: (transcribedText) => {
+								const output = () => {
+									// if copy to clipboard is enabled, copy the transcription to clipboard
+									if (
+										settings.value['transcription.copyToClipboardOnSuccess']
+									) {
+										writeTextToClipboard(transcribedText);
+									}
+									if (settings.value['transcription.insertToCursorOnSuccess']) {
+										writeTextToCursor(transcribedText);
+									}
+								};
+
+								const config = settings.value['postProcessing.config'];
+								if (config.type !== 'none') {
+									const transformToastId = nanoid();
+									transformer.transform.mutate(
+										{
+											input: transcribedText,
+											config,
+											toastId: transformToastId,
+										},
+										{
+											onSuccess: () => {
+												output();
+											},
+										},
+									);
+								} else {
+									output();
+								}
+							},
 						},
 					);
 				},

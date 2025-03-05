@@ -9,7 +9,6 @@ import { WhisperingErr, type Recording } from '@repo/shared';
 import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
-import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
 
 export type Transcriber = ReturnType<typeof createTranscriber>;
 
@@ -71,16 +70,8 @@ function createTranscriber() {
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
 		},
-		onSuccess: (transcribedText) => {
+		onSuccess: () => {
 			void playSoundIfEnabled('transcriptionComplete');
-
-			// if copy to clipboard is enabled, copy the transcription to clipboard
-			if (settings.value['transcription.copyToClipboardOnSuccess']) {
-				writeTextToClipboard(transcribedText);
-			}
-			if(settings.value['transcription.insertToCursorOnSuccess']) {
-				writeTextToCursor(transcribedText);
-			}
 		},
 	}));
 
