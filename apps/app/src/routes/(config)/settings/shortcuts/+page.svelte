@@ -16,34 +16,17 @@
 </script>
 
 <svelte:head>
-	<title>Configure Shortcuts - Whispering</title>
+	<title>Configure Shortcuts</title>
 </svelte:head>
 
 <div class="space-y-6">
 	<div>
 		<h3 class="text-lg font-medium">Shortcuts</h3>
 		<p class="text-muted-foreground text-sm">
-			Configure your shortcuts for activating Whispering.
+			Configure your shortcuts for activating WhisperingX.
 		</p>
 	</div>
 	<Separator />
-
-	<LabeledInput
-		id="local-shortcut"
-		label="Local Shortcut"
-		placeholder="Local Shortcut to toggle recording"
-		value={settings.value['shortcuts.currentLocalShortcut']}
-		onchange={({ currentTarget: { value } }) => {
-			settings.value = {
-				...settings.value,
-				'shortcuts.currentLocalShortcut': value,
-			};
-			registerShortcuts.registerLocalShortcut({
-				shortcut: value,
-				callback: (action) => recorder.toggleRecording(action=== 'Pressed'),
-			});
-		}}
-	/>
 
 	<LabeledInput
 		id="global-shortcut"

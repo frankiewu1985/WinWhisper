@@ -1,4 +1,3 @@
-import { useCreateRecording } from '$lib/query/recordings/mutations';
 import { createResultMutation, createResultQuery } from '$lib/services';
 import { playSoundIfEnabled } from '$lib/services/index.js';
 import { createVadServiceWeb } from '$lib/services/recorder/VadService.web';
@@ -10,6 +9,8 @@ import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
+import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
+import { hideRecorderIndicator, showRecorderIndicator } from './recorderIndicator';
 
 export type VadRecorder = ReturnType<typeof createVadRecorder>;
 
@@ -44,7 +45,6 @@ function createVadRecorder({
 	const VadService = createVadServiceWeb();
 	const invalidateVadState = () =>
 		queryClient.invalidateQueries({ queryKey: vadRecorderKeys.state });
-	const { createRecording } = useCreateRecording();
 
 	const vadState = createResultQuery(() => ({
 		queryKey: vadRecorderKeys.state,
@@ -59,81 +59,48 @@ function createVadRecorder({
 			const ensureVadResult = await VadService.ensureVad({
 				deviceId: settings.value['recording.selectedAudioInputDeviceId'],
 				onSpeechEnd: (blob) => {
-					const toastId = nanoid();
-					toast.success({
-						id: toastId,
-						title: '🎙️ Voice activated speech captured',
-						description: 'Your voice activated speech has been captured.',
-					});
 					console.info('Voice activated speech captured');
 					void playSoundIfEnabled('stop-manual');
 
-					const now = new Date().toISOString();
-					const newRecordingId = nanoid();
-
-					createRecording.mutate(
+					const transcribeToastId = nanoid();
+					transcriber.transcribeRecording.mutate(
 						{
-							id: newRecordingId,
-							title: '',
-							subtitle: '',
-							createdAt: now,
-							updatedAt: now,
-							timestamp: now,
-							transcribedText: '',
-							blob,
-							transcriptionStatus: 'UNPROCESSED',
+							recording: { blob },
+							toastId: transcribeToastId,
+							language: 'auto',
 						},
 						{
-							onError(error) {
-								toast.error({
-									id: toastId,
-									title: '❌ Database Save Failed',
-									description:
-										'Your voice activated capture was captured but could not be saved to the database. Please check your storage space and permissions.',
-									action: {
-										type: 'more-details',
-										error: error,
-									},
-								});
-							},
-							onSuccess: async (createdRecording) => {
-								toast.loading({
-									id: toastId,
-									title: '✨ Voice activated capture complete!',
-									description: settings.value[
-										'recording.isFasterRerecordEnabled'
-									]
-										? 'Voice activated capture complete! Ready for another take'
-										: 'Voice activated capture complete! Session closed successfully',
-								});
+							onSuccess: (transcribedText) => {
+								const output = () => {
+									// if copy to clipboard is enabled, copy the transcription to clipboard
+									if (
+										settings.value['transcription.copyToClipboardOnSuccess']
+									) {
+										writeTextToClipboard(transcribedText);
+									}
+									if (settings.value['transcription.insertToCursorOnSuccess']) {
+										writeTextToCursor(transcribedText);
+									}
+								};
 
-								const transcribeToastId = nanoid();
-								transcriber.transcribeRecording.mutate(
-									{
-										recording: createdRecording,
-										toastId: transcribeToastId,
-										language: 'auto'
-									},
-									{
-										onSuccess: () => {
-											if (
-												settings.value[
-													'transformations.selectedTransformationId'
-												]
-											) {
-												const transformToastId = nanoid();
-												transformer.transformRecording.mutate({
-													recordingId: createdRecording.id,
-													transformationId:
-														settings.value[
-															'transformations.selectedTransformationId'
-														],
-													toastId: transformToastId,
-												});
-											}
+								const config = settings.value['postProcessing.config'];
+								if (config.type !== 'none') {
+									const transformToastId = nanoid();
+									transformer.transform.mutate(
+										{
+											input: transcribedText,
+											config,
+											toastId: transformToastId,
 										},
-									},
-								);
+										{
+											onSuccess: () => {
+												output();
+											},
+										},
+									);
+								} else {
+									output();
+								}
 							},
 						},
 					);
@@ -182,7 +149,8 @@ function createVadRecorder({
 					'Speak now. Will transcribe until you end the voice activated capture session',
 			});
 			console.info('Voice activated capture started');
-			void playSoundIfEnabled('start-vad');
+			showRecorderIndicator();
+			void playSoundIfEnabled('start-vad');			
 		},
 		onSettled: invalidateVadState,
 	}));
@@ -212,6 +180,8 @@ function createVadRecorder({
 
 			console.info('Stopping voice activated capture');
 			void playSoundIfEnabled('on-stopped-voice-activated-session');
+			
+			hideRecorderIndicator();
 
 			if (!settings.value['recording.isFasterRerecordEnabled']) {
 				toast.loading({

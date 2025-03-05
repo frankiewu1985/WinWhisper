@@ -1,7 +1,7 @@
 import { Ok, tryAsync } from '@epicenterhq/result';
 import { WhisperingErr, WhisperingWarning } from '@repo/shared';
 import { invoke } from '@tauri-apps/api/core';
-import { writeText } from '@tauri-apps/plugin-clipboard-manager';
+import { writeText as writeTextToClipboard } from '@tauri-apps/plugin-clipboard-manager';
 import { type } from '@tauri-apps/plugin-os';
 import type { ClipboardService } from './ClipboardService';
 
@@ -21,7 +21,7 @@ export function createClipboardServiceDesktop(): ClipboardService {
 	return {
 		setClipboardText: (text) =>
 			tryAsync({
-				try: () => writeText(text),
+				try: () => writeTextToClipboard(text),
 				mapErr: (error) =>
 					WhisperingErr({
 						title: '⚠️ Unable to copy to clipboard',
@@ -65,7 +65,7 @@ export function createClipboardServiceDesktop(): ClipboardService {
 					title:
 						'Please enable or re-enable accessibility to paste transcriptions!',
 					description:
-						'Accessibility must be enabled or re-enabled for Whispering after install or update. Follow the link below for instructions.',
+						'Accessibility must be enabled or re-enabled for WhisperingX after install or update. Follow the link below for instructions.',
 					action: {
 						type: 'link',
 						label: 'Open Directions',

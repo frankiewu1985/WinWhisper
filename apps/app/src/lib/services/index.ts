@@ -14,13 +14,8 @@ import {
 	createSetTrayIconDesktopService,
 } from './SetTrayIconService';
 import { createClipboardServiceDesktop } from './clipboard/ClipboardService.desktop';
-import {
-	createDbRecordingsServiceDexie,
-	createDbTransformationsServiceDexie,
-} from './db/DbService.dexie';
-import { createDownloadServiceDesktop } from './download/DownloadService.desktop';
 import { createHttpServiceDesktop } from './http/HttpService.desktop';
-import { createRecorderServiceTauri } from './recorder/RecorderService.tauri';
+// import { createRecorderServiceTauri } from './recorder/RecorderService.tauri';
 import { createRecorderServiceWeb } from './recorder/RecorderService.web';
 import { createRunTransformationService } from './runTransformation';
 import { createPlaySoundServiceDesktop } from './sound/PlaySoundService.desktop';
@@ -91,29 +86,23 @@ export function createResultMutation<
 	});
 }
 
-export const DownloadService = createDownloadServiceDesktop();
-
 export const ClipboardService = createClipboardServiceDesktop();
 
 export const SetTrayIconService = createSetTrayIconDesktopService();
-
-export const DbRecordingsService = createDbRecordingsServiceDexie();
-export const DbTransformationsService = createDbTransformationsServiceDexie();
 
 const HttpService = createHttpServiceDesktop();
 
 const PlaySoundService = createPlaySoundServiceDesktop();
 
 export const RunTransformationService = createRunTransformationService({
-	HttpService,
-	DbTransformationsService,
+	HttpService
 });
 
 /**
  * Services that are determined by the user's settings.
  */
 export const userConfiguredServices = (() => {
-	const RecorderServiceTauri = createRecorderServiceTauri();
+	// const RecorderServiceTauri = createRecorderServiceTauri();
 	const RecorderServiceWeb = createRecorderServiceWeb();
 
 	return {
@@ -150,9 +139,9 @@ export const userConfiguredServices = (() => {
 			}
 		},
 		get recorder() {
-			if (settings.value['recorder.selectedRecorderService'] === 'Tauri') {
-				return RecorderServiceTauri;
-			}
+			// if (settings.value['recorder.selectedRecorderService'] === 'Tauri') {
+			// 	return RecorderServiceTauri;
+			// }
 			return RecorderServiceWeb;
 		},
 	};
@@ -165,6 +154,7 @@ export const playSoundIfEnabled = (soundName: WhisperingSoundNames) => {
 				void PlaySoundService.playSound(soundName);
 			}
 			break;
+		case 'start':
 		case 'start-manual':
 			if (settings.value['sound.playOn.start']) {
 				void PlaySoundService.playSound(soundName);
@@ -175,6 +165,7 @@ export const playSoundIfEnabled = (soundName: WhisperingSoundNames) => {
 				void PlaySoundService.playSound(soundName);
 			}
 			break;
+		case 'stop':
 		case 'stop-manual':
 			if (settings.value['sound.playOn.stop']) {
 				void PlaySoundService.playSound(soundName);
@@ -187,11 +178,6 @@ export const playSoundIfEnabled = (soundName: WhisperingSoundNames) => {
 			break;
 		case 'transcriptionComplete':
 			if (settings.value['sound.playOn.transcriptionComplete']) {
-				void PlaySoundService.playSound(soundName);
-			}
-			break;
-		case 'transformationComplete':
-			if (settings.value['sound.playOn.transformationComplete']) {
 				void PlaySoundService.playSound(soundName);
 			}
 			break;

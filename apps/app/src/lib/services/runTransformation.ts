@@ -2,14 +2,8 @@ import { settings } from '$lib/stores/settings.svelte';
 import { getErrorMessage } from '$lib/utils';
 import { Err, Ok, type Result, tryAsync } from '@epicenterhq/result';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-import { POST_PROCESSING_PROMPT_SYSTEM_DEFAULT, POST_PROCESSING_PROMPT_USER_DEFAULT, WhisperingErr } from '@repo/shared';
+import { POST_PROCESSING_PROMPT_SYSTEM_DEFAULT, POST_PROCESSING_PROMPT_USER_DEFAULT, WhisperingErr, type PostProcessingConfig } from '@repo/shared';
 import { z } from 'zod';
-import { DbRecordingsService } from '.';
-import type {
-	DbTransformationsService,
-	TransformationRun,
-	TransformationStep,
-} from './db';
 import type { HttpService } from './http/HttpService';
 
 type TransformErrorProperties = {
@@ -92,18 +86,18 @@ export const TransformError = <
 
 export const handleStep = async ({
 	input,
-	step,
+	config,
 	HttpService,
 }: {
 	input: string;
-	step: TransformationStep;
+	config: PostProcessingConfig;
 	HttpService: HttpService;
 }): Promise<Result<string, string>> => {
-	switch (step.type) {
+	switch (config.type) {
 		case 'find_replace': {
-			const findText = step['find_replace.findText'];
-			const replaceText = step['find_replace.replaceText'];
-			const useRegex = step['find_replace.useRegex'];
+			const findText = config['find_replace.findText'];
+			const replaceText = config['find_replace.replaceText'];
+			const useRegex = config['find_replace.useRegex'];
 
 			if (useRegex) {
 				try {
@@ -119,8 +113,8 @@ export const handleStep = async ({
 
 		case 'prompt_transform': {
 			const vocabulary = settings.value['transcription.vocabulary'];
-			const provider = step['prompt_transform.inference.provider'];
-			const rawSystemPrompt = step['prompt_transform.systemPromptTemplate'];
+			const provider = config['prompt_transform.inference.provider'];
+			const rawSystemPrompt = config['prompt_transform.systemPromptTemplate'];
 			const systemPrompt = (
 				rawSystemPrompt.trim().length > 0
 					? rawSystemPrompt.trim()
@@ -128,7 +122,7 @@ export const handleStep = async ({
 			)
 				.replace('{{input}}', input)
 				.replace('{{vocabulary}}', vocabulary);
-			const rawUserPrompt = step['prompt_transform.userPromptTemplate'];
+			const rawUserPrompt = config['prompt_transform.userPromptTemplate'];
 			const userPrompt = (
 				rawUserPrompt.trim().length > 0
 					? rawUserPrompt.trim()
@@ -140,7 +134,7 @@ export const handleStep = async ({
 			switch (provider) {
 				case 'OpenAI': {
 					const model =
-						step['prompt_transform.inference.provider.OpenAI.model'];
+						config['prompt_transform.inference.provider.OpenAI.model'];
 					const result = await HttpService.post({
 						url: 'https://api.openai.com/v1/chat/completions',
 						headers: {
@@ -179,7 +173,7 @@ export const handleStep = async ({
 				}
 
 				case 'Groq': {
-					const model = step['prompt_transform.inference.provider.Groq.model'];
+					const model = config['prompt_transform.inference.provider.Groq.model'];
 					const result = await HttpService.post({
 						url: 'https://api.groq.com/openai/v1/chat/completions',
 						headers: {
@@ -219,7 +213,7 @@ export const handleStep = async ({
 
 				case 'Anthropic': {
 					const model =
-						step['prompt_transform.inference.provider.Anthropic.model'];
+						config['prompt_transform.inference.provider.Anthropic.model'];
 					const result = await HttpService.post({
 						url: 'https://api.anthropic.com/v1/messages',
 						headers: {
@@ -269,7 +263,7 @@ export const handleStep = async ({
 							);
 
 							const model = genAI.getGenerativeModel({
-								model: step['prompt_transform.inference.provider.Google.model'],
+								model: config['prompt_transform.inference.provider.Google.model'],
 								generationConfig: { temperature: 0 },
 							});
 							return await model.generateContent(combinedPrompt);
@@ -295,127 +289,25 @@ export const handleStep = async ({
 		}
 
 		default:
-			return Err(`Unsupported step type: ${step.type}`);
+			return Err(`Unsupported step type: ${config.type}`);
 	}
 };
 
 export function createRunTransformationService({
-	DbTransformationsService,
 	HttpService,
 }: {
-	DbTransformationsService: DbTransformationsService;
 	HttpService: HttpService;
 }) {
 	const runTransformation = async ({
 		input,
-		transformationId,
-		recordingId,
+		config,
 	}: {
 		input: string;
-		transformationId: string;
-		recordingId: string | null;
-	}): Promise<TransformResult<TransformationRun>> => {
-		const getTransformationResult =
-			await DbTransformationsService.getTransformationById(transformationId);
-		if (!getTransformationResult.ok || !getTransformationResult.data) {
-			return TransformError({ code: 'TRANSFORMATION_NOT_FOUND' });
-		}
-
-		const transformation = getTransformationResult.data;
-
-		if (transformation.steps.length === 0) {
-			return TransformError({ code: 'NO_STEPS_CONFIGURED' });
-		}
-
-		const createTransformationRunResult =
-			await DbTransformationsService.createTransformationRun({
-				transformationId: transformation.id,
-				recordingId,
-				input,
-			});
-
-		if (!createTransformationRunResult.ok)
-			return TransformError({
-				code: 'FAILED_TO_CREATE_TRANSFORMATION_RUN',
-			});
-
-		const transformationRun = createTransformationRunResult.data;
-
-		let currentInput = input;
-
-		for (const step of transformation.steps) {
-			const newTransformationStepRunResult =
-				await DbTransformationsService.addTransformationStepRunToTransformationRun(
-					{ transformationRun, stepId: step.id, input: currentInput },
-				);
-
-			if (!newTransformationStepRunResult.ok)
-				return TransformError({
-					code: 'FAILED_TO_ADD_TRANSFORMATION_STEP_RUN',
-				});
-
-			const newTransformationStepRun = newTransformationStepRunResult.data;
-
-			const handleStepResult = await handleStep({
-				input: currentInput,
-				step,
-				HttpService,
-			});
-
-			if (!handleStepResult.ok) {
-				const dbResult =
-					await DbTransformationsService.markTransformationRunAndRunStepAsFailed(
-						{
-							transformationRun,
-							stepRunId: newTransformationStepRun.id,
-							error: handleStepResult.error,
-						},
-					);
-				if (!dbResult.ok)
-					return TransformError({
-						code: 'FAILED_TO_MARK_TRANSFORMATION_RUN_AND_STEP_AS_FAILED',
-					});
-				return dbResult;
-			}
-
-			const dbResult =
-				await DbTransformationsService.markTransformationRunStepAsCompleted({
-					transformationRun,
-					stepRunId: newTransformationStepRun.id,
-					output: handleStepResult.data,
-				});
-
-			if (!dbResult.ok)
-				return TransformError({
-					code: 'FAILED_TO_MARK_TRANSFORMATION_RUN_STEP_AS_COMPLETED',
-				});
-
-			currentInput = handleStepResult.data;
-		}
-
-		const dbResult =
-			await DbTransformationsService.markTransformationRunAsCompleted({
-				transformationRun,
-				output: currentInput,
-			});
-
-		if (!dbResult.ok)
-			return TransformError({
-				code: 'FAILED_TO_MARK_TRANSFORMATION_RUN_AS_COMPLETED',
-			});
-		return dbResult;
-	};
-
-	const runTransformationStep = async ({
-		input,
-		step,
-	}: {
-		input: string;
-		step: TransformationStep;
+		config: PostProcessingConfig;
 	}): Promise<TransformResult<string>> => {
 		const handleStepResult = await handleStep({
 			input,
-			step,
+			config,
 			HttpService,
 		});
 
@@ -429,55 +321,19 @@ export function createRunTransformationService({
 	};
 
 	return {
-		transformInput: async ({
+		runTransformation: async ({
 			input,
-			transformationId,
+			config,
 		}: {
 			input: string;
-			transformationId: string;
-		}): Promise<TransformResult<TransformationRun>> => {
-			if (!input.trim()) {
-				return TransformError({ code: 'NO_INPUT' });
-			}
-			return runTransformation({
-				input,
-				transformationId,
-				recordingId: null,
-			});
-		},
-		transformRecording: async ({
-			transformationId,
-			recordingId,
-		}: {
-			transformationId: string;
-			recordingId: string;
-		}): Promise<TransformResult<TransformationRun>> => {
-			const getRecordingResult =
-				await DbRecordingsService.getRecordingById(recordingId);
-			if (!getRecordingResult.ok || !getRecordingResult.data) {
-				return TransformError({ code: 'RECORDING_NOT_FOUND' });
-			}
-			const recording = getRecordingResult.data;
-
-			return runTransformation({
-				input: recording.transcribedText,
-				transformationId,
-				recordingId,
-			});
-		},
-		runTransformationStep: async ({
-			input,
-			transformationStep,
-		}: {
-			input: string;
-			transformationStep: TransformationStep;
+			config: PostProcessingConfig;
 		}): Promise<TransformResult<string>> => {
 			if (!input.trim()) {
 				return TransformError({ code: 'NO_INPUT' });
 			}
-			return runTransformationStep({
+			return runTransformation({
 				input,
-				step: transformationStep,
+				config,
 			});
 		},
 	};

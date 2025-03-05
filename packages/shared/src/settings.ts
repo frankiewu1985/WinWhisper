@@ -23,18 +23,11 @@ export const getDefaultSettings = () =>
     "sound.playOn.stop": true,
     "sound.playOn.cancel": true,
     "sound.playOn.transcriptionComplete": true,
-    "sound.playOn.transformationComplete": true,
-    "transcription.clipboard.copyOnSuccess": true,
-    "transcription.clipboard.pasteOnSuccess": true,
-    "transformation.clipboard.copyOnSuccess": true,
-    "transformation.clipboard.pasteOnSuccess": true,
+    "transcription.copyToClipboardOnSuccess": false,
+    "transcription.insertToCursorOnSuccess": true,
     "recording.isFasterRerecordEnabled": false,
-    "system.closeToTray": false,
+    "system.closeToTray": true,
     "system.alwaysOnTop": "Never",
-
-    // Recording retention defaults
-    "database.recordingRetentionStrategy": "keep-forever",
-    "database.maxRecordingCount": "5",
 
     "recording.selectedAudioInputDeviceId": "default",
     "recording.bitrateKbps": DEFAULT_BITRATE_KBPS,
@@ -76,7 +69,6 @@ export const getDefaultSettings = () =>
     "apiKeys.groq": "",
     "apiKeys.google": "",
 
-    "shortcuts.currentLocalShortcut": "space",
     "shortcuts.currentGlobalShortcut": "CommandOrControl+Shift+;",
     "shortcuts.currentGlobalShortcut1": "CommandOrControl+Shift+1",
     "shortcuts.currentGlobalShortcut2": "CommandOrControl+Shift+2",
@@ -89,25 +81,16 @@ export const settingsSchema = z.object({
 		'sound.playOn.stop': z.boolean(),
 		'sound.playOn.cancel': z.boolean(),
 		'sound.playOn.transcriptionComplete': z.boolean(),
-		'sound.playOn.transformationComplete': z.boolean(),
-	} satisfies {
+	} satisfies Partial<{
 		[K in WhisperingSoundNames as `sound.playOn.${K}`]: ZodBoolean;
-	}),
+	}>),
 
-	'transcription.clipboard.copyOnSuccess': z.boolean(),
-	'transcription.clipboard.pasteOnSuccess': z.boolean(),
-	'transformation.clipboard.copyOnSuccess': z.boolean(),
-	'transformation.clipboard.pasteOnSuccess': z.boolean(),
+	'transcription.copyToClipboardOnSuccess': z.boolean(),
+	'transcription.insertToCursorOnSuccess': z.boolean(),
 	'recording.isFasterRerecordEnabled': z.boolean(),
 
 	'system.closeToTray': z.boolean(),
 	'system.alwaysOnTop': z.enum(ALWAYS_ON_TOP_VALUES),
-
-	'database.recordingRetentionStrategy': z.enum([
-		'keep-forever',
-		'limit-count',
-	] as const),
-	'database.maxRecordingCount': z.string().regex(/^\d+$/, 'Must be a number'),
 
 	'recording.selectedAudioInputDeviceId': z.string().nullable(),
 	'recording.bitrateKbps': z
@@ -154,7 +137,6 @@ export const settingsSchema = z.object({
 	'apiKeys.groq': z.string(),
 	'apiKeys.google': z.string(),
 
-	'shortcuts.currentLocalShortcut': z.string(),
 	'shortcuts.currentGlobalShortcut': z.string(),
 	'shortcuts.currentGlobalShortcut1': z.string(),
 	'shortcuts.currentGlobalShortcut2': z.string(),

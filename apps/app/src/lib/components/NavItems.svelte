@@ -1,13 +1,7 @@
 <script lang="ts">
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
-	import { GithubIcon } from '$lib/components/icons';
-	import { settings } from '$lib/stores/settings.svelte';
 	import { cn } from '$lib/utils';
-	import { LogicalSize, getCurrentWindow } from '@tauri-apps/api/window';
 	import {
-		LayersIcon,
-		ListIcon,
-		Minimize2Icon,
 		MoonIcon,
 		SettingsIcon,
 		SunIcon,
@@ -21,15 +15,6 @@
 	class={cn('flex items-center gap-1.5', className)}
 	style="view-transition-name: nav"
 >
-	<WhisperingButton
-		tooltipContent="Transformations"
-		href="/transformations"
-		variant="ghost"
-		size="icon"
-		class="relative"
-	>
-		<LayersIcon class="h-4 w-4" aria-hidden="true" />
-	</WhisperingButton>
 	<WhisperingButton
 		tooltipContent="Settings"
 		href="/settings"

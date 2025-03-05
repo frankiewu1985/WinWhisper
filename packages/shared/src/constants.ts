@@ -11,7 +11,7 @@ export const WHISPERING_RECORDINGS_PATHNAME = '/recordings' as const;
 
 export const WHISPERING_SETTINGS_PATHNAME = '/settings' as const;
 
-export const DEBOUNCE_TIME_MS = 500;
+export const DEBOUNCE_TIME_MS = 1000;
 
 export const BITRATE_VALUES_KBPS = [
 	'16',
@@ -282,13 +282,14 @@ export const GOOGLE_INFERENCE_MODEL_OPTIONS = GOOGLE_INFERENCE_MODELS.map(
 );
 
 export type WhisperingSoundNames =
+	| 'start'
+	| 'stop'
 	| 'start-vad'
 	| 'start-manual'
 	| 'stop-manual'
 	| 'on-stopped-voice-activated-session'
 	| 'cancel'
-	| 'transcriptionComplete'
-	| 'transformationComplete';
+	| 'transcriptionComplete';
 
 
 export const TRANSFORMATION_STEP_TYPES = [
@@ -301,3 +302,32 @@ export const TRANSFORMATION_STEP_TYPES = [
 export const TRANSCRIPTION_PROMPT_DEFAULT = `Transcribe the provided audio input with high accuracy, preserving the original language as spoken, without translating any part of the text into another language, even if multiple languages are present. Prioritize capturing the exact wording, including dialects and natural speech patterns. Incorporate the following custom vocabulary, favoring these words when their pronunciation and audio context match: [{{vocabulary}}]. If audio quality is poor or contains background noise, use contextual clues to interpret the most likely spoken content without altering the language.`;
 export const POST_PROCESSING_PROMPT_SYSTEM_DEFAULT = `Refine transcriptions to produce an accurate representation of what was said in the original audio, preserving the original language without any translation. Remove hesitations and filler words (e.g., 'um,' 'uh,' 'you know') while maintaining the natural flow and meaning of the speech. Use the following custom vocabulary to correct or favor these words when appropriate based on context and their provided explanations: [{{vocabulary}}]. Return only the corrected transcription as a single string, with no additional text or explanation.`;
 export const POST_PROCESSING_PROMPT_USER_DEFAULT = `Here’s the transcription to refine: '{{input}}' Please process it according to the guidelines.`;
+
+export type Recording = {
+	blob: Blob | undefined;
+};
+
+export type PostProcessingConfig = {
+	id: string;
+	// For now, steps don't need titles or descriptions. They can be computed from the type as "Find and Replace" or "Prompt Transform"
+	type: (typeof TRANSFORMATION_STEP_TYPES)[number];
+
+	'prompt_transform.inference.provider': (typeof INFERENCE_PROVIDERS)[number];
+	'prompt_transform.inference.provider.OpenAI.model': (typeof OPENAI_INFERENCE_MODELS)[number];
+	'prompt_transform.inference.provider.Groq.model': (typeof GROQ_INFERENCE_MODELS)[number];
+	'prompt_transform.inference.provider.Anthropic.model': (typeof ANTHROPIC_INFERENCE_MODELS)[number];
+	'prompt_transform.inference.provider.Google.model': (typeof GOOGLE_INFERENCE_MODELS)[number];
+
+	'prompt_transform.systemPromptTemplate': string;
+	'prompt_transform.userPromptTemplate': string;
+
+	'find_replace.findText': string;
+	'find_replace.replaceText': string;
+	'find_replace.useRegex': boolean;
+};
+
+export const TRANSFORMATION_STEP_TYPES_TO_LABELS = {
+	prompt_transform: 'Prompt Transform',
+	find_replace: 'Find Replace',
+	none: 'None',
+} as const satisfies Record<(typeof TRANSFORMATION_STEP_TYPES)[number], string>;

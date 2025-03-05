@@ -9,31 +9,31 @@
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import {
 		ANTHROPIC_INFERENCE_MODEL_OPTIONS,
+		debounce,
+		DEBOUNCE_TIME_MS,
 		GOOGLE_INFERENCE_MODEL_OPTIONS,
 		GROQ_INFERENCE_MODEL_OPTIONS,
 		INFERENCE_PROVIDER_OPTIONS,
 		OPENAI_INFERENCE_MODEL_OPTIONS,
 		TRANSFORMATION_STEP_TYPES,
+		TRANSFORMATION_STEP_TYPES_TO_LABELS,
+		type PostProcessingConfig,
 	} from '@repo/shared';
 	import GroqApiKeyInput from '../../-components/GroqApiKeyInput.svelte';
 	import OpenAiApiKeyInput from '../../-components/OpenAiApiKeyInput.svelte';
 
 	import * as Accordion from '$lib/components/ui/accordion';
-	import {
-		TRANSFORMATION_STEP_TYPES_TO_LABELS,
-		type TransformationStep,
-	} from '$lib/services/db';
 	import AnthropicApiKeyInput from '../../-components/AnthropicApiKeyInput.svelte';
 	import GoogleApiKeyInput from '../../-components/GoogleApiKeyInput.svelte';
 	import { settings } from '$lib/stores/settings.svelte';
 
-	let transformationStep: TransformationStep =
+	let transformationConfig: PostProcessingConfig =
 		settings.value['postProcessing.config'];
-	const setTransformationStep = (step: TransformationStep) => {
-		transformationStep = { ...step };
-		settings.value['postProcessing.config'] = transformationStep;
+	const setTransformationConfig = (step: PostProcessingConfig) => {
+		transformationConfig = { ...step };
+		settings.value['postProcessing.config'] = transformationConfig;
 	};
-	const setTransformationStepDebounced = setTransformationStep;
+	const setTransformationConfigDebounced = debounce(setTransformationConfig, DEBOUNCE_TIME_MS);
 </script>
 
 <svelte:head>
@@ -54,7 +54,7 @@
 				<LabeledSelect
 					id="step-type"
 					label="Type"
-					selected={transformationStep.type}
+					selected={transformationConfig.type}
 					items={TRANSFORMATION_STEP_TYPES.map(
 						(type) =>
 							({
@@ -63,7 +63,7 @@
 							}) as const,
 					)}
 					onSelectedChange={(value) => {
-						setTransformationStep({ ...transformationStep, type: value });
+						setTransformationConfig({ ...transformationConfig, type: value });
 					}}
 					hideLabel
 					class="h-8"
@@ -71,7 +71,7 @@
 				/>
 			</div>
 		</div>
-		{#if transformationStep.type === 'prompt_transform'}
+		{#if transformationConfig.type === 'prompt_transform'}
 			<Card.Description>
 				{@html `
 				<b>Variables:</b><br>
@@ -80,16 +80,16 @@
 			</Card.Description>
 		{/if}
 		
-		{#if transformationStep.type === 'find_replace'}
+		{#if transformationConfig.type === 'find_replace'}
 			<div class="space-y-4">
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<LabeledInput
 						id="find_replace.findText"
 						label="Find Text"
-						value={transformationStep['find_replace.findText']}
+						value={transformationConfig['find_replace.findText']}
 						oninput={(e) => {
-							setTransformationStepDebounced({
-								...transformationStep,
+							setTransformationConfigDebounced({
+								...transformationConfig,
 								'find_replace.findText': e.currentTarget.value,
 							});
 						}}
@@ -98,10 +98,10 @@
 					<LabeledInput
 						id="find_replace.replaceText"
 						label="Replace Text"
-						value={transformationStep['find_replace.replaceText']}
+						value={transformationConfig['find_replace.replaceText']}
 						oninput={(e) => {		
-							setTransformationStepDebounced({
-								...transformationStep,
+							setTransformationConfigDebounced({
+								...transformationConfig,
 								'find_replace.replaceText': e.currentTarget.value,
 							});
 						}}
@@ -117,10 +117,10 @@
 							<LabeledSwitch
 								id="find_replace.useRegex"
 								label="Use Regex"
-								checked={transformationStep['find_replace.useRegex']}
+								checked={transformationConfig['find_replace.useRegex']}
 								onCheckedChange={(v) => {
-									setTransformationStep({
-										...transformationStep,
+									setTransformationConfig({
+										...transformationConfig,
 										'find_replace.useRegex': v,
 									});
 								}}
@@ -130,83 +130,83 @@
 					</Accordion.Item>
 				</Accordion.Root>
 			</div>
-		{:else if transformationStep.type === 'prompt_transform'}
+		{:else if transformationConfig.type === 'prompt_transform'}
 			<div class="space-y-4">
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
 					<LabeledSelect
 						id="prompt_transform.inference.provider"
 						label="Provider"
 						items={INFERENCE_PROVIDER_OPTIONS}
-						selected={transformationStep['prompt_transform.inference.provider']}
+						selected={transformationConfig['prompt_transform.inference.provider']}
 						placeholder="Select a provider"
 						onSelectedChange={(value) => {
-							setTransformationStep({
-								...transformationStep,
+							setTransformationConfig({
+								...transformationConfig,
 								'prompt_transform.inference.provider': value,
 							});
 						}}
 					/>
 
-					{#if transformationStep['prompt_transform.inference.provider'] === 'OpenAI'}
+					{#if transformationConfig['prompt_transform.inference.provider'] === 'OpenAI'}
 						<LabeledSelect
 							id="prompt_transform.inference.provider.OpenAI.model"
 							label="Model"
 							items={OPENAI_INFERENCE_MODEL_OPTIONS}
-							selected={transformationStep[
+							selected={transformationConfig[
 								'prompt_transform.inference.provider.OpenAI.model'
 							]}
 							placeholder="Select a model"
 							onSelectedChange={(value) => {
-								setTransformationStep({
-									...transformationStep,
+								setTransformationConfig({
+									...transformationConfig,
 									'prompt_transform.inference.provider.OpenAI.model': value,
 								});
 							}}
 						/>
-					{:else if transformationStep['prompt_transform.inference.provider'] === 'Groq'}
+					{:else if transformationConfig['prompt_transform.inference.provider'] === 'Groq'}
 						<LabeledSelect
 							id="prompt_transform.inference.provider.Groq.model"
 							label="Model"
 							items={GROQ_INFERENCE_MODEL_OPTIONS}
-							selected={transformationStep[
+							selected={transformationConfig[
 								'prompt_transform.inference.provider.Groq.model'
 							]}
 							placeholder="Select a model"
 							onSelectedChange={(value) => {
-								setTransformationStep({
-									...transformationStep,
+								setTransformationConfig({
+									...transformationConfig,
 									'prompt_transform.inference.provider.Groq.model': value,
 								});
 							}}
 						/>
-					{:else if transformationStep['prompt_transform.inference.provider'] === 'Anthropic'}
+					{:else if transformationConfig['prompt_transform.inference.provider'] === 'Anthropic'}
 						<LabeledSelect
 							id="prompt_transform.inference.provider.Anthropic.model"
 							label="Model"
 							items={ANTHROPIC_INFERENCE_MODEL_OPTIONS}
-							selected={transformationStep[
+							selected={transformationConfig[
 								'prompt_transform.inference.provider.Anthropic.model'
 							]}
 							placeholder="Select a model"
 							onSelectedChange={(value) => {
-								setTransformationStep({
-									...transformationStep,
+								setTransformationConfig({
+									...transformationConfig,
 									'prompt_transform.inference.provider.Anthropic.model': value,
 								});
 							}}
 						/>
-					{:else if transformationStep['prompt_transform.inference.provider'] === 'Google'}
+					{:else if transformationConfig['prompt_transform.inference.provider'] === 'Google'}
 						<LabeledSelect
 							id="prompt_transform.inference.provider.Google.model"
 							label="Model"
 							items={GOOGLE_INFERENCE_MODEL_OPTIONS}
-							selected={transformationStep[
+							selected={transformationConfig[
 								'prompt_transform.inference.provider.Google.model'
 							]}
 							placeholder="Select a model"
 							onSelectedChange={(value) => {
-								setTransformationStep({
-									...transformationStep,
+								setTransformationConfig({
+									...transformationConfig,
 									'prompt_transform.inference.provider.Google.model': value,
 								});
 							}}
@@ -217,10 +217,10 @@
 				<LabeledTextarea
 					id="prompt_transform.systemPromptTemplate"
 					label="System Prompt Template"
-					value={transformationStep['prompt_transform.systemPromptTemplate']}
+					value={transformationConfig['prompt_transform.systemPromptTemplate']}
 					oninput={(e) => {
-						setTransformationStepDebounced({
-							...transformationStep,
+						setTransformationConfigDebounced({
+							...transformationConfig,
 							'prompt_transform.systemPromptTemplate': e.currentTarget.value,
 						});
 					}}
@@ -229,17 +229,17 @@
 				<LabeledTextarea
 					id="prompt_transform.userPromptTemplate"
 					label="User Prompt Template"
-					value={transformationStep['prompt_transform.userPromptTemplate']}
+					value={transformationConfig['prompt_transform.userPromptTemplate']}
 					oninput={(e) => {
-						setTransformationStepDebounced({
-							...transformationStep,
+						setTransformationConfigDebounced({
+							...transformationConfig,
 							'prompt_transform.userPromptTemplate': e.currentTarget.value,
 						});
 					}}
 					placeholder="Tell the AI what to do with your text. Use {'{{input}}'} where you want your text to appear, e.g., 'Format this transcript into clear sections: {'{{input}}'}'"
 				>
 					{#snippet description()}
-						{#if transformationStep['prompt_transform.userPromptTemplate'] && !transformationStep['prompt_transform.userPromptTemplate'].includes('{{input}}')}
+						{#if transformationConfig['prompt_transform.userPromptTemplate'] && !transformationConfig['prompt_transform.userPromptTemplate'].includes('{{input}}')}
 							<p class="text-amber-500 text-sm font-semibold">
 								Remember to include {'{{input}}'} in your prompt - this is where
 								your text will be inserted!
@@ -253,13 +253,13 @@
 							Advanced Options
 						</Accordion.Trigger>
 						<Accordion.Content>
-							{#if transformationStep['prompt_transform.inference.provider'] === 'OpenAI'}
+							{#if transformationConfig['prompt_transform.inference.provider'] === 'OpenAI'}
 								<OpenAiApiKeyInput />
-							{:else if transformationStep['prompt_transform.inference.provider'] === 'Groq'}
+							{:else if transformationConfig['prompt_transform.inference.provider'] === 'Groq'}
 								<GroqApiKeyInput />
-							{:else if transformationStep['prompt_transform.inference.provider'] === 'Anthropic'}
+							{:else if transformationConfig['prompt_transform.inference.provider'] === 'Anthropic'}
 								<AnthropicApiKeyInput />
-							{:else if transformationStep['prompt_transform.inference.provider'] === 'Google'}
+							{:else if transformationConfig['prompt_transform.inference.provider'] === 'Google'}
 								<GoogleApiKeyInput />
 							{/if}
 						</Accordion.Content>

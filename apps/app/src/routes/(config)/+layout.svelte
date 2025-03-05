@@ -1,6 +1,5 @@
 <script lang="ts">
 	import NavItems from '$lib/components/NavItems.svelte';
-	import RecordingControls from '$lib/components/RecordingControls.svelte';
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { cn } from '$lib/utils.js';
@@ -27,7 +26,6 @@
 			<span class="text-lg font-bold">&#706;</span>
 		</WhisperingButton>
 	</div>
-	<RecordingControls class="hidden sm:flex" />
 	<WhisperingButton
 		tooltipContent="Toggle recording"
 		onclick={()=>recorder.toggleRecording(recorder.recorderState!== 'SESSION+RECORDING')}

@@ -5,8 +5,6 @@
 	import MoreDetailsDialog from '$lib/components/MoreDetailsDialog.svelte';
 	import NotificationLog from '$lib/components/NotificationLog.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
-	import { DbRecordingsService } from '$lib/services';
-	import { settings } from '$lib/stores/settings.svelte';
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { onMount } from 'svelte';
 	import { Toaster, type ToasterProps } from 'svelte-sonner';
@@ -20,7 +18,6 @@
 
 	$effect(() => {
 		recorder.recorderState;
-		void DbRecordingsService.cleanupExpiredRecordings(settings.value);
 	});
 
 	onMount(async () => {

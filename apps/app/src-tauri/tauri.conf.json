@@ -41,9 +41,9 @@
         },
         "createUpdaterArtifacts": "v1Compatible"
     },
-    "productName": "Whispering",
+    "productName": "WhisperingX",
     "version": "6.4.3",
-    "identifier": "com.bradenwong.whispering",
+    "identifier": "com.frankiew.whisperingX",
     "plugins": {
         "updater": {
             "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IEQ3N0I1NjlCMzA5NEFFRkYKUldUL3JwUXdtMVo3MTQ5dVd3TnhwbkdJdmNUbFBPSzA5bDJlSFlWMDZUeTIrVHQ3UkJoKzFoOWQK",
@@ -56,10 +56,10 @@
                 "fullscreen": false,
                 "height": 600,
                 "resizable": true,
-                "title": "Whispering",
+                "title": "WhisperingX",
                 "width": 800,
-                "minHeight": 84,
-                "minWidth": 72
+                "minHeight": 150,
+                "minWidth": 200
             }
         ],
         "security": {

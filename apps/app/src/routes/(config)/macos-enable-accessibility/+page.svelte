@@ -14,9 +14,9 @@
 		<Card.Header>
 			<Card.Title class="text-xl">MacOS Accessibility</Card.Title>
 			<Card.Description class="leading-7">
-				Follow the steps below to re-enable Whispering in your MacOS
+				Follow the steps below to re-enable WhisperingX in your MacOS
 				Accessibility settings. This often is needed after installing a new
-				version of Whispering to get pasting to work, as detailed in this
+				version of WhisperingX to get pasting to work, as detailed in this
 				<Button
 					variant="link"
 					size="inline"
@@ -51,13 +51,13 @@
 
 					<li>
 						Click on <span class="text-primary font-semibold tracking-tight"
-							>🎙️ Whispering</span
+							>🎙️ WhisperingX</span
 						> and remove it using the minus icon (-).
 					</li>
 					<li>
-						Re-add Whispering by pressing the plus icon (+) and selecting <span
+						Re-add WhisperingX by pressing the plus icon (+) and selecting <span
 							class="text-primary font-semibold tracking-tight"
-							>🎙️ Whispering.app</span
+							>🎙️ WhisperingX.app</span
 						>
 					</li>
 				</ol>

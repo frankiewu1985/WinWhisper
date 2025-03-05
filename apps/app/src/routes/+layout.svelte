@@ -22,7 +22,7 @@
 </script>
 
 <svelte:head>
-    <title>Whispering</title>
+    <title>WhisperingX</title>
 </svelte:head>
 
 <QueryClientProvider client={queryClient}>

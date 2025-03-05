@@ -26,7 +26,7 @@
 			<Dialog.Description>Faster re-recording explained</Dialog.Description>
 		</Dialog.Header>
 		<p class="text-sm leading-7">
-			Whispering can allow the media stream to remain active after you start
+			WhisperingX can allow the media stream to remain active after you start
 			recording, enabling faster re-recording with reduced latency.
 		</p>
 		<p class="text-sm leading-7">

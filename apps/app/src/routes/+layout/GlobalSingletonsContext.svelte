@@ -8,7 +8,7 @@
 	const transcriber = initTranscriberInContext();
 	const transformer = initTransformerInContext();
 	const recorder = initRecorderInContext({ transcriber, transformer });
-	const vadRecorder = initVadRecorderInContext({ transcriber, transformer });
+	const vadRecorder = initVadRecorderInContext({ transcriber });
 	const registerShortcuts = initRegisterShortcutsInContext({ recorder });
 
 	let { children } = $props();

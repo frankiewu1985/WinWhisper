@@ -14,69 +14,41 @@
 </script>
 
 <svelte:head>
-	<title>Settings - Whispering</title>
+	<title>Settings</title>
 </svelte:head>
 
 <div class="space-y-6">
 	<div>
 		<h3 class="text-lg font-medium">General</h3>
 		<p class="text-muted-foreground text-sm">
-			Configure your general Whispering preferences.
+			Configure your general preferences.
 		</p>
 	</div>
 
 	<Separator />
 
 	<LabeledSwitch
-		id="transcription.clipboard.copyOnSuccess"
+		id="transcription.copyToClipboardOnSuccess"
 		label="Copy text to clipboard on successful transcription"
-		checked={settings.value['transcription.clipboard.copyOnSuccess']}
+		checked={settings.value['transcription.copyToClipboardOnSuccess']}
 		onCheckedChange={(v) => {
 			settings.value = {
 				...settings.value,
-				'transcription.clipboard.copyOnSuccess': v,
+				'transcription.copyToClipboardOnSuccess': v,
 			};
 		}}
 	/>
 
 	<LabeledSwitch
-		id="transcription.clipboard.pasteOnSuccess"
+		id="transcription.insertToCursorOnSuccess"
 		label="Paste contents from clipboard after successful transcription"
-		checked={settings.value['transcription.clipboard.pasteOnSuccess']}
+		checked={settings.value['transcription.insertToCursorOnSuccess']}
 		onCheckedChange={(v) => {
 			settings.value = {
 				...settings.value,
-				'transcription.clipboard.pasteOnSuccess': v,
+				'transcription.insertToCursorOnSuccess': v,
 			};
 		}}
-		disabled={!settings.value['transcription.clipboard.copyOnSuccess']}
-	/>
-
-	<Separator />
-
-	<LabeledSwitch
-		id="transformation.clipboard.copyOnSuccess"
-		label="Copy text to clipboard on successful transformation"
-		checked={settings.value['transformation.clipboard.copyOnSuccess']}
-		onCheckedChange={(v) => {
-			settings.value = {
-				...settings.value,
-				'transformation.clipboard.copyOnSuccess': v,
-			};
-		}}
-	/>
-
-	<LabeledSwitch
-		id="transformation.clipboard.pasteOnSuccess"
-		label="Paste contents from clipboard after successful transformation"
-		checked={settings.value['transformation.clipboard.pasteOnSuccess']}
-		onCheckedChange={(v) => {
-			settings.value = {
-				...settings.value,
-				'transformation.clipboard.pasteOnSuccess': v,
-			};
-		}}
-		disabled={!settings.value['transformation.clipboard.copyOnSuccess']}
 	/>
 
 	<Separator />
@@ -124,45 +96,6 @@
 	</LabeledSwitch>
 
 	<Separator />
-
-	<LabeledSelect
-		id="recording-retention-strategy"
-		label="Auto Delete Recordings"
-		items={[
-			{ value: 'keep-forever', label: 'Keep All Recordings' },
-			{ value: 'limit-count', label: 'Keep Limited Number' },
-		]}
-		selected={settings.value['database.recordingRetentionStrategy']}
-		onSelectedChange={(selected) => {
-			settings.value = {
-				...settings.value,
-				'database.recordingRetentionStrategy': selected,
-			};
-		}}
-		placeholder="Select retention strategy"
-	/>
-
-	{#if settings.value['database.recordingRetentionStrategy'] === 'limit-count'}
-		<LabeledSelect
-			id="max-recording-count"
-			label="Maximum Recordings"
-			items={[
-				{ value: '5', label: '5 Recordings' },
-				{ value: '10', label: '10 Recordings' },
-				{ value: '25', label: '25 Recordings' },
-				{ value: '50', label: '50 Recordings' },
-				{ value: '100', label: '100 Recordings' },
-			]}
-			selected={settings.value['database.maxRecordingCount']}
-			onSelectedChange={(selected) => {
-				settings.value = {
-					...settings.value,
-					'database.maxRecordingCount': selected,
-				};
-			}}
-			placeholder="Select maximum recordings"
-		/>
-	{/if}
 
 	<LabeledSelect
 		id="always-on-top"

@@ -28,7 +28,7 @@
 	<div>
 		<h3 class="text-lg font-medium">Transcription</h3>
 		<p class="text-muted-foreground text-sm">
-			Configure your Whispering transcription preferences.
+			Configure your transcription preferences.
 		</p>
 	</div>
 	<Separator />

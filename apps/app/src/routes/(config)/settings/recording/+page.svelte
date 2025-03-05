@@ -18,14 +18,14 @@
 </script>
 
 <svelte:head>
-	<title>Recording Settings - Whispering</title>
+	<title>Recording Settings</title>
 </svelte:head>
 
 <div class="space-y-6">
 	<div>
 		<h3 class="text-lg font-medium">Recording</h3>
 		<p class="text-muted-foreground text-sm">
-			Configure your Whispering recording preferences.
+			Configure your recording preferences.
 		</p>
 	</div>
 	<Separator />

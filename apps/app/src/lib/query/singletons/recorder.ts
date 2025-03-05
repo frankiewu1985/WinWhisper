@@ -1,4 +1,3 @@
-import { useCreateRecording } from '$lib/query/recordings/mutations';
 import { createResultMutation, createResultQuery } from '$lib/services';
 import {
 	playSoundIfEnabled,
@@ -13,9 +12,9 @@ import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
-import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
-import { LogicalPosition, LogicalSize } from '@tauri-apps/api/window';
 import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
+import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
+import { showRecorderIndicator, hideRecorderIndicator } from './recorderIndicator';
 
 export type Recorder = ReturnType<typeof createRecorder>;
 
@@ -50,8 +49,6 @@ function createRecorder({
 	const invalidateRecorderState = () =>
 		queryClient.invalidateQueries({ queryKey: recorderKeys.state });
 
-	const { createRecording } = useCreateRecording();
-
 	const recorderState = createResultQuery(() => ({
 		queryKey: recorderKeys.state,
 		queryFn: async () => {
@@ -61,70 +58,6 @@ function createRecorder({
 		},
 		initialData: 'IDLE' as const,
 	}));
-
-	let recorderIndicatorWindow: WebviewWindow | null = null;
-	const showRecorderIndicator = () => {
-		if (!recorderIndicatorWindow) {
-			try {
-				// Get the screen size
-				const screenSize = window.screen;
-				const screenWidth = screenSize.width;
-				const screenHeight = screenSize.height;
-	
-				// Calculate the position for the bottom center
-				const windowWidth = 120;
-				const windowHeight = 60;
-				const x = (screenWidth - windowWidth) / 2;
-				const y = screenHeight - windowHeight - 150;
-	
-				// Open a new Tauri window in hidden mode
-				recorderIndicatorWindow = new WebviewWindow('recording', {
-					url: 'recording.html',
-					resizable: false,
-					decorations: false,
-					transparent: true,
-					alwaysOnTop: true,
-					visible: false,
-					shadow: false,
-					skipTaskbar: true,
-				});
-
-				// Set the position of the window
-				recorderIndicatorWindow.setSize(
-					new LogicalSize(windowWidth, windowHeight),
-				);
-				recorderIndicatorWindow.setPosition(new LogicalPosition(x, y));
-
-				recorderIndicatorWindow.once('tauri://created', () => {
-					console.log('Recorder indicator window created successfully');
-				});
-	
-				recorderIndicatorWindow.once('tauri://error', (e) => {
-					console.error('Failed to create recorder indicator window', e);
-				});
-			} catch (error) {
-				console.error('Error creating recorder indicator window:', error);
-			}
-		}
-
-        recorderIndicatorWindow!.show().then(() => {
-            console.log('Recorder indicator window shown successfully');
-        }).catch((error) => {
-            console.error('Error showing recorder indicator window:', error);
-        });
-	};
-
-	const hideRecorderIndicator = () => {
-		if (recorderIndicatorWindow) {
-			recorderIndicatorWindow.hide().then(() => {
-				console.log('Recorder indicator window hidden successfully');
-			}).catch((error) => {
-				console.error('Error hiding recorder indicator window:', error);
-			});
-		} else {
-			console.log('No recorder indicator window to hide');
-		}
-	};
 
 	const startRecording = createResultMutation(() => ({
 		onMutate: async ({ toastId }) => {
@@ -148,7 +81,7 @@ function createRecorder({
 		onSuccess: (_data, { toastId }) => {
 			toast.success({
 				id: toastId,
-				title: '🎙️ Whispering is recording...',
+				title: '🎙️ recording...',
 				description: 'Speak now and stop recording when done',
 			});
 
@@ -168,7 +101,12 @@ function createRecorder({
 				description: 'Finalizing your audio capture...',
 			});
 		},
-		mutationFn: async ({ toastId }: { toastId: string; language:LanguageType }) => {
+		mutationFn: async ({
+			toastId,
+		}: {
+			toastId: string;
+			language: LanguageType;
+		}) => {
 			const stopResult = await userConfiguredServices.recorder.stopRecording({
 				sendStatus: (options) => toast.loading({ id: toastId, ...options }),
 			});
@@ -188,101 +126,81 @@ function createRecorder({
 
 			hideRecorderIndicator();
 
-			const now = new Date().toISOString();
-			const newRecordingId = nanoid();
+			if (!settings.value['recording.isFasterRerecordEnabled']) {
+				toast.loading({
+					id: toastId,
+					title: '⏳ Closing recording session...',
+					description: 'Wrapping things up, just a moment...',
+				});
+				closeRecordingSession.mutate(
+					{
+						sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+					},
+					{
+						onSuccess: async () => {
+							toast.success({
+								id: toastId,
+								title: '✨ Session Closed Successfully',
+								description:
+									'Your recording session has been neatly wrapped up',
+							});
+						},
+						onError: (error) => {
+							toast.warning({
+								id: toastId,
+								title: '⚠️ Unable to close session after recording',
+								description:
+									'You might need to restart the application to continue recording',
+								action: {
+									type: 'more-details',
+									error: error,
+								},
+							});
+						},
+					},
+				);
+			}
 
-			createRecording.mutate(
+			// transcribe.
+			const transcribeToastId = nanoid();
+			transcriber.transcribeRecording.mutate(
 				{
-					id: newRecordingId,
-					title: '',
-					subtitle: '',
-					createdAt: now,
-					updatedAt: now,
-					timestamp: now,
-					transcribedText: '',
-					blob,
-					transcriptionStatus: 'UNPROCESSED',
+					recording: {
+						blob,
+					},
+					toastId: transcribeToastId,
+					language: language,
 				},
 				{
-					onError(error) {
-						toast.error({
-							id: toastId,
-							title: '❌ Database Save Failed',
-							description:
-								'Your recording was captured but could not be saved to the database. Please check your storage space and permissions.',
-							action: {
-								type: 'more-details',
-								error: error,
-							},
-						});
-					},
-					onSuccess: async (createdRecording) => {
-						toast.loading({
-							id: toastId,
-							title: '✨ Recording Complete!',
-							description: settings.value['recording.isFasterRerecordEnabled']
-								? 'Recording saved! Ready for another take'
-								: 'Recording saved and session closed successfully',
-						});
+					onSuccess: (transcribedText) => {
+						const output = () => {
+							// if copy to clipboard is enabled, copy the transcription to clipboard
+							if (settings.value['transcription.copyToClipboardOnSuccess']) {
+								writeTextToClipboard(transcribedText);
+							}
+							if (settings.value['transcription.insertToCursorOnSuccess']) {
+								writeTextToCursor(transcribedText);
+							}
+						};
 
-						if (!settings.value['recording.isFasterRerecordEnabled']) {
-							toast.loading({
-								id: toastId,
-								title: '⏳ Closing recording session...',
-								description: 'Wrapping things up, just a moment...',
-							});
-							closeRecordingSession.mutate(
+						const config = settings.value['postProcessing.config'];
+						if (config.type !== 'none') {
+							const transformToastId = nanoid();
+							transformer.transform.mutate(
 								{
-									sendStatus: (options) =>
-										toast.loading({ id: toastId, ...options }),
+									input: transcribedText,
+									config,
+									toastId: transformToastId,
 								},
 								{
-									onSuccess: async () => {
-										toast.success({
-											id: toastId,
-											title: '✨ Session Closed Successfully',
-											description:
-												'Your recording session has been neatly wrapped up',
-										});
-									},
-									onError: (error) => {
-										toast.warning({
-											id: toastId,
-											title: '⚠️ Unable to close session after recording',
-											description:
-												'You might need to restart the application to continue recording',
-											action: {
-												type: 'more-details',
-												error: error,
-											},
-										});
+									onSuccess: () => {
+										output();
 									},
 								},
 							);
+						}else{
+							output();
 						}
-
-						// transcribe.
-						const transcribeToastId = nanoid();
-						transcriber.transcribeRecording.mutate(
-							{
-								recording: createdRecording,
-								toastId: transcribeToastId,
-								language: language,
-							},
-							{
-								onSuccess: (transcribedText) => {
-									const transformStep = settings.value['postProcessing.config'];
-									if(transformStep.type!== 'none') {
-										const transformToastId = nanoid();
-										transformer.transformStep.mutate({
-											input: transcribedText,
-											transformationStep:transformStep,
-											toastId: transformToastId,
-										});
-									}
-								},
-							},
-						);
 					},
 				},
 			);

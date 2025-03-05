@@ -1,20 +1,18 @@
 <script lang="ts">
 	import { LabeledSwitch } from '$lib/components/labeled';
-	import { Label } from '$lib/components/ui/label/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
-	import { Switch } from '$lib/components/ui/switch/index.js';
 	import { settings } from '$lib/stores/settings.svelte';
 </script>
 
 <svelte:head>
-	<title>Sound Settings - Whispering</title>
+	<title>Sound Settings</title>
 </svelte:head>
 
 <div class="space-y-6">
 	<div>
 		<h3 class="text-lg font-medium">Sound</h3>
 		<p class="text-muted-foreground text-sm">
-			Configure your Whispering sound preferences.
+			Configure your sound preferences.
 		</p>
 	</div>
 
@@ -65,18 +63,6 @@
 				settings.value = {
 					...settings.value,
 					'sound.playOn.transcriptionComplete': v,
-				};
-			}}
-		/>
-
-		<LabeledSwitch
-			id="play-sound-transformation"
-			label="Play sound after transformation"
-			checked={settings.value['sound.playOn.transformationComplete']}
-			onCheckedChange={(v) => {
-				settings.value = {
-					...settings.value,
-					'sound.playOn.transformationComplete': v,
 				};
 			}}
 		/>
