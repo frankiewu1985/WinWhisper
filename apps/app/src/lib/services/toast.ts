@@ -8,24 +8,24 @@ import { toast as sonnerToast } from 'svelte-sonner';
 
 export const toast = createToastService();
 
-const isFocused = async () => {
-	const isDocumentFocused = document.hasFocus();
-	const isWindowFocused = await getCurrentWindow().isFocused();
-	return isWindowFocused && isDocumentFocused;
-};
+// const isFocused = async () => {
+// 	const isDocumentFocused = document.hasFocus();
+// 	const isWindowFocused = await getCurrentWindow().isFocused();
+// 	return isWindowFocused && isDocumentFocused;
+// };
 
 function createToastService() {
 	const createToastFn =
 		(toastVariant: ToastAndNotifyOptions['variant']) =>
 		(toastOptions: Omit<ToastAndNotifyOptions, 'variant'>) => {
-			const getDurationInMs = () => {
-				if (toastVariant === 'loading') return 5000;
-				if (toastVariant === 'error' || toastVariant === 'warning') return 5000;
-				if (toastOptions.action) return 4000;
-				return 3000;
-			};
+			// const getDurationInMs = () => {
+			// 	if (toastVariant === 'loading') return 5000;
+			// 	if (toastVariant === 'error' || toastVariant === 'warning') return 5000;
+			// 	if (toastOptions.action) return 4000;
+			// 	return 3000;
+			// };
 
-			const durationInMs = getDurationInMs();
+			// const durationInMs = getDurationInMs();
 
 			notificationLog.addLog({ variant: toastVariant, ...toastOptions });
 
@@ -49,13 +49,13 @@ function createToastService() {
 				}
 			}
 
-			const { title, action, ...options } = toastOptions;
-			const id = sonnerToast[toastVariant](title, {
-				...options,
-				duration: durationInMs,
-				action: convertActionToToastAction(action),
-			});
-			return String(id);
+			// const { title, action, ...options } = toastOptions;
+			// const id = sonnerToast[toastVariant](title, {
+			// 	...options,
+			// 	duration: durationInMs,
+			// 	action: convertActionToToastAction(action),
+			// });
+			// return String(id);
 		};
 
 	return {
@@ -68,24 +68,24 @@ function createToastService() {
 	};
 }
 
-function convertActionToToastAction(action: ToastAndNotifyOptions['action']) {
-	switch (action?.type) {
-		case 'link':
-			return {
-				label: action.label,
-				onClick: () => goto(action.goto),
-			};
-		case 'more-details':
-			return {
-				label: 'More details',
-				onClick: () =>
-					moreDetailsDialog.open({
-						title: 'More details',
-						description: 'The following is the raw error message.',
-						content: action.error,
-					}),
-			};
-		default:
-			return undefined;
-	}
-}
+// function convertActionToToastAction(action: ToastAndNotifyOptions['action']) {
+// 	switch (action?.type) {
+// 		case 'link':
+// 			return {
+// 				label: action.label,
+// 				onClick: () => goto(action.goto),
+// 			};
+// 		case 'more-details':
+// 			return {
+// 				label: 'More details',
+// 				onClick: () =>
+// 					moreDetailsDialog.open({
+// 						title: 'More details',
+// 						description: 'The following is the raw error message.',
+// 						content: action.error,
+// 					}),
+// 			};
+// 		default:
+// 			return undefined;
+// 	}
+// }

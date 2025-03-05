@@ -48,11 +48,6 @@ export function createRecorderServiceWeb(): RecorderService {
 			const firstStream = getFirstStreamResult.data;
 			return Ok(firstStream);
 		}
-		sendStatus({
-			title: '🎯 Connecting Device',
-			description:
-				'Almost there! Just need your permission to use the microphone...',
-		});
 		const getPreferredStreamResult = await getStreamForDeviceId(
 			settings.deviceId,
 		);
@@ -97,28 +92,13 @@ export function createRecorderServiceWeb(): RecorderService {
 			return Ok(undefined);
 		},
 
-		closeRecordingSession: async ({ sendStatus }) => {
+		closeRecordingSession: async () => {
 			if (!maybeCurrentSession) return Ok(undefined);
 			const currentSession = maybeCurrentSession;
-			sendStatus({
-				title: '🎙️ Cleaning Up',
-				description:
-					'Safely stopping your audio stream to free up system resources...',
-			});
 			for (const track of currentSession.stream.getTracks()) {
 				track.stop();
 			}
-			sendStatus({
-				title: '🧹 Almost Done',
-				description:
-					'Cleaning up recording resources and preparing for next session...',
-			});
 			maybeCurrentSession.recorder = null;
-			sendStatus({
-				title: '✨ All Set',
-				description:
-					'Recording session successfully closed and resources freed',
-			});
 			maybeCurrentSession = null;
 			return Ok(undefined);
 		},
@@ -133,11 +113,6 @@ export function createRecorderServiceWeb(): RecorderService {
 			}
 			const currentSession = maybeCurrentSession;
 			if (!currentSession.stream.active) {
-				sendStatus({
-					title: '🔄 Session Expired',
-					description:
-						'Your recording session timed out. Reconnecting to your microphone...',
-				});
 				const acquireStreamResult = await acquireStream(
 					currentSession.settings,
 					{ sendStatus },
@@ -150,10 +125,6 @@ export function createRecorderServiceWeb(): RecorderService {
 					recorder: null,
 				};
 			}
-			sendStatus({
-				title: '🎯 Getting Ready',
-				description: 'Initializing your microphone and preparing to record...',
-			});
 			const newRecorderResult = await tryAsync({
 				try: async () => {
 					return new MediaRecorder(currentSession.stream, {
@@ -170,11 +141,6 @@ export function createRecorderServiceWeb(): RecorderService {
 			});
 			if (!newRecorderResult.ok) return newRecorderResult;
 			const newRecorder = newRecorderResult.data;
-			sendStatus({
-				title: '🎤 Recording Active',
-				description:
-					'Your microphone is now recording. Speak clearly and naturally!',
-			});
 			maybeCurrentSession.recorder = {
 				mediaRecorder: newRecorder,
 				recordedChunks: [],
@@ -188,7 +154,7 @@ export function createRecorderServiceWeb(): RecorderService {
 			return Ok(undefined);
 		},
 
-		stopRecording: async ({ sendStatus }) => {
+		stopRecording: async () => {
 			if (!maybeCurrentSession?.recorder) {
 				return WhisperingErr({
 					title: '⚠️ Nothing to Stop',
@@ -197,11 +163,6 @@ export function createRecorderServiceWeb(): RecorderService {
 				});
 			}
 			const recorder = maybeCurrentSession.recorder;
-			sendStatus({
-				title: '⏸️ Finishing Up',
-				description:
-					'Saving your recording and preparing the final audio file...',
-			});
 			const stopResult = await tryAsync({
 				try: () =>
 					new Promise<Blob>((resolve) => {
@@ -221,16 +182,12 @@ export function createRecorderServiceWeb(): RecorderService {
 					}),
 			});
 			if (!stopResult.ok) return stopResult;
-			sendStatus({
-				title: '✅ Recording Complete',
-				description: 'Successfully saved your audio recording!',
-			});
 			const blob = stopResult.data;
 			maybeCurrentSession.recorder = null;
 			return Ok(blob);
 		},
 
-		cancelRecording: async ({ sendStatus }) => {
+		cancelRecording: async () => {
 			if (!maybeCurrentSession?.recorder) {
 				return WhisperingErr({
 					title: '⚠️ Nothing to Cancel',
@@ -239,15 +196,7 @@ export function createRecorderServiceWeb(): RecorderService {
 				});
 			}
 			const recorder = maybeCurrentSession.recorder;
-			sendStatus({
-				title: '🛑 Cancelling',
-				description: 'Safely cancelling your recording...',
-			});
 			recorder.mediaRecorder.stop();
-			sendStatus({
-				title: '✨ Cancelled',
-				description: 'Recording successfully cancelled!',
-			});
 			maybeCurrentSession.recorder = null;
 			return Ok(undefined);
 		},
