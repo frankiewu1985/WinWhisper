@@ -70,7 +70,12 @@ function createTranscriber() {
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
 		},
-		onSuccess: () => {
+		onSuccess: (data, { toastId }) => {			
+			toast.success({
+				id: toastId,
+				title: '✅ Transformation successful!',
+				description: `Transcribed text: ${data}`,
+			});
 			void playSoundIfEnabled('transcriptionComplete');
 		},
 	}));

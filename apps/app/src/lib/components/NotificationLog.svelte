@@ -63,8 +63,15 @@
 	>
 		<div class="flex flex-col space-y-1.5">
 			<h1 class="text-lg font-semibold">Notification History</h1>
-			<h2 class="text-sm text-muted-foreground">View past notifications</h2>
 		</div>
+		<WhisperingButton
+			tooltipContent="Clear Logs"
+			class="mt-4"
+			variant="outline"
+			size="sm"
+			onclick={() => notificationLog.clearLogs()}>
+			Clear Logs
+		</WhisperingButton>
 
 		<ScrollArea
 			class="mt-4 h-[60vh] overflow-y-auto rounded-md border bg-background p-4"

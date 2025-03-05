@@ -32,6 +32,13 @@ export function createTransformer() {
 				description: 'Applying your selected transformation to the input...',
 			});
 		},
+		onSuccess: (data, { toastId }) => {
+			toast.success({
+				id: toastId,
+				title: '✅ Transformation successful!',
+				description: `Transformed text: ${data}`,
+			});
+		},
 		mutationFn: async ({
 			input,
 			config,

@@ -190,14 +190,6 @@ function createVadRecorder({
 					description: 'Wrapping things up, just a moment...',
 				});
 				closeVadSession.mutate(undefined, {
-					onSuccess: async () => {
-						toast.success({
-							id: toastId,
-							title: '✨ Session Closed Successfully',
-							description:
-								'Your voice activated capture session has been neatly wrapped up',
-						});
-					},
 					onError: (error) => {
 						toast.warning({
 							id: toastId,
