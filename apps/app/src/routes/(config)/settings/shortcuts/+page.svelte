@@ -29,23 +29,6 @@
 	<Separator />
 
 	<LabeledInput
-		id="local-shortcut"
-		label="Local Shortcut"
-		placeholder="Local Shortcut to toggle recording"
-		value={settings.value['shortcuts.currentLocalShortcut']}
-		onchange={({ currentTarget: { value } }) => {
-			settings.value = {
-				...settings.value,
-				'shortcuts.currentLocalShortcut': value,
-			};
-			registerShortcuts.registerLocalShortcut({
-				shortcut: value,
-				callback: (action) => recorder.toggleRecording(action=== 'Pressed'),
-			});
-		}}
-	/>
-
-	<LabeledInput
 		id="global-shortcut"
 		label="Global Shortcut (language Auto)"
 		placeholder="Global Shortcut to toggle recording"

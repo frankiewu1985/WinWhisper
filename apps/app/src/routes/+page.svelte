@@ -139,22 +139,6 @@
 	<NavItems class="xs:flex -mb-2.5 -mt-1 hidden" />
 
 	<div class="xs:flex hidden flex-col items-center gap-3">
-		<p class="text-foreground/75 text-center text-sm">
-			Click the microphone or press
-			{' '}<WhisperingButton
-				tooltipContent="Go to local shortcut in settings"
-				href="/settings#local-shortcut"
-				variant="link"
-				size="inline"
-			>
-				<kbd
-					class="bg-muted relative rounded px-[0.3rem] py-[0.15rem] font-mono text-sm font-semibold"
-				>
-					{settings.value['shortcuts.currentLocalShortcut']}
-				</kbd>
-			</WhisperingButton>{' '}
-			to start recording here.
-		</p>
 		<p class="text-foreground/75 text-sm">
 			Press
 			{' '}<WhisperingButton

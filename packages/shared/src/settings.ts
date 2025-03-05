@@ -69,7 +69,6 @@ export const getDefaultSettings = () =>
     "apiKeys.groq": "",
     "apiKeys.google": "",
 
-    "shortcuts.currentLocalShortcut": "space",
     "shortcuts.currentGlobalShortcut": "CommandOrControl+Shift+;",
     "shortcuts.currentGlobalShortcut1": "CommandOrControl+Shift+1",
     "shortcuts.currentGlobalShortcut2": "CommandOrControl+Shift+2",
@@ -138,7 +137,6 @@ export const settingsSchema = z.object({
 	'apiKeys.groq': z.string(),
 	'apiKeys.google': z.string(),
 
-	'shortcuts.currentLocalShortcut': z.string(),
 	'shortcuts.currentGlobalShortcut': z.string(),
 	'shortcuts.currentGlobalShortcut1': z.string(),
 	'shortcuts.currentGlobalShortcut2': z.string(),

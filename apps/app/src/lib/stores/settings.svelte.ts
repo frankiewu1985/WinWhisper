@@ -47,14 +47,7 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 	const jobQueue = createJobQueue<RegisterShortcutJob>();
 
 	const initialSilentJob = async () => {
-		unregisterAllLocalShortcuts();
 		await unregisterAllGlobalShortcuts();
-		registerLocalShortcut({
-			shortcut: settings.value['shortcuts.currentLocalShortcut'],
-			callback: (action) => {
-				recorder.toggleRecording(action === 'Pressed');
-			},
-		});
 		await registerGlobalShortcut({
 			shortcut: settings.value['shortcuts.currentGlobalShortcut'],
 			callback: (action) => {
@@ -84,23 +77,6 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 	jobQueue.addJobToQueue(initialSilentJob());
 
 	return {
-		registerLocalShortcut: ({
-			shortcut,
-			callback,
-		}: {
-			shortcut: string;
-			callback: (action: 'Pressed' | 'Released') => void;
-		}) => {
-			const job = async () => {
-				unregisterAllLocalShortcuts();
-				registerLocalShortcut({ shortcut, callback });
-				toast.success({
-					title: `Local shortcut set to ${shortcut}`,
-					description: 'Press the shortcut to start recording',
-				});
-			};
-			jobQueue.addJobToQueue(job());
-		},
 		registerGlobalShortcut: ({
 			shortcut,
 			callback,
@@ -119,18 +95,6 @@ function createRegisterShortcuts({ recorder }: { recorder: Recorder }) {
 			jobQueue.addJobToQueue(job());
 		},
 	};
-}
-
-function unregisterAllLocalShortcuts() {
-	return trySync({
-		try: () => hotkeys.unbind(),
-		mapErr: (error) =>
-			WhisperingErr({
-				title: 'Error unregistering all shortcuts',
-				description: 'Please try again.',
-				action: { type: 'more-details', error },
-			}),
-	});
 }
 
 function unregisterAllGlobalShortcuts() {
@@ -162,41 +126,6 @@ function unregisterGlobalShortcut(shortcut: string) {
 			WhisperingErr({
 				title: 'Error unregistering all shortcuts',
 				description: 'Please try again.',
-				action: { type: 'more-details', error },
-			}),
-	});
-}
-
-function registerLocalShortcut({
-	shortcut,
-	callback,
-}: {
-	shortcut: string;
-	callback: (action: 'Pressed' | 'Released') => void;
-}) {
-	const unregisterAllLocalShortcutsResult = unregisterAllLocalShortcuts();
-	if (!unregisterAllLocalShortcutsResult.ok)
-		return unregisterAllLocalShortcutsResult;
-	return trySync({
-		try: () =>
-			hotkeys(shortcut, (event) => {
-				// check if the event is pressed or released.
-				const action =
-					event.type === 'keydown'
-						? 'Pressed'
-						: event.type === 'keyup'
-							? 'Released'
-							: undefined;
-				if (action) {
-					// Prevent the default refresh event under WINDOWS system
-					event.preventDefault();
-					callback(action);
-				}
-			}),
-		mapErr: (error) =>
-			WhisperingErr({
-				title: 'Error registering local shortcut',
-				description: 'Please make sure it is a valid keyboard shortcut.',
 				action: { type: 'more-details', error },
 			}),
 	});

@@ -12,8 +12,6 @@ import { getContext, setContext } from 'svelte';
 import { queryClient } from '..';
 import type { Transcriber } from './transcriber';
 import type { Transformer } from './transformer';
-import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
-import { LogicalPosition, LogicalSize } from '@tauri-apps/api/window';
 import type { LanguageType } from '$lib/services/transcription/TranscriptionService';
 import { writeTextToClipboard, writeTextToCursor } from './maybeCopyAndPaste';
 import { showRecorderIndicator, hideRecorderIndicator } from './recorderIndicator';
