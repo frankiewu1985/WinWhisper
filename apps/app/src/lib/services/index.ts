@@ -20,7 +20,6 @@ import {
 } from './db/DbService.dexie';
 import { createDownloadServiceDesktop } from './download/DownloadService.desktop';
 import { createHttpServiceDesktop } from './http/HttpService.desktop';
-import { createNotificationServiceDesktop } from './notifications/NotificationService.desktop';
 import { createRecorderServiceTauri } from './recorder/RecorderService.tauri';
 import { createRecorderServiceWeb } from './recorder/RecorderService.web';
 import { createRunTransformationService } from './runTransformation';
@@ -93,8 +92,6 @@ export function createResultMutation<
 }
 
 export const DownloadService = createDownloadServiceDesktop();
-
-export const NotificationService = createNotificationServiceDesktop();
 
 export const ClipboardService = createClipboardServiceDesktop();
 

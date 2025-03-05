@@ -2,7 +2,6 @@ import { dev } from '$app/environment';
 import { goto } from '$app/navigation';
 import { moreDetailsDialog } from '$lib/components/MoreDetailsDialog.svelte';
 import { notificationLog } from '$lib/components/NotificationLog.svelte';
-import { NotificationService } from '$lib/services/index.js';
 import type { ToastAndNotifyOptions } from '@repo/shared';
 import { getCurrentWindow } from '@tauri-apps/api/window';
 import { toast as sonnerToast } from 'svelte-sonner';
@@ -19,18 +18,6 @@ function createToastService() {
 	const createToastFn =
 		(toastVariant: ToastAndNotifyOptions['variant']) =>
 		(toastOptions: Omit<ToastAndNotifyOptions, 'variant'>) => {
-			(async () => {
-				if (toastVariant !== 'loading' && !(await isFocused())) {
-					const notifyResult = await NotificationService.notify({
-						variant: toastVariant,
-						...toastOptions,
-					});
-					if (!notifyResult.ok) {
-						console.error('[Toast]', notifyResult.error);
-					}
-				}
-			})();
-
 			const getDurationInMs = () => {
 				if (toastVariant === 'loading') return 5000;
 				if (toastVariant === 'error' || toastVariant === 'warning') return 5000;

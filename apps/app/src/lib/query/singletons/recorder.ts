@@ -261,11 +261,16 @@ function createRecorder({
 							);
 						}
 
+						// transcribe.
 						const transcribeToastId = nanoid();
 						transcriber.transcribeRecording.mutate(
 							{ recording: createdRecording, toastId: transcribeToastId, language: language },
 							{
 								onSuccess: () => {
+									// const vocabulary = settings.value['transcription.vocabulary'];
+
+									// transform to remove heisitation and fix transcription based on vocabulary.
+
 									if (
 										settings.value['transformations.selectedTransformationId']
 									) {
