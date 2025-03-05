@@ -12,17 +12,14 @@
 	import * as Card from '$lib/components/ui/card';
 	import { Separator } from '$lib/components/ui/separator';
 	import type { Transformation } from '$lib/services/db';
-	import { generateDefaultTransformationStep } from '$lib/services/db';
-	import {
-		TRANSFORMATION_STEP_TYPES,
-		TRANSFORMATION_STEP_TYPES_TO_LABELS,
-	} from '$lib/services/db/DbService';
+	import { generateDefaultTransformationStep, TRANSFORMATION_STEP_TYPES_TO_LABELS } from '$lib/services/db';
 	import {
 		ANTHROPIC_INFERENCE_MODEL_OPTIONS,
 		GOOGLE_INFERENCE_MODEL_OPTIONS,
 		GROQ_INFERENCE_MODEL_OPTIONS,
 		INFERENCE_PROVIDER_OPTIONS,
 		OPENAI_INFERENCE_MODEL_OPTIONS,
+		TRANSFORMATION_STEP_TYPES,
 	} from '@repo/shared';
 	import { CopyIcon, PlusIcon, TrashIcon } from 'lucide-svelte';
 	import { slide } from 'svelte/transition';

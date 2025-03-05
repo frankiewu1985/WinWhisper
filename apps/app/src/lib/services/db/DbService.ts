@@ -6,6 +6,7 @@ import type {
 	INFERENCE_PROVIDERS,
 	OPENAI_INFERENCE_MODELS,
 	Settings,
+	TRANSFORMATION_STEP_TYPES,
 } from '@repo/shared';
 import { nanoid } from 'nanoid/non-secure';
 
@@ -142,14 +143,10 @@ export type DbTransformationsService = {
 	}) => Promise<DbServiceResult<TransformationRun>>;
 };
 
-export const TRANSFORMATION_STEP_TYPES = [
-	'prompt_transform',
-	'find_replace',
-] as const;
-
 export const TRANSFORMATION_STEP_TYPES_TO_LABELS = {
 	prompt_transform: 'Prompt Transform',
 	find_replace: 'Find Replace',
+	none: 'None',
 } as const satisfies Record<(typeof TRANSFORMATION_STEP_TYPES)[number], string>;
 
 export type Recording = {

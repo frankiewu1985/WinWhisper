@@ -201,6 +201,13 @@ export const SUPPORTED_LANGUAGES_OPTIONS = SUPPORTED_LANGUAGES.map(
 		({ label: SUPPORTED_LANGUAGES_TO_LABEL[lang], value: lang }) as const,
 );
 
+export const INFERENCE_PROVIDERS = [
+	'OpenAI',
+	'Groq',
+	'Anthropic',
+	'Google',
+] as const;
+
 export const GROQ_MODELS = [
 	'whisper-large-v3',
 	'whisper-large-v3-turbo',
@@ -211,13 +218,6 @@ export const GROQ_MODELS_OPTIONS = GROQ_MODELS.map((model) => ({
 	value: model,
 	label: model,
 }));
-
-export const INFERENCE_PROVIDERS = [
-	'OpenAI',
-	'Groq',
-	'Anthropic',
-	'Google',
-] as const;
 
 export const INFERENCE_PROVIDER_OPTIONS = INFERENCE_PROVIDERS.map(
 	(provider) => ({
@@ -289,3 +289,15 @@ export type WhisperingSoundNames =
 	| 'cancel'
 	| 'transcriptionComplete'
 	| 'transformationComplete';
+
+
+export const TRANSFORMATION_STEP_TYPES = [
+	'prompt_transform',
+	'find_replace',
+	'none',
+] as const;
+
+
+export const TRANSCRIPTION_PROMPT_DEFAULT = `Transcribe the provided audio input with high accuracy, preserving the original language as spoken, without translating any part of the text into another language, even if multiple languages are present. Prioritize capturing the exact wording, including dialects and natural speech patterns. Incorporate the following custom vocabulary, favoring these words when their pronunciation and audio context match: [{{vocabulary}}]. If audio quality is poor or contains background noise, use contextual clues to interpret the most likely spoken content without altering the language.`;
+export const POST_PROCESSING_PROMPT_SYSTEM_DEFAULT = `Refine transcriptions to produce an accurate representation of what was said in the original audio, preserving the original language without any translation. Remove hesitations and filler words (e.g., 'um,' 'uh,' 'you know') while maintaining the natural flow and meaning of the speech. Use the following custom vocabulary to correct or favor these words when appropriate based on context and their provided explanations: [{{vocabulary}}]. Return only the corrected transcription as a single string, with no additional text or explanation.`;
+export const POST_PROCESSING_PROMPT_USER_DEFAULT = `Here’s the transcription to refine: '{{input}}' Please process it according to the guidelines.`;
