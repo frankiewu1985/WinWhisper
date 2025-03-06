@@ -52,7 +52,7 @@
 
 	<Separator />
 
-	<LabeledSwitch
+	<!-- <LabeledSwitch
 		id="open-on-boot"
 		checked={settings.value['system.openOnBoot']}
 		onCheckedChange={(v) => {
@@ -71,7 +71,7 @@
 				</Button>
 			{/if}
 		{/snippet}
-	</LabeledSwitch>
+	</LabeledSwitch> -->
 
 	<LabeledSwitch
 		id="close-to-tray"
