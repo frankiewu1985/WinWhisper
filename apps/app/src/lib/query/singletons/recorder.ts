@@ -66,20 +66,14 @@ function createRecorder({
 		mutationFn: async ({ toastId }: { toastId: string }) => {
 			const startRecordingResult =
 				await userConfiguredServices.recorder.startRecording(nanoid(), {
-					sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+					sendStatus: () => {}
 				});
 			return startRecordingResult;
 		},
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
 		},
-		onSuccess: (_data, { toastId }) => {
-			toast.success({
-				id: toastId,
-				title: '🎙️ recording...',
-				description: 'Speak now and stop recording when done',
-			});
-
+		onSuccess: (_data) => {
 			showRecorderIndicator();
 
 			console.info('Recording started');
@@ -96,7 +90,7 @@ function createRecorder({
 			language: LanguageType;
 		}) => {
 			const stopResult = await userConfiguredServices.recorder.stopRecording({
-				sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+				sendStatus: () =>{},
 			});
 			return stopResult;
 		},
@@ -104,11 +98,6 @@ function createRecorder({
 			toast.error({ id: toastId, ...error });
 		},
 		onSuccess: async (blob, { toastId, language }) => {
-			toast.success({
-				id: toastId,
-				title: '🎙️ Recording stopped',
-				description: 'Your recording has been saved',
-			});
 			console.info('Recording stopped');
 			void playSoundIfEnabled('stop-manual');
 
@@ -116,7 +105,7 @@ function createRecorder({
 
 			closeRecordingSession.mutate(
 				{
-					sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+					sendStatus: () => {},
 				},
 				{
 					onError: (error) => {
@@ -191,7 +180,7 @@ function createRecorder({
 							Number(settings.value['recording.bitrateKbps']) * 1000,
 					},
 					{
-						sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+						sendStatus: () => {},
 					},
 				);
 			return ensureRecordingSessionResult;
@@ -218,7 +207,7 @@ function createRecorder({
 		mutationFn: async ({ toastId }: { toastId: string }) => {
 			const cancelResult =
 				await userConfiguredServices.recorder.cancelRecording({
-					sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+					sendStatus: () => {},
 				});
 			return cancelResult;
 		},
@@ -228,7 +217,7 @@ function createRecorder({
 		onSuccess: async (_data, { toastId }) => {
 			closeRecordingSession.mutate(
 				{
-					sendStatus: (options) => toast.loading({ id: toastId, ...options }),
+					sendStatus: () => {},
 				},
 				{
 					onSuccess: () => {

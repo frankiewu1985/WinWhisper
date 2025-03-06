@@ -30,18 +30,6 @@ const transcriberKeys = {
 function createTranscriber() {
 	const transcribeRecording = createResultMutation(() => ({
 		mutationKey: transcriberKeys.transcribe,
-		onMutate: ({
-			toastId,
-		}: {
-			recording: Recording;
-			toastId: string;
-		}) => {
-			toast.loading({
-				id: toastId,
-				title: '📋 Transcribing...',
-				description: 'Your recording is being transcribed...',
-			});
-		},
 		mutationFn: async ({
 			recording,
 			language,
@@ -73,7 +61,7 @@ function createTranscriber() {
 		onSuccess: (data, { toastId }) => {			
 			toast.success({
 				id: toastId,
-				title: '✅ Transformation successful!',
+				title: '✅ Transcription successful!',
 				description: `Transcribed text: ${data}`,
 			});
 			void playSoundIfEnabled('transcriptionComplete');
