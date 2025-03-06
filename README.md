@@ -8,16 +8,8 @@
 
 ## About
 
-WhisperingX is a customized fork of the open-source <a href="https://whispering.bradenwong.com">Whispering</a> project.
+WhisperingX is a minimalist transcription tool forked from the open-source project <a href="https://whispering.bradenwong.com">Whispering</a>. Built with a focus on accuracy and simplicity, WhisperingX strips away unnecessary features and code from its predecessor, offering a streamlined experience for users who need reliable audio-to-text conversion.
 
-## Customizations
-
-- Support press and hold to start and stop recording.
-- Add a pop up indicator on the screen while recording.
-- Add vocabulary setting.
-- Support use different shortcut for different languages.
-- Other UX adjustments.
-- Browser extension logic removed.
 
 ## Build Executables with private key
 - Open a new powershell in projects root

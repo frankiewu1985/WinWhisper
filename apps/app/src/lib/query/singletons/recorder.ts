@@ -146,13 +146,13 @@ function createRecorder({
 				},
 				{
 					onSuccess: (transcribedText) => {
-						const output = () => {
+						const output = (text: string) => {
 							// if copy to clipboard is enabled, copy the transcription to clipboard
 							if (settings.value['transcription.copyToClipboardOnSuccess']) {
-								writeTextToClipboard(transcribedText);
+								writeTextToClipboard(text);
 							}
 							if (settings.value['transcription.insertToCursorOnSuccess']) {
-								writeTextToCursor(transcribedText);
+								writeTextToCursor(text);
 							}
 						};
 
@@ -166,13 +166,13 @@ function createRecorder({
 									toastId: transformToastId,
 								},
 								{
-									onSuccess: () => {
-										output();
+									onSuccess: (transformedText) => {
+										output(transformedText);
 									},
 								},
 							);
-						}else{
-							output();
+						} else {
+							output(transcribedText);
 						}
 					},
 				},
