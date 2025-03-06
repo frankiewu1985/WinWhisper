@@ -26,23 +26,6 @@
 			<span class="text-lg font-bold">&#706;</span>
 		</WhisperingButton>
 	</div>
-	<WhisperingButton
-		tooltipContent="Toggle recording"
-		onclick={()=>recorder.toggleRecording(recorder.recorderState!== 'SESSION+RECORDING')}
-		variant="ghost"
-		size="icon"
-		style="view-transition-name: microphone-icon"
-	>
-		{#if recorder.recorderState === 'SESSION+RECORDING'}
-		<img
-			src="/stop512x512.png"
-			alt="Stop" />
-		{:else}
-		<img
-			src="/mic512x512.png"
-			alt="Record" />
-		{/if}
-	</WhisperingButton>
 	<NavItems class="-mr-4" />
 </header>
 

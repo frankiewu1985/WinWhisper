@@ -1,14 +1,13 @@
 <script lang="ts">
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
+	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { cn } from '$lib/utils';
-	import {
-		MoonIcon,
-		SettingsIcon,
-		SunIcon,
-	} from 'lucide-svelte';
+	import { MoonIcon, SettingsIcon, SunIcon, MicIcon, OctagonXIcon } from 'lucide-svelte';
 	import { toggleMode } from 'mode-watcher';
+	import NotificationLog from './NotificationLog.svelte';
 
 	let { class: className }: { class?: string } = $props();
+	const recorder = getRecorderFromContext();
 </script>
 
 <nav
@@ -16,11 +15,25 @@
 	style="view-transition-name: nav"
 >
 	<WhisperingButton
+		tooltipContent="Toggle recording"
+		onclick={() =>
+			recorder.toggleRecording(recorder.recorderState !== 'SESSION+RECORDING')}
+		variant="ghost"
+		size="icon"
+		style="view-transition-name: microphone-icon"
+	>
+		{#if recorder.recorderState === 'SESSION+RECORDING'}
+			<OctagonXIcon />
+		{:else}
+			<MicIcon />
+		{/if}
+	</WhisperingButton>
+	<WhisperingButton
 		tooltipContent="Settings"
 		href="/settings"
 		variant="ghost"
 		size="icon"
-	>
+	>		
 		<SettingsIcon class="h-4 w-4" aria-hidden="true" />
 	</WhisperingButton>
 	<WhisperingButton
@@ -36,6 +49,7 @@
 			class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
 		/>
 	</WhisperingButton>
+	<NotificationLog />
 </nav>
 
 <style>
