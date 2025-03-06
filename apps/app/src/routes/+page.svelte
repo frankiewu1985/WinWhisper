@@ -3,8 +3,16 @@
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { settings } from '$lib/stores/settings.svelte';
+	import { setWindowSizeWithAnimation } from '$lib/utils';
+	import { getCurrentWindow } from '@tauri-apps/api/window';
+	import { onMount } from 'svelte';
 	
 	const recorder = getRecorderFromContext();
+	
+	onMount(() => {
+		const appWindow = getCurrentWindow();
+		setWindowSizeWithAnimation(appWindow, 500, 150);
+	});
 </script>
 
 <svelte:head>

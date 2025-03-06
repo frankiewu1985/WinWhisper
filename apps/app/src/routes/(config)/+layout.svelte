@@ -2,11 +2,18 @@
 	import NavItems from '$lib/components/NavItems.svelte';
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
-	import { cn } from '$lib/utils.js';
+	import { cn, setWindowSizeWithAnimation } from '$lib/utils.js';
+	import { getCurrentWindow } from '@tauri-apps/api/window';
+	import { onMount } from 'svelte';
 
 	const recorder = getRecorderFromContext();
 
 	let { children } = $props();
+
+	onMount(async () => {
+		const appWindow = getCurrentWindow();
+		setWindowSizeWithAnimation(appWindow, 1200, 800);
+	});
 </script>
 
 <header
