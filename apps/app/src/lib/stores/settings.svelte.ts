@@ -2,14 +2,13 @@ import type { Recorder } from '$lib/query/singletons/recorder';
 import { toast } from '$lib/services/toast';
 import { createJobQueue } from '$lib/utils/createJobQueue';
 import { createPersistedState } from '$lib/utils/createPersistedState.svelte';
-import { tryAsync, trySync } from '@epicenterhq/result';
+import { tryAsync } from '@epicenterhq/result';
 import {
 	WhisperingErr,
 	getDefaultSettings,
 	settingsSchema,
 } from '@repo/shared';
 import type { ShortcutEvent } from '@tauri-apps/plugin-global-shortcut';
-import hotkeys from 'hotkeys-js';
 import { getContext, setContext } from 'svelte';
 
 export const settings = createPersistedState({

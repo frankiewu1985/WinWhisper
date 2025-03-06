@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { cn } from '$lib/utils.js';
 	import {
 		LabeledInput,
 		LabeledSelect,
@@ -11,7 +12,6 @@
 		settings,
 	} from '$lib/stores/settings.svelte';
 	import { SUPPORTED_LANGUAGES_OPTIONS } from '@repo/shared';
-	import { LogicalSize, LogicalPosition } from '@tauri-apps/api/dpi';
 	import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 	const recorder = getRecorderFromContext();
@@ -60,11 +60,11 @@
 			});
 		}}
 	/>
-	<Label
+	<Label class={cn('text-blue-500 underline cursor-pointer')}
 		onclick={() => {
 			// open url via browser.
 			new WebviewWindow('Keys', {
-				url: 'keys.html',//'https://github.com/tauri-apps/global-hotkey/blob/c9913a97667b3e44cb000de384cd8937d5a0050a/src/hotkey.rs#L233'
+				url: 'keys.html',
 				alwaysOnTop: true,
 			});
 		}}

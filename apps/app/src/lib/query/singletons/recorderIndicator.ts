@@ -27,6 +27,7 @@ export const showRecorderIndicator = () => {
 				visible: false,
 				shadow: false,
 				skipTaskbar: true,
+				focus: false,
 			});
 
 			// Set the position of the window
