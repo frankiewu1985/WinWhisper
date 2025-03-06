@@ -21,6 +21,7 @@ export const getDefaultSettings = () =>
     "transcription.copyToClipboardOnSuccess": false,
     "transcription.insertToCursorOnSuccess": true,
     "system.closeToTray": true,
+    "system.openOnBoot": true,
     "system.alwaysOnTop": "Never",
 
     "recording.selectedAudioInputDeviceId": "default",
@@ -66,14 +67,13 @@ export const getDefaultSettings = () =>
 export const settingsSchema = z.object({
 	...({
 		'sound.enabled': z.boolean(),
-	} satisfies Partial<{
-		[K in WhisperingSoundNames as `sound.playOn.${K}`]: ZodBoolean;
-	}>),
+	}),
 
 	'transcription.copyToClipboardOnSuccess': z.boolean(),
 	'transcription.insertToCursorOnSuccess': z.boolean(),
 
 	'system.closeToTray': z.boolean(),
+	'system.openOnBoot': z.boolean(),
 	'system.alwaysOnTop': z.enum(ALWAYS_ON_TOP_VALUES),
 
 	'recording.selectedAudioInputDeviceId': z.string().nullable(),

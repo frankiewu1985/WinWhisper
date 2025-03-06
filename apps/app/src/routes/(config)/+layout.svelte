@@ -12,7 +12,7 @@
 
 	onMount(async () => {
 		const appWindow = getCurrentWindow();
-		setWindowSizeWithAnimation(appWindow, 1200, 800);
+		setWindowSizeWithAnimation(appWindow, 850, 600);
 	});
 </script>
 

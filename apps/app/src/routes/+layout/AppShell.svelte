@@ -63,4 +63,3 @@
 <ModeWatcher />
 <ConfirmationDialog />
 <MoreDetailsDialog />
-<NotificationLog />

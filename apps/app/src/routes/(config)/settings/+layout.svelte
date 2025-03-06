@@ -10,6 +10,7 @@
 		{ title: 'Post Processing', href: '/settings/post-processing' },
 		{ title: 'API Keys', href: '/settings/api-keys' },
 		{ title: 'Shortcuts', href: '/settings/shortcuts' },
+		{ title: 'Log', href: '/settings/log' },
 	] as const;
 
 	const isString = (value: unknown): value is string =>
@@ -21,7 +22,7 @@
 		<aside class="-mx-4 lg:w-1/5">
 			<SidebarNav items={sidebarNavItems} />
 		</aside>
-		<div class="flex-1 lg:max-w-2xl">
+		<div class="flex-1">
 			{@render children()}
 		</div>
 	</div>

@@ -53,6 +53,27 @@
 	<Separator />
 
 	<LabeledSwitch
+		id="open-on-boot"
+		checked={settings.value['system.openOnBoot']}
+		onCheckedChange={(v) => {
+			settings.value = { ...settings.value, 'system.openOnBoot': v };
+		}}
+	>
+		{#snippet label()}
+			Open on boot
+			{#if type() === 'macos'}
+				<Button
+					variant="link"
+					size="inline"
+					onclick={() => macOSAppNapExplainedDialog.open()}
+				>
+					(Not recommended for macOS)
+				</Button>
+			{/if}
+		{/snippet}
+	</LabeledSwitch>
+
+	<LabeledSwitch
 		id="close-to-tray"
 		checked={settings.value['system.closeToTray']}
 		onCheckedChange={(v) => {

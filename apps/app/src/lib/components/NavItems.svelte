@@ -4,8 +4,6 @@
 	import { cn } from '$lib/utils';
 	import { MoonIcon, SettingsIcon, SunIcon, MicIcon, OctagonXIcon, MinimizeIcon } from 'lucide-svelte';
 	import { toggleMode } from 'mode-watcher';
-	import NotificationLog from './NotificationLog.svelte';
-	import { closeToTrayIfEnabled } from '../../routes/+layout/closeToTrayIfEnabled';
 	import { getCurrentWindow } from '@tauri-apps/api/window';
 
 	let { class: className }: { class?: string } = $props();
