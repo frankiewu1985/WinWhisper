@@ -37,9 +37,13 @@
 					class="text-[50px] leading-none"
 				>
 					{#if recorder.recorderState === 'SESSION+RECORDING'}
-						⏹️
+						<img
+							src="/stop512x512.png"
+							alt="Stop" />
 					{:else}
-						🎙️
+						<img
+							src="/mic512x512.png"
+							alt="Record" />
 					{/if}
 				</span>
 			</WhisperingButton>

@@ -34,9 +34,13 @@
 		style="view-transition-name: microphone-icon"
 	>
 		{#if recorder.recorderState === 'SESSION+RECORDING'}
-			⏹️
+		<img
+			src="/stop512x512.png"
+			alt="Stop" />
 		{:else}
-			🎙️
+		<img
+			src="/mic512x512.png"
+			alt="Record" />
 		{/if}
 	</WhisperingButton>
 	<NavItems class="-mr-4" />
