@@ -10,6 +10,10 @@ export default defineConfig({
                 {
                     src: 'src/recording.html',
                     dest: ''
+                },
+                {
+                    src: 'src/keys.html',
+                    dest: ''
                 }
             ]
         })

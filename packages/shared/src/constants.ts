@@ -5,12 +5,6 @@ export const WHISPERING_URL =
 		? 'https://whispering.bradenwong.com'
 		: 'http://localhost:5173';
 
-export const WHISPERING_URL_WILDCARD = `${WHISPERING_URL}/*` as const;
-
-export const WHISPERING_RECORDINGS_PATHNAME = '/recordings' as const;
-
-export const WHISPERING_SETTINGS_PATHNAME = '/settings' as const;
-
 export const DEBOUNCE_TIME_MS = 1000;
 
 export const BITRATE_VALUES_KBPS = [

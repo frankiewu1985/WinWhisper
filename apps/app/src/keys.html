@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recording</title>
+  <style>
+    table {
+      font-family: arial, sans-serif;
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    td,
+    th {
+      border: 1px solid #dddddd;
+      text-align: left;
+      padding: 8px;
+    }
+
+    th {
+      width: 50%;
+    }
+
+    .container {
+      padding: 20px 50px 50px 50px;
+    }
+
+    .closeButton{
+      position: absolute;
+      right: 20px;
+      top: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <table>
+      <thead>
+        <tr>
+          <th>Shortcut</th>
+          <th>Key</th>
+        </tr>
+      </thead>
+      <tr>
+        <td>"BACKQUOTE" | "`"</td>
+        <td>Backquote</td>
+      </tr>
+      <tr>
+        <td>"BACKSLASH" | "\\"</td>
+        <td>Backslash</td>
+      </tr>
+      <tr>
+        <td>"BRACKETLEFT" | "["</td>
+        <td>BracketLeft</td>
+      </tr>
+      <tr>
+        <td>"BRACKETRIGHT" | "]"</td>
+        <td>BracketRight</td>
+      </tr>
+      <tr>
+        <td>"COMMA" | ","</td>
+        <td>Comma</td>
+      </tr>
+      <tr>
+        <td>"DIGIT0" | "0"</td>
+        <td>Digit0</td>
+      </tr>
+      <tr>
+        <td>"DIGIT1" | "1"</td>
+        <td>Digit1</td>
+      </tr>
+      <tr>
+        <td>"DIGIT2" | "2"</td>
+        <td>Digit2</td>
+      </tr>
+      <tr>
+        <td>"DIGIT3" | "3"</td>
+        <td>Digit3</td>
+      </tr>
+      <tr>
+        <td>"DIGIT4" | "4"</td>
+        <td>Digit4</td>
+      </tr>
+      <tr>
+        <td>"DIGIT5" | "5"</td>
+        <td>Digit5</td>
+      </tr>
+      <tr>
+        <td>"DIGIT6" | "6"</td>
+        <td>Digit6</td>
+      </tr>
+      <tr>
+        <td>"DIGIT7" | "7"</td>
+        <td>Digit7</td>
+      </tr>
+      <tr>
+        <td>"DIGIT8" | "8"</td>
+        <td>Digit8</td>
+      </tr>
+      <tr>
+        <td>"DIGIT9" | "9"</td>
+        <td>Digit9</td>
+      </tr>
+      <tr>
+        <td>"EQUAL" | "="</td>
+        <td>Equal</td>
+      </tr>
+      <tr>
+        <td>"KEYA" | "A"</td>
+        <td>KeyA</td>
+      </tr>
+      <tr>
+        <td>"KEYB" | "B"</td>
+        <td>KeyB</td>
+      </tr>
+      <tr>
+        <td>"KEYC" | "C"</td>
+        <td>KeyC</td>
+      </tr>
+      <tr>
+        <td>"KEYD" | "D"</td>
+        <td>KeyD</td>
+      </tr>
+      <tr>
+        <td>"KEYE" | "E"</td>
+        <td>KeyE</td>
+      </tr>
+      <tr>
+        <td>"KEYF" | "F"</td>
+        <td>KeyF</td>
+      </tr>
+      <tr>
+        <td>"KEYG" | "G"</td>
+        <td>KeyG</td>
+      </tr>
+      <tr>
+        <td>"KEYH" | "H"</td>
+        <td>KeyH</td>
+      </tr>
+      <tr>
+        <td>"KEYI" | "I"</td>
+        <td>KeyI</td>
+      </tr>
+      <tr>
+        <td>"KEYJ" | "J"</td>
+        <td>KeyJ</td>
+      </tr>
+      <tr>
+        <td>"KEYK" | "K"</td>
+        <td>KeyK</td>
+      </tr>
+      <tr>
+        <td>"KEYL" | "L"</td>
+        <td>KeyL</td>
+      </tr>
+      <tr>
+        <td>"KEYM" | "M"</td>
+        <td>KeyM</td>
+      </tr>
+      <tr>
+        <td>"KEYN" | "N"</td>
+        <td>KeyN</td>
+      </tr>
+      <tr>
+        <td>"KEYO" | "O"</td>
+        <td>KeyO</td>
+      </tr>
+      <tr>
+        <td>"KEYP" | "P"</td>
+        <td>KeyP</td>
+      </tr>
+      <tr>
+        <td>"KEYQ" | "Q"</td>
+        <td>KeyQ</td>
+      </tr>
+      <tr>
+        <td>"KEYR" | "R"</td>
+        <td>KeyR</td>
+      </tr>
+      <tr>
+        <td>"KEYS" | "S"</td>
+        <td>KeyS</td>
+      </tr>
+      <tr>
+        <td>"KEYT" | "T"</td>
+        <td>KeyT</td>
+      </tr>
+      <tr>
+        <td>"KEYU" | "U"</td>
+        <td>KeyU</td>
+      </tr>
+      <tr>
+        <td>"KEYV" | "V"</td>
+        <td>KeyV</td>
+      </tr>
+      <tr>
+        <td>"KEYW" | "W"</td>
+        <td>KeyW</td>
+      </tr>
+      <tr>
+        <td>"KEYX" | "X"</td>
+        <td>KeyX</td>
+      </tr>
+      <tr>
+        <td>"KEYY" | "Y"</td>
+        <td>KeyY</td>
+      </tr>
+      <tr>
+        <td>"KEYZ" | "Z"</td>
+        <td>KeyZ</td>
+      </tr>
+      <tr>
+        <td>"MINUS" | "-"</td>
+        <td>Minus</td>
+      </tr>
+      <tr>
+        <td>"PERIOD" | "."</td>
+        <td>Period</td>
+      </tr>
+      <tr>
+        <td>"QUOTE" | "'"</td>
+        <td>Quote</td>
+      </tr>
+      <tr>
+        <td>"SEMICOLON" | ";"</td>
+        <td>Semicolon</td>
+      </tr>
+      <tr>
+        <td>"SLASH" | "/"</td>
+        <td>Slash</td>
+      </tr>
+      <tr>
+        <td>"BACKSPACE"</td>
+        <td>Backspace</td>
+      </tr>
+      <tr>
+        <td>"CAPSLOCK"</td>
+        <td>CapsLock</td>
+      </tr>
+      <tr>
+        <td>"ENTER"</td>
+        <td>Enter</td>
+      </tr>
+      <tr>
+        <td>"SPACE"</td>
+        <td>Space</td>
+      </tr>
+      <tr>
+        <td>"TAB"</td>
+        <td>Tab</td>
+      </tr>
+      <tr>
+        <td>"DELETE"</td>
+        <td>Delete</td>
+      </tr>
+      <tr>
+        <td>"END"</td>
+        <td>End</td>
+      </tr>
+      <tr>
+        <td>"HOME"</td>
+        <td>Home</td>
+      </tr>
+      <tr>
+        <td>"INSERT"</td>
+        <td>Insert</td>
+      </tr>
+      <tr>
+        <td>"PAGEDOWN"</td>
+        <td>PageDown</td>
+      </tr>
+      <tr>
+        <td>"PAGEUP"</td>
+        <td>PageUp</td>
+      </tr>
+      <tr>
+        <td>"PRINTSCREEN"</td>
+        <td>PrintScreen</td>
+      </tr>
+      <tr>
+        <td>"SCROLLLOCK"</td>
+        <td>ScrollLock</td>
+      </tr>
+      <tr>
+        <td>"ARROWDOWN" | "DOWN"</td>
+        <td>ArrowDown</td>
+      </tr>
+      <tr>
+        <td>"ARROWLEFT" | "LEFT"</td>
+        <td>ArrowLeft</td>
+      </tr>
+      <tr>
+        <td>"ARROWRIGHT" | "RIGHT"</td>
+        <td>ArrowRight</td>
+      </tr>
+      <tr>
+        <td>"ARROWUP" | "UP"</td>
+        <td>ArrowUp</td>
+      </tr>
+      <tr>
+        <td>"NUMLOCK"</td>
+        <td>NumLock</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD0" | "NUM0"</td>
+        <td>Numpad0</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD1" | "NUM1"</td>
+        <td>Numpad1</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD2" | "NUM2"</td>
+        <td>Numpad2</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD3" | "NUM3"</td>
+        <td>Numpad3</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD4" | "NUM4"</td>
+        <td>Numpad4</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD5" | "NUM5"</td>
+        <td>Numpad5</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD6" | "NUM6"</td>
+        <td>Numpad6</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD7" | "NUM7"</td>
+        <td>Numpad7</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD8" | "NUM8"</td>
+        <td>Numpad8</td>
+      </tr>
+      <tr>
+        <td>"NUMPAD9" | "NUM9"</td>
+        <td>Numpad9</td>
+      </tr>
+      <tr>
+        <td>"NUMPADADD" | "NUMADD" | "NUMPADPLUS" | "NUMPLUS"</td>
+        <td>NumpadAdd</td>
+      </tr>
+      <tr>
+        <td>"NUMPADDECIMAL" | "NUMDECIMAL"</td>
+        <td>NumpadDecimal</td>
+      </tr>
+      <tr>
+        <td>"NUMPADDIVIDE" | "NUMDIVIDE"</td>
+        <td>NumpadDivide</td>
+      </tr>
+      <tr>
+        <td>"NUMPADENTER" | "NUMENTER"</td>
+        <td>NumpadEnter</td>
+      </tr>
+      <tr>
+        <td>"NUMPADEQUAL" | "NUMEQUAL"</td>
+        <td>NumpadEqual</td>
+      </tr>
+      <tr>
+        <td>"NUMPADMULTIPLY" | "NUMMULTIPLY"</td>
+        <td>NumpadMultiply</td>
+      </tr>
+      <tr>
+        <td>"NUMPADSUBTRACT" | "NUMSUBTRACT"</td>
+        <td>NumpadSubtract</td>
+      </tr>
+      <tr>
+        <td>"ESCAPE" | "ESC"</td>
+        <td>Escape</td>
+      </tr>
+      <tr>
+        <td>"F1"</td>
+        <td>F1</td>
+      </tr>
+      <tr>
+        <td>"F2"</td>
+        <td>F2</td>
+      </tr>
+      <tr>
+        <td>"F3"</td>
+        <td>F3</td>
+      </tr>
+      <tr>
+        <td>"F4"</td>
+        <td>F4</td>
+      </tr>
+      <tr>
+        <td>"F5"</td>
+        <td>F5</td>
+      </tr>
+      <tr>
+        <td>"F6"</td>
+        <td>F6</td>
+      </tr>
+      <tr>
+        <td>"F7"</td>
+        <td>F7</td>
+      </tr>
+      <tr>
+        <td>"F8"</td>
+        <td>F8</td>
+      </tr>
+      <tr>
+        <td>"F9"</td>
+        <td>F9</td>
+      </tr>
+      <tr>
+        <td>"F10"</td>
+        <td>F10</td>
+      </tr>
+      <tr>
+        <td>"F11"</td>
+        <td>F11</td>
+      </tr>
+      <tr>
+        <td>"F12"</td>
+        <td>F12</td>
+      </tr>
+      <tr>
+        <td>"AUDIOVOLUMEDOWN" | "VOLUMEDOWN"</td>
+        <td>AudioVolumeDown</td>
+      </tr>
+      <tr>
+        <td>"AUDIOVOLUMEUP" | "VOLUMEUP"</td>
+        <td>AudioVolumeUp</td>
+      </tr>
+      <tr>
+        <td>"AUDIOVOLUMEMUTE" | "VOLUMEMUTE"</td>
+        <td>AudioVolumeMute</td>
+      </tr>
+      <tr>
+        <td>"MEDIAPLAY"</td>
+        <td>MediaPlay</td>
+      </tr>
+      <tr>
+        <td>"MEDIAPAUSE"</td>
+        <td>MediaPause</td>
+      </tr>
+      <tr>
+        <td>"MEDIAPLAYPAUSE"</td>
+        <td>MediaPlayPause</td>
+      </tr>
+      <tr>
+        <td>"MEDIASTOP"</td>
+        <td>MediaStop</td>
+      </tr>
+      <tr>
+        <td>"MEDIATRACKNEXT"</td>
+        <td>MediaTrackNext</td>
+      </tr>
+      <tr>
+        <td>"MEDIATRACKPREV" | "MEDIATRACKPREVIOUS"</td>
+        <td>MediaTrackPrevious</td>
+      </tr>
+      <tr>
+        <td>"F13"</td>
+        <td>F13</td>
+      </tr>
+      <tr>
+        <td>"F14"</td>
+        <td>F14</td>
+      </tr>
+      <tr>
+        <td>"F15"</td>
+        <td>F15</td>
+      </tr>
+      <tr>
+        <td>"F16"</td>
+        <td>F16</td>
+      </tr>
+      <tr>
+        <td>"F17"</td>
+        <td>F17</td>
+      </tr>
+      <tr>
+        <td>"F18"</td>
+        <td>F18</td>
+      </tr>
+      <tr>
+        <td>"F19"</td>
+        <td>F19</td>
+      </tr>
+      <tr>
+        <td>"F20"</td>
+        <td>F20</td>
+      </tr>
+      <tr>
+        <td>"F21"</td>
+        <td>F21</td>
+      </tr>
+      <tr>
+        <td>"F22"</td>
+        <td>F22</td>
+      </tr>
+      <tr>
+        <td>"F23"</td>
+        <td>F23</td>
+      </tr>
+      <tr>
+        <td>"F24"</td>
+        <td>F24</td>
+      </tr>
+    </table>
+  </div>
+</body>
+
+</html>

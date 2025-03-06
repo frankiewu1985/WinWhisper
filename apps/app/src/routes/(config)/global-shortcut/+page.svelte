@@ -1,9 +1,6 @@
 <script lang="ts">
-	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
-	import { ChromeWebStoreIcon } from '$lib/components/icons';
 	import { Button } from '$lib/components/ui/button/index.js';
-	import { LaptopIcon as DesktopIcon } from 'lucide-svelte';
-</script>
+	</script>
 
 <svelte:head>
 	<title>Change Global Keyboard Shortcut</title>

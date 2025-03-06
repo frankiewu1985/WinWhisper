@@ -22,7 +22,6 @@ export const getDefaultSettings = () =>
     "transcription.insertToCursorOnSuccess": true,
     "system.closeToTray": true,
     "system.openOnBoot": true,
-    "system.alwaysOnTop": "Never",
 
     "recording.selectedAudioInputDeviceId": "default",
     "recording.bitrateKbps": DEFAULT_BITRATE_KBPS,
@@ -74,7 +73,6 @@ export const settingsSchema = z.object({
 
 	'system.closeToTray': z.boolean(),
 	'system.openOnBoot': z.boolean(),
-	'system.alwaysOnTop': z.enum(ALWAYS_ON_TOP_VALUES),
 
 	'recording.selectedAudioInputDeviceId': z.string().nullable(),
 	'recording.bitrateKbps': z

@@ -105,22 +105,6 @@
 			};
 		}}
 	/>
-
-	<Separator />
-
-	<LabeledSelect
-		id="always-on-top"
-		label="Always On Top"
-		items={ALWAYS_ON_TOP_OPTIONS}
-		selected={settings.value['system.alwaysOnTop']}
-		onSelectedChange={async (selected) => {
-			settings.value = {
-				...settings.value,
-				'system.alwaysOnTop': selected,
-			};
-		}}
-		placeholder="Select a language"
-	/>
 </div>
 
 <MacOSAppNapExplainedDialog />

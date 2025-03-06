@@ -2,17 +2,14 @@
 	import { goto } from '$app/navigation';
 	import ConfirmationDialog from '$lib/components/ConfirmationDialog.svelte';
 	import MoreDetailsDialog from '$lib/components/MoreDetailsDialog.svelte';
-	import NotificationLog from '$lib/components/NotificationLog.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { ModeWatcher, mode } from 'mode-watcher';
 	import { onMount } from 'svelte';
 	import { Toaster, type ToasterProps } from 'svelte-sonner';
-	import { syncWindowAlwaysOnTopWithRecorderState } from './alwaysOnTop.svelte';
 	import { closeToTrayIfEnabled } from './closeToTrayIfEnabled';
 
 	const recorder = getRecorderFromContext();
 
-	syncWindowAlwaysOnTopWithRecorderState();
 	closeToTrayIfEnabled();
 
 	$effect(() => {

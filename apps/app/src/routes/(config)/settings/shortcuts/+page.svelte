@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { LabeledInput, LabeledSelect } from '$lib/components/labeled/index.js';
-	import { Button } from '$lib/components/ui/button/index.js';
-	import { Input } from '$lib/components/ui/input/index.js';
+	import {
+		LabeledInput,
+		LabeledSelect,
+	} from '$lib/components/labeled/index.js';
 	import { Label } from '$lib/components/ui/label/index.js';
 	import { Separator } from '$lib/components/ui/separator/index.js';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
@@ -10,6 +11,8 @@
 		settings,
 	} from '$lib/stores/settings.svelte';
 	import { SUPPORTED_LANGUAGES_OPTIONS } from '@repo/shared';
+	import { LogicalSize, LogicalPosition } from '@tauri-apps/api/dpi';
+	import { WebviewWindow } from '@tauri-apps/api/webviewWindow';
 
 	const recorder = getRecorderFromContext();
 	const registerShortcuts = getRegisterShortcutsFromContext();
@@ -29,18 +32,18 @@
 	<Separator />
 
 	<LabeledSelect
-	id="output-language"
-	label="Output Language"
-	items={SUPPORTED_LANGUAGES_OPTIONS}
-	selected={settings.value['transcription.outputLanguage']}
-	onSelectedChange={(selected) => {
-		settings.value = {
-			...settings.value,
-			'transcription.outputLanguage': selected,
-		};
-	}}
-	placeholder="Select a language"
-/>	
+		id="output-language"
+		label="Output Language"
+		items={SUPPORTED_LANGUAGES_OPTIONS}
+		selected={settings.value['transcription.outputLanguage']}
+		onSelectedChange={(selected) => {
+			settings.value = {
+				...settings.value,
+				'transcription.outputLanguage': selected,
+			};
+		}}
+		placeholder="Select a language"
+	/>
 	<LabeledInput
 		id="global-shortcut"
 		label="Global Shortcut (language Auto)"
@@ -53,10 +56,19 @@
 			};
 			registerShortcuts.registerGlobalShortcut({
 				shortcut: value,
-				callback: (action) => recorder.toggleRecording(action=== 'Pressed'),
+				callback: (action) => recorder.toggleRecording(action === 'Pressed'),
 			});
 		}}
-	/>	
-	
-	<Separator />
+	/>
+	<Label
+		onclick={() => {
+			// open url via browser.
+			new WebviewWindow('Keys', {
+				url: 'keys.html',//'https://github.com/tauri-apps/global-hotkey/blob/c9913a97667b3e44cb000de384cd8937d5a0050a/src/hotkey.rs#L233'
+				alwaysOnTop: true,
+			});
+		}}
+	>
+		List of Keys
+	</Label>
 </div>
