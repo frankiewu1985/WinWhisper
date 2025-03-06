@@ -2,9 +2,11 @@
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { cn } from '$lib/utils';
-	import { MoonIcon, SettingsIcon, SunIcon, MicIcon, OctagonXIcon } from 'lucide-svelte';
+	import { MoonIcon, SettingsIcon, SunIcon, MicIcon, OctagonXIcon, MinimizeIcon } from 'lucide-svelte';
 	import { toggleMode } from 'mode-watcher';
 	import NotificationLog from './NotificationLog.svelte';
+	import { closeToTrayIfEnabled } from '../../routes/+layout/closeToTrayIfEnabled';
+	import { getCurrentWindow } from '@tauri-apps/api/window';
 
 	let { class: className }: { class?: string } = $props();
 	const recorder = getRecorderFromContext();
@@ -28,6 +30,7 @@
 			<MicIcon />
 		{/if}
 	</WhisperingButton>
+
 	<WhisperingButton
 		tooltipContent="Settings"
 		href="/settings"
@@ -36,6 +39,7 @@
 	>		
 		<SettingsIcon class="h-4 w-4" aria-hidden="true" />
 	</WhisperingButton>
+
 	<WhisperingButton
 		tooltipContent="Toggle dark mode"
 		onclick={toggleMode}
@@ -49,7 +53,20 @@
 			class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
 		/>
 	</WhisperingButton>
-	<NotificationLog />
+	
+	<WhisperingButton
+		tooltipContent="Minimize"
+		onclick={() =>
+			{				
+				getCurrentWindow().hide();
+			}}
+		variant="ghost"
+		size="icon"
+		style="view-transition-name: microphone-icon"
+	>
+		<MinimizeIcon />
+	</WhisperingButton>
+
 </nav>
 
 <style>

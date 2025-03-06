@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import ConfirmationDialog from '$lib/components/ConfirmationDialog.svelte';
-	import FasterRerecordExplainedDialog from '$lib/components/FasterRerecordExplainedDialog.svelte';
 	import MoreDetailsDialog from '$lib/components/MoreDetailsDialog.svelte';
 	import NotificationLog from '$lib/components/NotificationLog.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
@@ -62,7 +61,6 @@
 	{...TOASTER_SETTINGS}
 />
 <ModeWatcher />
-<FasterRerecordExplainedDialog />
 <ConfirmationDialog />
 <MoreDetailsDialog />
 <NotificationLog />
