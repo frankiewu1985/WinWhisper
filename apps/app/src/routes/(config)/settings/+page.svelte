@@ -41,7 +41,7 @@
 
 	<LabeledSwitch
 		id="transcription.insertToCursorOnSuccess"
-		label="Paste contents from clipboard after successful transcription"
+		label="Insert contents to current cursor after successful transcription"
 		checked={settings.value['transcription.insertToCursorOnSuccess']}
 		onCheckedChange={(v) => {
 			settings.value = {
