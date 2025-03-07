@@ -60,7 +60,7 @@
 			}}
 		variant="ghost"
 		size="icon"
-		style="view-transition-name: microphone-icon"
+		style="view-transition-name: minimize-icon"
 	>
 		<MinimizeIcon />
 	</WhisperingButton>
