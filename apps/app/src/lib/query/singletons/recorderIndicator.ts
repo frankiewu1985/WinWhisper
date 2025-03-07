@@ -50,7 +50,20 @@ export const showRecorderIndicator = () => {
 
 	recorderIndicatorWindow!
 		.show()
-		.then(() => {
+		.then(() => {			
+			// Get the screen size
+			const screenSize = window.screen;
+			const screenWidth = screenSize.width;
+			const screenHeight = screenSize.height;
+
+			// Calculate the position for the bottom center
+			const windowWidth = 120;
+			const windowHeight = 60;
+			const x = (screenWidth - windowWidth) / 2;
+			const y = screenHeight - windowHeight - 150;
+
+			recorderIndicatorWindow?.setPosition(new LogicalPosition(x, y));
+
 			console.log('Recorder indicator window shown successfully');
 		})
 		.catch((error) => {
