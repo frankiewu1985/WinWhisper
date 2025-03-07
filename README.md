@@ -39,6 +39,29 @@ WhisperingX is a minimalist transcription tool forked from the open-source proje
 
 <img src="./doc/images/tryOut.png" alt="Try it out" width="500">
 
+---
+# Tuning for better accuracy.
+1. Define your vacabulary, the transcription will favor the words in the vocabulary for better accurracy. Here is an example:
+```
+'xAI' - company name, 'Grok' - AI assistant name, 'neuralink' - brain-interface tech, 'Yao' - person name
+```
+
+2. Override the default prompt passed to Whisper model, by going to Setting->Transcription, expand "Advanced Options". 
+You can use `{{vocabulary}}` parameter to reference the vocabulary setting.
+
+<img src="./doc/images/transcription2.png" alt="transcription prompt" width="500">
+
+3. Override the default system/user prompt passed to LLM for post processing - by going to Settings->Post Processing, expand "Advanced Options". 
+You can use `{{vocabulary}}` parameter to reference the vocabulary setting, and the `{{input}}` parameter to reference the transcribed text.
+
+<img src="./doc/images/postProcessing2.png" alt="post processing prompt" width="500">
+
+4. Whisper model has language detection, and by default the app put the output language as 'auto', however you can change the output languge in Settings->Shortcut
+
+<img src="./doc/images/shortcut2.png" alt="language" width="500">
+
+
+
 ## Build Executables with private key
 - Open a new powershell in projects root
 - type the following command: `$env:TAURI_SIGNING_PRIVATE_KEY="Your private key"` (env variables do not persist across terminals)
