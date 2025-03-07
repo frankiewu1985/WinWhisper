@@ -3,7 +3,6 @@
     <img width="180" src="./apps/app/src-tauri/recorder-state-icons/studio_microphone.png" alt="Whispering">
     </a>
   <h1 align="center">WhisperingX</h1>
-  <p align="center">A fork from <a href="https://whispering.bradenwong.com">whispering</a></p>
 </p>
 
 ## About
