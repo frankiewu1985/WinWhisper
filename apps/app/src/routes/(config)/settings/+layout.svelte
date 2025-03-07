@@ -11,6 +11,7 @@
 		{ title: 'API Keys', href: '/settings/api-keys' },
 		{ title: 'Shortcuts', href: '/settings/shortcuts' },
 		{ title: 'Log', href: '/settings/log' },
+		{ title: 'About', href: '/settings/about' },
 	] as const;
 
 	const isString = (value: unknown): value is string =>
