@@ -62,6 +62,7 @@
                 "minWidth": 200
             }
         ],
+        "macOSPrivateApi": true,
         "security": {
             "csp": null
         }
