@@ -27,6 +27,10 @@
 		}
 	});
 
+	document.addEventListener('contextmenu', (event) => {
+		event.preventDefault();
+		console.log('right click forbidden');
+	});
 
 </script>
 
