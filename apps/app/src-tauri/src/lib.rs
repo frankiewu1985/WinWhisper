@@ -27,13 +27,21 @@ pub fn run() {
         .plugin(tauri_plugin_shell::init())
         .plugin(tauri_plugin_updater::Builder::new().build())
         .plugin(tauri_plugin_window_state::Builder::default().build())
-        .setup(|_| {
+        .setup(|app| {
             let _ = ensure_thread_initialized();
+            // Use Regular policy to show the window by default
+            app.set_activation_policy(tauri::ActivationPolicy::Regular);
             Ok(())
         })
         .on_window_event(|_, event| {
-            if let tauri::WindowEvent::Destroyed = event {
-                let _ = close_thread();
+            match event {
+                tauri::WindowEvent::CloseRequested { api, .. } => {
+                    let _ = ensure_thread_initialized();
+                }
+                tauri::WindowEvent::Destroyed => {
+                    let _ = close_thread();
+                }
+                _ => {}
             }
         });
 
