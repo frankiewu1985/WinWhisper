@@ -46,12 +46,6 @@ export const recordingStateSchema = z.enum([
 
 export type WhisperingRecordingState = z.infer<typeof recordingStateSchema>;
 
-export const recorderStateToIcons = {
-	IDLE: '🎙️',
-	SESSION: '🎙️',
-	'SESSION+RECORDING': '⏹️',
-} as const satisfies Record<WhisperingRecordingState, string>;
-
 /** Supported languages pulled from OpenAI Website: https://platform.openai.com/docs/guides/speech-to-text/supported-languages */
 export const SUPPORTED_LANGUAGES = [
 	'auto',

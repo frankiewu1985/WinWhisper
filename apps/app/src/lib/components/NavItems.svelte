@@ -2,9 +2,17 @@
 	import WhisperingButton from '$lib/components/WhisperingButton.svelte';
 	import { getRecorderFromContext } from '$lib/query/singletons/recorder';
 	import { cn } from '$lib/utils';
-	import { MoonIcon, SettingsIcon, SunIcon, MicIcon, OctagonXIcon, MinimizeIcon } from 'lucide-svelte';
+	import {
+		MoonIcon,
+		SettingsIcon,
+		SunIcon,
+		MicIcon,
+		OctagonXIcon,
+		MinimizeIcon,
+	} from 'lucide-svelte';
 	import { toggleMode } from 'mode-watcher';
-	import { getCurrentWindow } from '@tauri-apps/api/window';
+	import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
+	import { type } from '@tauri-apps/plugin-os';
 
 	let { class: className }: { class?: string } = $props();
 	const recorder = getRecorderFromContext();
@@ -34,7 +42,7 @@
 		href="/settings"
 		variant="ghost"
 		size="icon"
-	>		
+	>
 		<SettingsIcon class="h-4 w-4" aria-hidden="true" />
 	</WhisperingButton>
 
@@ -51,20 +59,25 @@
 			class="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100"
 		/>
 	</WhisperingButton>
-	
+
 	<WhisperingButton
 		tooltipContent="Minimize"
-		onclick={() =>
-			{				
+		onclick={() => {
+			const isMacos = type() === 'macos';
+			if (isMacos) {
+				const appWindow = getCurrentWindow();
+				appWindow.setSize(new LogicalSize(1, 1));
+				appWindow.setAlwaysOnTop(true);
+			} else {
 				getCurrentWindow().hide();
-			}}
+			}
+		}}
 		variant="ghost"
 		size="icon"
 		style="view-transition-name: minimize-icon"
 	>
 		<MinimizeIcon />
 	</WhisperingButton>
-
 </nav>
 
 <style>

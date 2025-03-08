@@ -2,10 +2,11 @@ import { Err, Ok, tryAsync } from '@epicenterhq/result';
 import {
 	type WhisperingRecordingState,
 } from '@repo/shared';
-import {  Menu, MenuItem } from '@tauri-apps/api/menu';
+import { Menu, MenuItem } from '@tauri-apps/api/menu';
 import { resolveResource } from '@tauri-apps/api/path';
 import { TrayIcon } from '@tauri-apps/api/tray';
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { getCurrentWindow, LogicalSize } from '@tauri-apps/api/window';
+import { type } from '@tauri-apps/plugin-os';
 import { exit } from '@tauri-apps/plugin-process';
 
 const TRAY_ID = 'whispering-tray';
@@ -53,7 +54,16 @@ async function initTray() {
 				id: 'show',
 				text: 'Show Window',
 				action: () => {
-					getCurrentWindow().show();
+
+					const isMacos = type() === 'macos';
+					if (isMacos) {
+						const appWindow = getCurrentWindow();
+						appWindow.setSize(new LogicalSize(500, 150));
+						appWindow.setAlwaysOnTop(true);
+					} else {
+						getCurrentWindow().show();
+
+					}
 				},
 			}),
 

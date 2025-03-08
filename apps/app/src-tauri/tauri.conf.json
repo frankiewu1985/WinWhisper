@@ -59,7 +59,9 @@
                 "title": "WhisperingX",
                 "width": 800,
                 "minHeight": 150,
-                "minWidth": 200
+                "minWidth": 200,
+                "backgroundThrottling": "disabled",
+                "alwaysOnTop": true
             }
         ],
         "macOSPrivateApi": true,
