@@ -276,6 +276,7 @@ export type WhisperingSoundNames =
 	| 'start-manual'
 	| 'stop-manual'
 	| 'on-stopped-voice-activated-session'
+	| 'error'
 	| 'cancel'
 	| 'transcriptionComplete';
 

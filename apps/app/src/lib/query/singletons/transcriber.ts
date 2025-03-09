@@ -57,6 +57,7 @@ function createTranscriber() {
 		},
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
+			void playSoundIfEnabled('error');
 		},
 		onSuccess: (data, { toastId }) => {			
 			toast.success({

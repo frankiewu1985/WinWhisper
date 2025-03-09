@@ -66,12 +66,13 @@ function createRecorder({
 		mutationFn: async ({ toastId }: { toastId: string }) => {
 			const startRecordingResult =
 				await userConfiguredServices.recorder.startRecording(nanoid(), {
-					sendStatus: () => {}
+					sendStatus: () => { }
 				});
 			return startRecordingResult;
 		},
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
+			void playSoundIfEnabled('error');
 		},
 		onSuccess: (_data) => {
 			showRecorderIndicator();
@@ -90,12 +91,13 @@ function createRecorder({
 			language: LanguageType;
 		}) => {
 			const stopResult = await userConfiguredServices.recorder.stopRecording({
-				sendStatus: () =>{},
+				sendStatus: () => { },
 			});
 			return stopResult;
 		},
 		onError: (error, { toastId }) => {
 			toast.error({ id: toastId, ...error });
+			void playSoundIfEnabled('error');
 		},
 		onSuccess: async (blob, { toastId, language }) => {
 			console.info('Recording stopped');
@@ -105,10 +107,11 @@ function createRecorder({
 
 			closeRecordingSession.mutate(
 				{
-					sendStatus: () => {},
+					sendStatus: () => { },
 				},
 				{
 					onError: (error) => {
+						void playSoundIfEnabled('error');
 						toast.warning({
 							id: toastId,
 							title: '⚠️ Unable to close session after recording',
@@ -164,6 +167,10 @@ function createRecorder({
 							output(transcribedText);
 						}
 					},
+					onError: (error, { toastId }) => {
+						toast.error({ id: toastId, ...error });
+						void playSoundIfEnabled('error');
+					},
 				},
 			);
 		},
@@ -180,7 +187,7 @@ function createRecorder({
 							Number(settings.value['recording.bitrateKbps']) * 1000,
 					},
 					{
-						sendStatus: () => {},
+						sendStatus: () => { },
 					},
 				);
 			return ensureRecordingSessionResult;
@@ -207,7 +214,7 @@ function createRecorder({
 		mutationFn: async ({ toastId }: { toastId: string }) => {
 			const cancelResult =
 				await userConfiguredServices.recorder.cancelRecording({
-					sendStatus: () => {},
+					sendStatus: () => { },
 				});
 			return cancelResult;
 		},
@@ -217,7 +224,7 @@ function createRecorder({
 		onSuccess: async (_data, { toastId }) => {
 			closeRecordingSession.mutate(
 				{
-					sendStatus: () => {},
+					sendStatus: () => { },
 				},
 				{
 					onSuccess: () => {
@@ -232,6 +239,8 @@ function createRecorder({
 								'Your recording was cancelled but we encountered an issue while closing your session. You may need to restart the application.',
 							action: { type: 'more-details', error: error },
 						});
+						
+						void playSoundIfEnabled('error');
 					},
 				},
 			);
