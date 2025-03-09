@@ -3,7 +3,7 @@ import { trySync } from "@epicenterhq/result";
 export const parseJson = (value: string) =>
   trySync({
     try: () => JSON.parse(value) as unknown,
-    mapErr: (error) => ({ _tag: "ParseJsonError", error }),
+    mapErr: (error) => ({ ok: false, _tag: "ParseJsonError", error }),
   });
 
 // implement a debounce function
